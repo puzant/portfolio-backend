@@ -24,6 +24,7 @@ app.get('/api/travel-images', async (req, res) => {
     const result = await cloudinary.api.resources({
       type: 'upload',
       prefix: 'travels',
+      max_results: 50
     })
 
     const webpImage = result.resources.map(resource => ({
