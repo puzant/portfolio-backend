@@ -9,7 +9,7 @@ const PORT = process.env.PORT
 
 app.use(express.json())
 app.use(cors({
-  origin: process.env.FRONT_END_URL,
+  origin: [process.env.FRONT_END_URL, "http://localhost:8080"],
   methods: ['GET', 'POST']
 }))
 
