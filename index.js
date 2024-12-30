@@ -1,17 +1,24 @@
 import cors from 'cors'
 import dotenv  from 'dotenv'
 import express from 'express'
+import morgan from 'morgan'
 import { v2 as cloudinary } from 'cloudinary'
+
+import { wakeupJob } from './cron.js'
 
 dotenv.config()
 const app = express()
 const PORT = process.env.PORT
 
 app.use(express.json())
+app.use(morgan('dev'))
+
 app.use(cors({
   origin: [process.env.FRONT_END_URL, "http://localhost:8080"],
   methods: ['GET', 'POST']
 }))
+
+wakeupJob.start()
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
