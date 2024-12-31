@@ -4,9 +4,11 @@ import express from 'express'
 import morgan from 'morgan'
 import { v2 as cloudinary } from 'cloudinary'
 
+import { cache } from './cache.js'
 import { wakeupJob } from './cron.js'
 
 dotenv.config()
+
 const app = express()
 const PORT = process.env.PORT
 
@@ -28,13 +30,19 @@ cloudinary.config({
 
 app.get('/api/travel-images', async (req, res) => {
   try {
+    const cachedImages = cache.get('travelImages')
+    
+    if (cachedImages) {
+      return res.json({ images: cachedImages, success: true })
+    }
+
     const result = await cloudinary.api.resources({
       type: 'upload',
       prefix: 'travels',
       max_results: 50
     })
 
-    const webpImage = result.resources.map(resource => ({
+    const webpImages = result.resources.map(resource => ({
       url: cloudinary.url(resource.public_id, {
         transformation: [
           { width: 384, height: 288, crop: 'fill', format: 'webp', quality: 'auto' }
@@ -45,7 +53,8 @@ app.get('/api/travel-images', async (req, res) => {
       public_id: resource.public_id
     }))
 
-    res.json({ images: webpImage, success: true })
+    cache.set('travelImages', webpImages)
+    res.json({ images: webpImages, success: true })
     
   } catch (err) {
     res.status(500).json({
