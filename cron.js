@@ -1,6 +1,8 @@
 import { CronJob } from 'cron'
 import https from 'https'
 
+import { cache } from './cache.js'
+
 const render_backend_URL = 'https://portfolio-backend-gq2s.onrender.com/api/travel-images'
 
 const onComplete = () => {
@@ -19,8 +21,13 @@ export const wakeupJob = new CronJob('*/13 * * * *', () => {
 
     res.on('end', () => {
       const body = Buffer.concat(chunks).toString();
-      if (res.statusCode === 200) console.log('server pinged!', body)
-        else console.error(`failed to ping the server ${res.statusCode}`)
+      if (res.statusCode === 200) {
+        if (!cache.get('travelImages')) cache.set('travelImages', body)
+
+        console.log('server pinged!', body)
+      } else {
+        console.error(`failed to ping the server ${res.statusCode}`)
+      }
     })   
   }).on('error', (err) => {
     console.error(`Error pinging server: ${err.message}`);
