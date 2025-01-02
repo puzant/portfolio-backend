@@ -2,6 +2,8 @@ import cors from 'cors'
 import dotenv  from 'dotenv'
 import express from 'express'
 import morgan from 'morgan'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 
 import { cache } from './cache.js'
@@ -11,6 +13,12 @@ dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT
+
+const __fileName = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__fileName)
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.json())
 app.use(morgan('dev'))
