@@ -3,14 +3,18 @@ import {
   getAllPublications, 
   addPublication, 
   editPublication, 
-  deletePublication 
+  deletePublication,
+  renderEditPublication
 } from '../controllers/publicationController.js'
 
 const router = express.Router()
 
-router.get('/', getAllPublications)
-router.get('/', addPublication)
-router.get('/', editPublication)
-router.get('/', deletePublication)
+router.get('/api', getAllPublications)
+router.post('api/add', addPublication)
+router.put('api/edit/:id', editPublication)
+router.delete('api/delete/:id', deletePublication)
+
+// rendering routes
+router.get('/edit/:id', renderEditPublication)
 
 export default router
