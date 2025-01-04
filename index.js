@@ -1,19 +1,23 @@
 import cors from 'cors'
+import path from 'path'
+import morgan from 'morgan'
 import dotenv  from 'dotenv'
 import express from 'express'
-import morgan from 'morgan'
-import path from 'path'
+import mongoose from 'mongoose'
 import { fileURLToPath } from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 
+import Publications from './models/publications.js'
+import publicationsRoute from './routes/publicationsRoute.js'
 import { cache } from './cache.js'
 import { wakeupJob } from './cron.js'
+import { fetchTravelImages } from './utils.js'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT
-
+const MONGO_URI = process.env.MONGO_URI
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__fileName)
 
@@ -28,6 +32,8 @@ app.use(cors({
   methods: ['GET', 'POST']
 }))
 
+app.use('/api/publications', publicationsRoute)
+
 wakeupJob.start()
 
 cloudinary.config({
@@ -36,39 +42,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-app.get('/cms', (req, res) => {
-  res.render('index', {
-    projects: [
-      {name: 'Locus', description: 'Real-Estate Management Platform', link: 'https://www.locus.eu/', tech: ['React', 'Tailwind', 'React Query', 'Formik']},
-      {name: 'TMDB Clone', description: 'Explore And Search Movies', link: 'https://react-app-movies-tracker.netlify.app/', tech: ['React', 'Tailwind', 'React Query', 'TypeScript', ]},
-      {name: 'Puzant CV', description: 'Interactive Online CV', link: 'https://puzant-cv.netlify.app/', tech: ['AlpineJs', 'JavaScript', 'HTML', 'CSS']},
-      {name: 'Password Generator', description: 'Complex Password Generator', link: 'https://complex-password-generator-app.netlify.app/', tech: ['JavaScript', 'HTML', 'Tailwind']},
-    ],
-    publications: [
-      {
-        title: 'Efficient Data Fetching and Mutation in React with Generic Hooks and HOCs',
-        preview: 'In the ever-evolving landscape of web development, one constant remains: the need to interact with APIs. Whether you’re building web…',
-        publishedDate: 'Sep 5, 2023',
-        duration: '4',
-        link: 'https://medium.com/@puzant24/efficient-data-fetching-and-mutation-in-react-with-generic-hooks-and-hocs-37728b444ac8'
-      },
-      {
-        title: 'Building A Simple Images Carousel With ReactJs',
-        preview: 'Carousel allows multiple image & videos to be displayed in a nice & interactive way',
-        publishedDate: 'Feb 3, 2021',
-        duration: '4',
-        link: 'https://medium.com/@puzant24/building-a-simple-images-carousel-with-reactjs-377256bedc61'
-      },
-      {
-        title: 'Infinite Scroll With ReactJs & Redux',
-        preview: 'Infinite scroll has been widely used in today’s web & mobile apps, it simply loads data as you scroll down the page, this eliminated the…',
-        publishedDate: 'Jul 8, 2020',
-        duration: '3',
-        link: 'https://medium.com/@puzant24/infinite-scroll-with-reactjs-redux-23bccea01dd0'
-      }
-    ]
-  });
-});
+app.get('/cms', async (req, res) => {
+  const publications = await Publications.find()
+  const webpImages = await fetchTravelImages()
+
+    res.render('index', {
+      travelImages: webpImages,
+      publications: publications,
+      projects: []
+    })
+})
 
 app.get('/api/travel-images', async (req, res) => {
   try {
@@ -78,22 +61,7 @@ app.get('/api/travel-images', async (req, res) => {
       return res.json({ images: cachedImages, success: true })
     }
 
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'travels',
-      max_results: 50
-    })
-
-    const webpImages = result.resources.map(resource => ({
-      url: cloudinary.url(resource.public_id, {
-        transformation: [
-          { width: 384, height: 288, crop: 'fill', format: 'webp', quality: 'auto' }
-        ],
-      }),
-      display_name: resource.display_name,
-      asset_id: resource.asset_id,
-      public_id: resource.public_id
-    }))
+    const webpImages = await fetchTravelImages()
 
     cache.set('travelImages', webpImages)
     res.json({ images: webpImages, success: true })
@@ -106,6 +74,10 @@ app.get('/api/travel-images', async (req, res) => {
     });
   }
 })
+
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err))
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
