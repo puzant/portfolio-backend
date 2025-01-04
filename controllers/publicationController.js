@@ -1,3 +1,4 @@
+import express from 'express'
 import Publications from '../models/publications.js'
 
 export const getAllPublications = async (req, res) => {
@@ -15,3 +16,17 @@ export const addPublication = async (req, res) => {}
 export const editPublication = async (req, res) => {}
 
 export const deletePublication = async (req, res) => {}
+
+export const renderEditPublication = async (req, res) => {
+  try {
+    const publication = await Publications.findById(req.params.id)
+     if (!publication) 
+      return res.status(404).send('Project not found')
+     
+     res.render('editPublication', { publication })
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).send('Server Error')
+  }
+}
