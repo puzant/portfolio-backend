@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head') %>
+<body>
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Publication</li>
+      </ol>
+    </nav>
+
+    <h3><%= publication.title %></h3>
+
+    <form id="editForm" action="/publications/api/edit/<%= publication._id %>" method="POST" class="d-flex flex-column gap-4 w-50">
+      <div>
+        <label class="form-label">Title</label>
+        <input name="title" type="text" class="form-control" value="<%= publication.title %>">
+      </div>
+  
+      <div>
+        <label class="form-label">Published Date</label>
+        <input name="publishedDate" type="text" class="form-control" value="<%= publication.publishedDate %>">
+      </div>
+  
+      <div>
+        <label class="form-label">Link</label>
+        <input name="link" type="text" class="form-control" value="<%= publication.link %>">
+      </div>
+
+      <div>
+        <label class="form-label">Duration</label>
+        <input name="duration" type="text" class="form-control" value="<%= publication.duration %>">
+      </div>
+  
+      <div>
+        <label class="form-label">Preview</label>
+        <textarea name="preview" class="form-control" rows="3"><%= publication.preview %></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: fit-content;">Save</button>
+    </form>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('editForm');
+  
+      form.addEventListener('submit', function(event) {
+        event.preventDefault()
+  
+        const formData = new FormData(this)
+  
+        fetch(this.action, {
+          method: this.method,
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showAlert('danger', data.error)
+          } else {
+            showAlert('success', 'Publication updated successfully!')
+          }
+        }).catch(err => {
+          showAlert('danger', 'An unexpected error occurred.')
+          console.error(err)
+        })
+      })
+    })
+
+    function showAlert(type, message) {
+      const alert = document.createElement('div')
+      alert.className = `alert alert-${type} alert-dismissible fade show`
+      alert.role = 'alert'
+      alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `
+      alertContainer.appendChild(alert)
+
+      setTimeout(() => {
+        alert.classList.remove('show')
+        alert.addEventListener('transitionend', () => alert.remove())
+      }, 5000)
+    }
+
+  </script>
+</body>
+</html>
