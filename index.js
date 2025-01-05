@@ -24,6 +24,7 @@ const __dirname = path.dirname(__fileName)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(morgan('dev'))
 
@@ -32,7 +33,7 @@ app.use(cors({
   methods: ['GET', 'POST']
 }))
 
-app.use('/api/publications', publicationsRoute)
+app.use('/publications', publicationsRoute)
 
 wakeupJob.start()
 
@@ -49,7 +50,8 @@ app.get('/cms', async (req, res) => {
     res.render('index', {
       travelImages: webpImages,
       publications: publications,
-      projects: []
+      projects: [],
+      title: 'CMS'
     })
 })
 
