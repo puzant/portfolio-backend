@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/_head') %>
+<body>
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Publication</li>
+      </ol>
+    </nav>
+
+
+    <form id="editForm" action="" method="POST" class="d-flex flex-column gap-4 w-50">
+      <div>
+        <label class="form-label">Title</label>
+        <input name="title" type="text" class="form-control" value="">
+      </div>
+  
+      <div>
+        <label class="form-label">Published Date</label>
+        <input name="publishedDate" type="date" class="form-control" value="">
+      </div>
+  
+      <div>
+        <label class="form-label">Link</label>
+        <input name="link" type="text" class="form-control" value="">
+      </div>
+
+      <div>
+        <label class="form-label">Duration</label>
+        <input name="duration" type="text" class="form-control" value="">
+      </div>
+  
+      <div>
+        <label class="form-label">Preview</label>
+        <textarea name="preview" class="form-control" rows="3"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: fit-content;">Save</button>
+    </form>
+
+  </div>
+</body>
+</html>
