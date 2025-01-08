@@ -14,7 +14,7 @@
 
     <h3><%= publication.preview %></h3>
 
-    <form id="editForm" action="/publications/api/edit/<%= publication._id %>" method="POST" data-id="<%= publication._id %>" class="d-flex flex-column gap-4 w-50">
+    <form id="editForm" action="/publications/api/edit/<%= publication._id %>" method="POST" class="d-flex flex-column gap-4 w-50">
       <div>
         <label class="form-label">Title</label>
         <input name="title" type="text" class="form-control" value="<%= publication.title %>">
@@ -51,8 +51,14 @@
   
       form.addEventListener('submit', function(e) {
         e.preventDefault()
+        const formData = new URLSearchParams()
+        
+        Array.from(form.elements).forEach(element => {
+          if (element.name && element.value) {
+            formData.append(element.name, element.value)
+          }
+        })
 
-        const formData = new FormData(this)
         fetch(this.action, {
           method: this.method,
           body: formData,
