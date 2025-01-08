@@ -12,9 +12,9 @@
       </ol>
     </nav>
 
-    <h3><%= publication.title %></h3>
+    <h3><%= publication.preview %></h3>
 
-    <form id="editForm" action="/publications/api/edit/<%= publication._id %>" method="POST" class="d-flex flex-column gap-4 w-50">
+    <form id="editForm" action="/publications/api/edit/<%= publication._id %>" method="POST" data-id="<%= publication._id %>" class="d-flex flex-column gap-4 w-50">
       <div>
         <label class="form-label">Title</label>
         <input name="title" type="text" class="form-control" value="<%= publication.title %>">
@@ -49,9 +49,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('editForm');
   
-      form.addEventListener('submit', function(event) {
-        event.preventDefault()
-  
+      form.addEventListener('submit', function(e) {
+        e.preventDefault()
+
         const formData = new FormData(this)
         fetch(this.action, {
           method: this.method,
