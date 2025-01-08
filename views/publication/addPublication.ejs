@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('../partials/_head') %>
+<%- include('../partials/_head') %>
 <body>
   <div class="p-4">
     <div id="alertContainer"></div>
@@ -12,10 +12,10 @@
       </ol>
     </nav>
 
-    <form id="addForm" action="/publications/api/add" method="POST" class="d-flex flex-column gap-4 w-50" enctype="multipart/form-data">
+    <form id="addForm" action="/publications/api/add" method="POST" class="d-flex flex-column gap-4 w-50">
       <div>
         <label class="form-label">Title</label>
-        <input name="title" type="text" class="form-control">
+        <input name="title" type="text" class="form-control" value="123">
       </div>
   
       <div>
@@ -49,12 +49,20 @@
   
       form.addEventListener('submit', function(event) {
         event.preventDefault()
-  
-        const formData = new FormData(form)
-  
+        const formData = new URLSearchParams()
+
+        Array.from(form.elements).forEach(element => {
+          if (element.name && element.value) {
+            formData.append(element.name, element.value)
+          }
+        })
+
         fetch(this.action, {
           method: this.method,
-          body: formData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: formData.toString(),
         })
         .then(response => response.json())
         .then(data => {
