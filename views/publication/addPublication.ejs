@@ -12,26 +12,25 @@
       </ol>
     </nav>
 
-
-    <form id="editForm" action="" method="POST" class="d-flex flex-column gap-4 w-50">
+    <form id="addForm" action="/publications/api/add" method="POST" class="d-flex flex-column gap-4 w-50" enctype="multipart/form-data">
       <div>
         <label class="form-label">Title</label>
-        <input name="title" type="text" class="form-control" value="">
+        <input name="title" type="text" class="form-control">
       </div>
   
       <div>
         <label class="form-label">Published Date</label>
-        <input name="publishedDate" type="date" class="form-control" value="">
+        <input name="publishedDate" type="date" class="form-control">
       </div>
   
       <div>
         <label class="form-label">Link</label>
-        <input name="link" type="text" class="form-control" value="">
+        <input name="link" type="text" class="form-control">
       </div>
 
       <div>
         <label class="form-label">Duration</label>
-        <input name="duration" type="text" class="form-control" value="">
+        <input name="duration" type="text" class="form-control">
       </div>
   
       <div>
@@ -43,5 +42,33 @@
     </form>
 
   </div>
+
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addForm');
+  
+      form.addEventListener('submit', function(event) {
+        event.preventDefault()
+  
+        const formData = new FormData(form)
+  
+        fetch(this.action, {
+          method: this.method,
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            // showAlert('danger', data.error)
+          } else {
+            // showAlert('success', 'Publication updated successfully!')
+          }
+        }).catch(err => {
+          // showAlert('danger', 'An unexpected error occurred.')
+          console.error(err)
+        })
+      })
+    })
+  </script>
 </body>
 </html>
