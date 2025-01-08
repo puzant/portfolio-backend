@@ -50,7 +50,10 @@
 
       if (decision) {
         try {
-          const response = await fetch('/publications/api/delete', { method: 'DELETE' })
+          const response = await fetch(`/publications/api/delete/${id}`, { method: 'DELETE' })
+          if (response) {
+            Swal.fire({ text: "Publication Deleted!", icon: "success"});
+          }
         } catch (err) {
           
         }
