@@ -4,6 +4,7 @@ import {
   addPublication, 
   editPublication, 
   deletePublication,
+  renderAddPublication,
   renderEditPublication
 } from '../controllers/publicationController.js'
 
@@ -15,6 +16,7 @@ router.post('/api/edit/:id', editPublication)
 router.delete('api/delete/:id', deletePublication)
 
 // rendering routes
+router.get('/add', renderAddPublication)
 router.get('/edit/:id', renderEditPublication)
 
 export default router
