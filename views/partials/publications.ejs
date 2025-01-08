@@ -15,7 +15,7 @@
 
     <div class="d-flex gap-4">
       <% publications.forEach(publication => { %>
-        <div id="publication" class="card d-flex w-25">
+        <div id="publication" class="card d-flex w-25" data-id="<%= publication._id %>">
           <div class="card-body">
             <b class="card-title"><%= publication.title %></b>
             <p class="card-text text-truncate" style="max-width: 200px"><%= publication.preview %></p>
@@ -25,7 +25,7 @@
             
               <div class="d-flex gap-4">
                 <a href="publications/edit/<%= publication._id %>"><i class="bi bi-pencil"></i></a>
-                <i id="deleteBtn" class="pe-auto bi bi-trash3"></i>
+                <i class="pe-auto bi bi-trash3 deleteBtn"></i>
               </div>
             </div>
 
@@ -38,11 +38,24 @@
 </div>
 
 <script>
-  const deleteBtn = document.getElementById('deleteBtn')
-  deleteBtn.addEventListener('click', (e) => {
-    console.log("🚀 ~ deleteBtn.addEventListener ~ e:", e)
-    const decision = confirm("Are you sure you want to delete this item?")
-    if (decision) alert('done')
-    else alert('not done')
+  const deleteBtns = document.querySelectorAll('.deleteBtn')
+  
+  deleteBtns.forEach((btn) => {
+    btn.addEventListener('click', async (e) => {
+      const clickBtn = e.target
+      const card = clickBtn.closest('.card')
+      const id = card.dataset.id
+
+      const decision = confirm("Are you sure you want to delete this item?")
+
+      if (decision) {
+        try {
+          const response = await fetch('/publications/api/delete', { method: 'DELETE' })
+        } catch (err) {
+          
+        }
+
+      }
+    })
   })
 </script>
