@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('partials/_head') %>
+<%- include('../partials/_head') %>
 <body>
   <div class="p-4">
     <div id="alertContainer"></div>
@@ -12,7 +12,7 @@
       </ol>
     </nav>
 
-    <h3><%= publication.title %></h3>
+    <h3><%= publication.preview %></h3>
 
     <form id="editForm" action="/publications/api/edit/<%= publication._id %>" method="POST" class="d-flex flex-column gap-4 w-50">
       <div>
@@ -21,8 +21,8 @@
       </div>
   
       <div>
-        <label class="form-label">Published Date</label>
-        <input name="publishedDate" type="text" class="form-control" value="<%= publication.publishedDate %>">
+        <label class="form-label">Published Date</label> <%= publication.publishedDate %>
+        <input name="publishedDate" type="date" class="form-control" value="<%= publication.publishedDate %>">
       </div>
   
       <div>
@@ -49,11 +49,16 @@
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('editForm');
   
-      form.addEventListener('submit', function(event) {
-        event.preventDefault()
-  
-        const formData = new FormData(this)
-  
+      form.addEventListener('submit', function(e) {
+        e.preventDefault()
+        const formData = new URLSearchParams()
+        
+        Array.from(form.elements).forEach(element => {
+          if (element.name && element.value) {
+            formData.append(element.name, element.value)
+          }
+        })
+
         fetch(this.action, {
           method: this.method,
           body: formData,

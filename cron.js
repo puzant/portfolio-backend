@@ -24,7 +24,6 @@ export const wakeupJob = new CronJob('*/13 * * * *', () => {
       if (res.statusCode === 200) {
         if (!cache.get('travelImages')) cache.set('travelImages', body)
 
-        console.log('server pinged!', body)
       } else {
         console.error(`failed to ping the server ${res.statusCode}`)
       }
