@@ -13,12 +13,10 @@ export const getAllPublications = async (req, res) => {
 
 export const addPublication = async (req, res) => {  
   const { title, publishedDate, link, duration, preview } = req.body
-  console.log("🚀 ~ addPublication ~ req.body:", req.body)
-  
-  try {
-    const newPublication = Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
 
-    res.status(200).json({message: 'success', publication: newPublication})
+  try {
+     Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
+    res.status(200).json({message: 'publication created successfully!'})
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' })
   }
@@ -55,11 +53,11 @@ export const deletePublication = async (req, res) => {
 
     if (!publicationToDelete) 
       return res.status(404).json({ message: 'Publication not found' })
+
     res.status(200).json({
       message: 'Publication deleted successfully', 
       publicationToDelete
     })
-
       
   } catch (error) {
     console.error('Error deleting publication:', error);
@@ -82,6 +80,7 @@ export const renderEditPublication = async (req, res) => {
      
      res.render('publication/editPublication', {
        publication: {
+        _id: publication._id,
         title: publication.title, 
         publishedDate: DateTime.local().toFormat('yyyy-MM-dd'),
         link: publication.link, 
