@@ -11,7 +11,7 @@ const publicationSchema = new mongoose.Schema({
   },
   publishedDate: {
     type: Date,
-    default: Date.now
+    required: true
   },
   duration: {
     type: String,
