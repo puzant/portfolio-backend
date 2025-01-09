@@ -65,12 +65,14 @@ export const deletePublication = async (req, res) => {
   }
 }
 
+// Route to render the Add Publication form
 export const renderAddPublication = async (req, res) => {
   res.render('publication/addPublication', {
     title: 'Add Publication'
   })
 }
 
+// Route to render the Edit Publication form
 export const renderEditPublication = async (req, res) => {
   try {
     const publication = await Publication.findById(req.params.id)
@@ -82,7 +84,7 @@ export const renderEditPublication = async (req, res) => {
        publication: {
         _id: publication._id,
         title: publication.title, 
-        publishedDate: DateTime.local().toFormat('yyyy-MM-dd'),
+        publishedDate: DateTime.fromJSDate(publication.publishedDate).toFormat('yyyy-MM-dd'),
         link: publication.link, 
         duration: publication.duration, 
         preview: publication.preview, 
