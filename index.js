@@ -1,17 +1,20 @@
 import cors from 'cors'
 import path from 'path'
+import multer from 'multer'
 import morgan from 'morgan'
 import dotenv  from 'dotenv'
 import express from 'express'
 import mongoose from 'mongoose'
+import { DateTime } from 'luxon'
 import { fileURLToPath } from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 
-import Publications from './models/publications.js'
-import publicationsRoute from './routes/publicationsRoute.js'
 import { cache } from './cache.js'
 import { wakeupJob } from './cron.js'
 import { fetchTravelImages } from './utils.js'
+import Publications from './models/publications.js'
+import projectsRoute from './routes/projectsRoute.js'
+import publicationsRoute from './routes/publicationsRoute.js'
 
 dotenv.config()
 
@@ -20,6 +23,15 @@ const PORT = process.env.PORT
 const MONGO_URI = process.env.MONGO_URI
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__fileName)
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, '/uploads')
+  },
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+})
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
@@ -34,6 +46,7 @@ app.use(cors({
 }))
 
 app.use('/publications', publicationsRoute)
+app.use('/projects', projectsRoute)
 
 wakeupJob.start()
 
@@ -44,12 +57,19 @@ cloudinary.config({
 });
 
 app.get('/cms', async (req, res) => {
-  const publications = await Publications.find()
+  const publications = await Publications.find({}).lean()
   const webpImages = await fetchTravelImages()
+
+  const tranformedPublications = publications.map(p => {
+    return {
+      ...p, 
+      publishedDate: DateTime.fromJSDate(p.publishedDate).toFormat('yyyy-MM-dd')
+    }
+  })
 
     res.render('index', {
       travelImages: webpImages,
-      publications: publications,
+      publications: tranformedPublications,
       projects: [],
       title: 'CMS'
     })
