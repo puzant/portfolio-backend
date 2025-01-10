@@ -1,6 +1,5 @@
 import cors from 'cors'
 import path from 'path'
-import multer from 'multer'
 import morgan from 'morgan'
 import dotenv  from 'dotenv'
 import express from 'express'
@@ -23,15 +22,6 @@ const PORT = process.env.PORT
 const MONGO_URI = process.env.MONGO_URI
 const __fileName = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__fileName)
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, '/uploads')
-  },
-  filename: function(req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-})
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
