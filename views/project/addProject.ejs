@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head') %>
+<body>
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Project</li>
+      </ol>
+    </nav>
+
+    <%- include('../partials/_projectsForm', { 
+      formAction: '/projects/api/add',
+      formId: 'addForm',
+      publication: null,
+    }) %>
+  
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addForm');
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault()
+        const formData = new FormData()
+
+        Array.from(form.elements).forEach(element => {
+        if (element.name && element.value) {
+          formData.append(element.name, element.value)
+
+          if (element.type === 'file' && element.files.length > 0) 
+            formData.append(element.name, element.files[0])
+        }
+      })
+      
+        fetch(this.action, {
+          method: this.method,
+          body: formData,
+        }).then(response => response.json())
+
+      })
+    })
+  </script>
+
+</body>
+</html>
