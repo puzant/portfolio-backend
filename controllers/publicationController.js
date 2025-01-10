@@ -15,7 +15,7 @@ export const addPublication = async (req, res) => {
   const { title, publishedDate, link, duration, preview } = req.body
 
   try {
-     Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
+    Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
     res.status(200).json({message: 'publication created successfully!'})
   } catch (err) {
     res.status(500).json({ error: 'Internal server error' })
