@@ -1,4 +1,6 @@
 import express from 'express'
+import upload from '../multerUpload.js'
+
 import {
   renderAddProject,
   renderEditProject,
@@ -9,7 +11,7 @@ import {
 
 const router = express.Router()
 
-router.post('/api/add', addProject)
+router.post('/api/add', upload.single('preview'), addProject)
 router.post('/api/edit/:id', editProject)
 router.delete('/api/delete/:id', deleteProject)
 
