@@ -12,6 +12,7 @@ import { cache } from './cache.js'
 import { wakeupJob } from './cron.js'
 import { fetchTravelImages } from './utils.js'
 import Publications from './models/publications.js'
+import Projects from './models/project.js'
 import projectsRoute from './routes/projectsRoute.js'
 import publicationsRoute from './routes/publicationsRoute.js'
 
@@ -47,6 +48,7 @@ cloudinary.config({
 });
 
 app.get('/cms', async (req, res) => {
+  const projects = await Projects.find({}).lean()
   const publications = await Publications.find({}).lean()
   const webpImages = await fetchTravelImages()
 
@@ -57,12 +59,12 @@ app.get('/cms', async (req, res) => {
     }
   })
 
-    res.render('index', {
-      travelImages: webpImages,
-      publications: tranformedPublications,
-      projects: [],
-      title: 'CMS'
-    })
+  res.render('index', {
+    travelImages: webpImages,
+    publications: tranformedPublications,
+    projects: projects,
+    title: 'CMS'
+  })
 })
 
 app.get('/api/travel-images', async (req, res) => {
