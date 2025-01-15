@@ -11,8 +11,9 @@ import {
 
 const router = express.Router()
 
+//  API routes
 router.post('/api/add', upload.single('preview'), addProject)
-router.post('/api/edit/:id', editProject)
+router.post('/api/edit/:id', upload.single('preview'), editProject)
 router.delete('/api/delete/:id', deleteProject)
 
 // rendering routes

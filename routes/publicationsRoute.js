@@ -10,6 +10,7 @@ import {
 
 const router = express.Router()
 
+// API routes
 router.get('/api', getAllPublications)
 router.post('/api/add', addPublication)
 router.post('/api/edit/:id', editPublication)
