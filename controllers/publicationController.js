@@ -78,7 +78,7 @@ export const renderEditPublication = async (req, res) => {
     const publication = await Publication.findById(req.params.id)
     
      if (!publication) 
-      return res.status(404).send('Project not found')
+      return res.status(404).send('Publication not found')
      
      res.render('publication/editPublication', {
        publication: {
