@@ -30,9 +30,25 @@
       <label class="form-label">Preview</label>
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1"><i class="bi bi-image"></i></span>
-        <input name="preview" type="file" class="form-control">
+        <input name="preview" id="fileInput" type="file" class="form-control">
       </div>
     </div>
+  </div>
+
+  <div class="position-relative" id="project-preview" style="display: none; width: 200px; height: 200px;">
+    <img 
+      id="previewImage" 
+      class="img-thumbnail img-fluid rounded object-fit-cover" 
+      style="display: block; width: 100%; height: 100%; object-fit: cover;" 
+      alt="Image Preview"
+    >
+    
+    <!-- Remove button -->
+    <button 
+      class="btn btn-danger position-absolute top-0 end-0 rounded-circle p-1 d-flex justify-content-center align-items-center" 
+      style="transform: translate(50%, -50%); width: 35px; height: 35px;">
+      <i class="fs-5 bi bi-trash3"></i>
+    </button>
   </div>
 
   <div class="d-flex gap-2">

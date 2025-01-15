@@ -23,6 +23,27 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('addForm');
+      const fileInput = document.getElementById('fileInput')
+      const previewImage = document.getElementById('previewImage')
+      const projectPreview = document.getElementById('project-preview')
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0]
+        
+        if (file) {
+          const reader = new FileReader() 
+
+          reader.onload = function(e) {
+            previewImage.src = e.target.result
+            previewImage.style.display = 'block'
+            projectPreview.style.display = 'block'
+          }
+          
+          reader.readAsDataURL(file);
+        } else {
+           previewImage.style.display = 'none'
+        }
+      })
 
       form.addEventListener('submit', function(event) {
         event.preventDefault()
@@ -40,10 +61,37 @@
         fetch(this.action, {
           method: this.method,
           body: formData,
-        }).then(response => response.json())
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showAlert('danger', data.error)
+          } else {
+            showAlert('success', 'Publication updated successfully!')
+          }
+        }).catch(err => {
+          showAlert('danger', 'An unexpected error occurred.')
+          console.error(err)
+        })
 
       })
     })
+
+    function showAlert(type, message) {
+      const alert = document.createElement('div')
+      alert.className = `alert alert-${type} alert-dismissible fade show`
+      alert.role = 'alert'
+      alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `
+      alertContainer.appendChild(alert)
+
+      setTimeout(() => {
+        alert.classList.remove('show')
+        alert.addEventListener('transitionend', () => alert.remove())
+      }, 5000)
+    }
   </script>
 
 </body>

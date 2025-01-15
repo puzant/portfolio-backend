@@ -22,10 +22,45 @@
   <script>
      document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('addForm');
-  
+     
       form.addEventListener('submit', function(event) {
         event.preventDefault()
+
+        let isValid = true
         const formData = new URLSearchParams()
+        
+        const title = document.getElementById('title').value
+        const publishedDate = document.getElementById('publishedDate').value.trim()
+        const link = document.getElementById('link').value.trim()
+        const duration = document.getElementById('duration').value.trim()
+        const preview = document.getElementById('preview').value.trim()
+        const parsedDate = Date.parse(publishedDate)
+        
+        if (!title) {
+          document.getElementById('titleError').textContent = 'Title is required'
+          isValid = false
+        }
+        
+        if (isNaN(parsedDate)) {
+          console.log('inside')
+          document.getElementById('publishedDateError').textContent = 'Published Date is required'
+          isValid = false
+        }
+
+        if (!link) {
+          document.getElementById('linkError').textContent = 'Link is required'
+          isValid = false
+        }
+
+        if (!duration) {
+          document.getElementById('durationError').textContent = 'Duration is required'
+          isValid = false
+        }
+
+        if (!preview) {
+          document.getElementById('previewError').textContent = 'Preview is required'
+          isValid = false
+        }
 
         Array.from(form.elements).forEach(element => {
           if (element.name && element.value) {
@@ -33,7 +68,8 @@
           }
         })
 
-        fetch(this.action, {
+        if (isValid) {
+          fetch(this.action, {
           method: this.method,
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -51,6 +87,7 @@
           showAlert('danger', 'An unexpected error occurred.')
           console.error(err)
         })
+        }
       })
     })
 
