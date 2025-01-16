@@ -29,7 +29,7 @@
         let isValid = true
         const formData = new URLSearchParams()
         
-        const title = document.getElementById('title').value
+        const title = document.getElementById('title').value.trim()
         const publishedDate = document.getElementById('publishedDate').value.trim()
         const link = document.getElementById('link').value.trim()
         const duration = document.getElementById('duration').value.trim()
@@ -70,23 +70,23 @@
 
         if (isValid) {
           fetch(this.action, {
-          method: this.method,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: formData.toString(),
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            showAlert('danger', data.error)
-          } else {
-            showAlert('success', 'Publication updated successfully!')
-          }
-        }).catch(err => {
-          showAlert('danger', 'An unexpected error occurred.')
-          console.error(err)
-        })
+            method: this.method,
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString(),
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              showAlert('danger', data.error)
+            } else {
+              showAlert('success', 'Publication updated successfully!')
+            }
+          }).catch(err => {
+            showAlert('danger', 'An unexpected error occurred.')
+            console.error(err)
+          })
         }
       })
     })
