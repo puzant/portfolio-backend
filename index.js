@@ -49,7 +49,7 @@ cloudinary.config({
 
 app.get('/cms', async (req, res) => {
   const projects = await Projects.find({}).lean()
-  const publications = await Publications.find({}).lean()
+  const publications = await Publications.find({}).sort({ publishedDate: -1 }).lean()
   const webpImages = await fetchTravelImages()
 
   const tranformedPublications = publications.map(p => {
