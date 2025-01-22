@@ -1,6 +1,16 @@
 import { v2 as cloudinary } from 'cloudinary'
 import Project from "../models/project.js"
 
+export const getAllProjects = async (req, res) => {
+  try {
+    const projects = await Project.find().lean()
+    res.status(200).json(projects)
+  } catch (error) {
+    console.error('Error fetching projects:', error)
+    res.status(500).json({ error: 'Failed to fetch projects' })
+  }
+}
+
 export const addProject = async (req, res) => {
   const { name, description, link } = req.body
 
