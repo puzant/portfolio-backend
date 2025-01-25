@@ -8,7 +8,8 @@
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
-This repository contains the backend for the portfolio website. It is built using Node.js, Express, and the Cloudinary SDK to manage and serve travel-related images.
+This repository contains the backend for the portfolio website. It is built using Node.js, Express, MongoDB, EJS, and the Cloudinary SDK.
+The backend functions as a content management system (CMS) to manage and serve various types of content
 
 Access the API at `https://portfolio-backend-gq2s.onrender.com`.
 
@@ -20,6 +21,7 @@ Access the API at `https://portfolio-backend-gq2s.onrender.com`.
 | /projects/api/add  | POST    |  Create new project  | name, descrption, preview, link
 | /projects/api/edit/:id  | POST    |  Edit project  | name, descrption, preview, link
 | /projects/api/delete/:id  | DELETE    |  Delete project  | id
+| /projects/api/projects-images  | GET    |  Get projects images  | N/A
 
 **Publications**
 | **Endpoint**   | **Method**  | **Description**  | **Data Fields** |
@@ -39,6 +41,8 @@ Access the API at `https://portfolio-backend-gq2s.onrender.com`.
 ## Features
 - **Node.js**: The backend runtime environment.
 - **Express**: Lightweight and flexible web framework.
+- **MongoDB**: Database for storing and managing dynamic content.
+- **EJS Templates**: Render the views of the CMS, enabling dynamic server-side content generation.
 - **Cloudinary SDK**: Used for fetching and managing images stored in Cloudinary.
 - **Deployed on Render**: Easily accessible and scalable deployment.
 - **WebP Image Format**: Optimized image format for faster load times.
