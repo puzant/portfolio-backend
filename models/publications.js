@@ -20,6 +20,10 @@ const publicationSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true
+  },
+  lastModified: {
+    type: Date,
+    default: Date.now()
   }
 });
 
