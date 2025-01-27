@@ -3,7 +3,7 @@ import Publication from '../models/publications.js'
 
 export const getAllPublications = async (req, res) => {
   try {
-    const publications = await Publication.find()
+    const publications = await Publication.find().sort({ publishedDate: -1 }).lean()
     res.status(200).json(publications)
   } catch (error) {
     console.error('Error fetching publications:', error)
@@ -29,7 +29,7 @@ export const editPublication = async (req, res) => {
   try {
     const updatedPublication = await Publication.findByIdAndUpdate(
       id,
-      { title, publishedDate: new Date(publishedDate), link, duration, preview },
+      { title, publishedDate: new Date(publishedDate), link, duration, preview, lastModified: new Date() },
       { new: true, runValidators: true }
     )
 
@@ -85,6 +85,7 @@ export const renderEditPublication = async (req, res) => {
         _id: publication._id,
         title: publication.title, 
         publishedDate: DateTime.fromJSDate(publication.publishedDate).toFormat('yyyy-MM-dd'),
+        lastModified: DateTime.fromJSDate(publication.lastModified).toFormat('yyyy-MM-dd HH:mm:ss'),
         link: publication.link, 
         duration: publication.duration, 
         preview: publication.preview, 
