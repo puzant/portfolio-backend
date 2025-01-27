@@ -17,6 +17,14 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  public_id: {
+    type: String,
+    required: true
+  },
+  asset_id: {
+    type: String,
+    required: true
+  },
 })
 
 export default mongoose.model('Porject', projectSchema)
