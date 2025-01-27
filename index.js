@@ -10,7 +10,7 @@ import { v2 as cloudinary } from 'cloudinary'
 
 import { cache } from './cache.js'
 import { wakeupJob } from './cron.js'
-import { fetchTravelImages } from './utils.js'
+import { fetchTravelImages } from './cloudinary.js'
 import Publications from './models/publications.js'
 import Projects from './models/project.js'
 import projectsRoute from './routes/projectsRoute.js'
