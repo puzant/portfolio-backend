@@ -1,10 +1,10 @@
-<form id="<%= formId %>" action="<%= formAction %>" method="POST" class="d-flex flex-column gap-4 w-75" enctype=="multipart/form-data">
+<form id="<%= formId %>" action="<%= formAction %>" method="POST" class="d-flex flex-column gap-4 w-75" enctype="multipart/form-data">
   <div class="row">
     <div class="col-md-6">
       <label class="form-label">Name</label>
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1"><i class="bi bi-lightbulb-fill"></i></span>
-        <input name="name" type="text" class="form-control" value="">
+        <input name="name" type="text" class="form-control" value="<%= project?.name || '' %>">
       </div>
     </div>
 
@@ -12,7 +12,7 @@
       <label class="form-label">Description</label>
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1"><i class="bi bi-info-circle"></i></span>
-        <input name="description" type="text" class="form-control" value="">
+        <input name="description" type="text" class="form-control" value="<%= project?.description || '' %>">
       </div>
     </div>
   </div>
@@ -22,7 +22,7 @@
       <label class="form-label">Link</label>
       <div class="input-group mb-3">
         <span class="input-group-text" id="basic-addon1"><i class="bi bi-link-45deg"></i></span>
-        <input name="link" type="text" class="form-control" value="">
+        <input name="link" type="text" class="form-control" value="<%= project?.link || '' %>">
       </div>
     </div>
 
@@ -35,24 +35,16 @@
     </div>
   </div>
 
-  <div class="position-relative" id="project-preview" style="display: none; width: 200px; height: 200px;">
-    <img 
-      id="previewImage" 
-      class="img-thumbnail img-fluid rounded object-fit-cover" 
-      style="display: block; width: 100%; height: 100%; object-fit: cover;" 
-      alt="Image Preview"
-    >
-    
-    <!-- Remove button -->
-    <button 
-      class="btn btn-danger position-absolute top-0 end-0 rounded-circle p-1 d-flex justify-content-center align-items-center" 
-      style="transform: translate(50%, -50%); width: 35px; height: 35px;">
-      <i class="fs-5 bi bi-trash3"></i>
-    </button>
+  <%= project?.prevew || '' %>
+  <div class="position-relative" id="projectPreviewContainer" style="width: 200px; height: 200px;">
+    <img id="projectPreview" class="img-thumbnail img-fluid rounded object-fit-cover" style="width: 200px; height: 200px;" src="<%= project?.preview || '' %>" alt="">
   </div>
-
+  
   <div class="d-flex gap-2">
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary d-flex gap-2 align-items-center">
+      <div id="loadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
+      <span>Save</span>
+    </button>
     <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
   </div>
 </form>
