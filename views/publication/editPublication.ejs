@@ -13,25 +13,32 @@
     </nav>
 
     <h3><%= publication.title %></h3>
+    <a style="width: fit-content;" class="d-flex gap-1 link-offset-2 link-underline link-underline-opacity-100" href="<%= publication.link %>" target="_blank">
+      <i class="bi bi-medium"></i>
+      <p>Medium Article</p>
+    </a>
+
+    <p class="fst-italic">Last modified <%= publication.lastModified %></p>
 
     <%- include('../partials/_publicationsForm', { 
       formAction: `/publications/api/edit/${publication._id}`, 
       formId: 'editForm',
       publication 
     }) %>
-
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('editForm');
-  
+      document.getElementById('loadingIndicator').style.display = 'none'
+
       form.addEventListener('submit', function(e) {
         e.preventDefault()
         
         let isValid = true
         const formData = new URLSearchParams()
         
+        document.getElementById('loadingIndicator').style.display = 'none'
         const title = document.getElementById('title').value.trim()
         const publishedDate = document.getElementById('publishedDate').value.trim()
         const link = document.getElementById('link').value.trim()
@@ -72,6 +79,8 @@
         })
 
         if (isValid) {
+          document.getElementById('loadingIndicator').style.display = 'block'
+
           fetch(this.action, {
             method: this.method,
             body: formData,
@@ -86,6 +95,8 @@
           }).catch(err => {
             showAlert('danger', 'An unexpected error occurred.')
             console.error(err)
+          }).finally(() => {
+            document.getElementById('loadingIndicator').style.display = 'none'
           })
         }
       })
