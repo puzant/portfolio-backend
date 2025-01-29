@@ -5,8 +5,14 @@
 </head>
 
 <body>
-  <%- include('./partials/_travelImages', { travelImages: travelImages }) %>
+  <nav class="nav p-4 ">
+    <a class="nav-link active" aria-current="page" href="https://puzant.netlify.app/" target="_blank">Portfolio</a>
+    <a class="nav-link" href="#">Settings</a>
+    <a class="nav-link" href="#">Traffic</a>
+  </nav>
+  
   <%- include('./partials/_projects', { projects: projects }) %>
   <%- include('./partials/_publications', { publications: publications }) %>
+  <%- include('./partials/_travelImages', { travelImages: travelImages }) %>
 </body>
 </html>
