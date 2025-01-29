@@ -1,24 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
 
-export const deleteImageFromCloudinary = async (publicId) => {
-  cloudinary.uploader.destroy(publicId, (res) => {
-    console.log("🚀 ~ cloudinary.uploader.destroy ~ res:", res)
-  })
-}
-
-export const fetchProjectsImages = async () => {
-  try {
-    const results = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'projects',
-      max_results: 50
-    })
-
-    return results
-  } catch (err) {
-    throw new Error(`Cloudinary fetch failed: ${err.message}`);
-  }
-}
 
 export const fetchTravelImages = async () => {
   try {
