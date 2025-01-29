@@ -22,6 +22,7 @@
   <script>
      document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('addForm');
+      document.getElementById('loadingIndicator').style.display = 'none'
      
       form.addEventListener('submit', function(event) {
         event.preventDefault()
@@ -42,7 +43,6 @@
         }
         
         if (isNaN(parsedDate)) {
-          console.log('inside')
           document.getElementById('publishedDateError').textContent = 'Published Date is required'
           isValid = false
         }
@@ -69,6 +69,8 @@
         })
 
         if (isValid) {
+          document.getElementById('loadingIndicator').style.display = 'block'
+
           fetch(this.action, {
             method: this.method,
             headers: {
@@ -86,6 +88,8 @@
           }).catch(err => {
             showAlert('danger', 'An unexpected error occurred.')
             console.error(err)
+          }).finally(() => {
+            document.getElementById('loadingIndicator').style.display = 'none'
           })
         }
       })

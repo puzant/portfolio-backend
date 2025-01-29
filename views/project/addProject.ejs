@@ -15,48 +15,33 @@
     <%- include('../partials/_projectsForm', { 
       formAction: '/projects/api/add',
       formId: 'addForm',
-      publication: null,
+      project: null,
     }) %>
   
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('loadingIndicator').style.display = 'none'
+
       const form = document.getElementById('addForm');
       const fileInput = document.getElementById('fileInput')
-      const previewImage = document.getElementById('previewImage')
-      const projectPreview = document.getElementById('project-preview')
+      const projectPreviewContainer = document.getElementById('projectPreviewContainer')
+      const projectPreview = document.getElementById('projectPreview')
 
-      fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0]
-        
+      projectPreviewContainer.style.display = 'none'
+      fileInput.addEventListener('change', function(e) {
+        const [file] = fileInput.files
         if (file) {
-          const reader = new FileReader() 
-
-          reader.onload = function(e) {
-            previewImage.src = e.target.result
-            previewImage.style.display = 'block'
-            projectPreview.style.display = 'block'
-          }
-          
-          reader.readAsDataURL(file);
-        } else {
-           previewImage.style.display = 'none'
+          projectPreviewContainer.style.display = 'block'
+          projectPreview.src = URL.createObjectURL(file)
         }
       })
 
       form.addEventListener('submit', function(event) {
         event.preventDefault()
-        const formData = new FormData()
-
-        Array.from(form.elements).forEach(element => {
-        if (element.name && element.value) {
-          formData.append(element.name, element.value)
-
-          if (element.type === 'file' && element.files.length > 0) 
-            formData.append(element.name, element.files[0])
-        }
-      })
+        const formData = new FormData(form)
+        document.getElementById('loadingIndicator').style.display = 'block'
       
         fetch(this.action, {
           method: this.method,
@@ -67,13 +52,14 @@
           if (data.error) {
             showAlert('danger', data.error)
           } else {
-            showAlert('success', 'Publication updated successfully!')
+            showAlert('success', 'Project added successfully!')
           }
         }).catch(err => {
           showAlert('danger', 'An unexpected error occurred.')
           console.error(err)
+        }).finally(() => {
+          document.getElementById('loadingIndicator').style.display = 'none'
         })
-
       })
     })
 

@@ -8,9 +8,11 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/cms">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add Project</li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Project</li>
       </ol>
     </nav>
+
+    <h3><%= project.name %></h3>
 
     <%- include('../partials/_projectsForm', { 
       formAction: `/projects/api/edit/${project._id}`,
@@ -18,6 +20,73 @@
       project
     }) %>
   
-  </div>  
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      var project = <%-JSON.stringify(project)%>
+
+      let preivewChanged = false
+      const form = document.getElementById('editForm')
+      const fileInput = document.getElementById('fileInput')
+      const projectPreview = document.getElementById('projectPreview')
+      document.getElementById('loadingIndicator').style.display = 'none'
+
+      fileInput.addEventListener('change', function(e) {
+        const [file] = fileInput.files
+        if (file) {
+          preivewChanged = true
+          projectPreview.src = URL.createObjectURL(file)
+        }
+      })
+      
+      form.addEventListener('submit', function(e) {
+        e.preventDefault()
+        const formData =  new FormData(form)
+        formData.append('public_id', project.public_id)
+        formData.append('asset_id', project.asset_id)
+        formData.append('previewChanged', preivewChanged)
+
+        document.getElementById('loadingIndicator').style.display = 'block'
+
+        fetch(this.action, {
+          method: form.method,
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showAlert('danger', data.error)
+          } else {
+            showAlert('success', 'Project updated successfully!')
+          }
+        }).catch(err => {
+          showAlert('danger', 'An unexpected error occurred.')
+          console.error(err)
+        }).finally(() => {
+          document.getElementById('loadingIndicator').style.display = 'none'
+        })
+      })
+
+    })
+
+    function showAlert(type, message) {
+      const alert = document.createElement('div')
+      alert.className = `alert alert-${type} alert-dismissible fade show`
+      alert.role = 'alert'
+      alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `
+      alertContainer.appendChild(alert)
+
+      setTimeout(() => {
+        alert.classList.remove('show')
+        alert.addEventListener('transitionend', () => alert.remove())
+      }, 5000)
+    }
+  </script>
+  
 </body>
 </html>
