@@ -4,10 +4,17 @@ import Publication from '../models/publications.js'
 export const getAllPublications = async (req, res) => {
   try {
     const publications = await Publication.find().sort({ publishedDate: -1 }).lean()
-    res.status(200).json(publications)
+    res.status(200).json({
+      success: true, 
+      message: "Publications retrieved successfully",
+      count: publications.length,
+      publications: publications,
+    })
   } catch (error) {
-    console.error('Error fetching publications:', error)
-    res.status(500).json({ error: 'Failed to fetch publications' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    })
   }
 }
 
@@ -15,10 +22,17 @@ export const addPublication = async (req, res) => {
   const { title, publishedDate, link, duration, preview } = req.body
 
   try {
-    Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
-    res.status(200).json({message: 'publication created successfully!'})
+    const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
+    res.status(201).json({
+      success: true,
+      message: "Publication saved successfully",
+      publication
+    })
   } catch (err) {
-    res.status(500).json({ error: 'Internal server error' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
   }
 }
 
@@ -34,16 +48,22 @@ export const editPublication = async (req, res) => {
     )
 
     if (!updatedPublication) {
-      return res.status(404).json({ error: 'Document not found' })
+      return res.status(404).json({ 
+        success: false,
+        error: 'Publication was not found' 
+      })
     }
 
-    res.json({
-      success: 'Publication updated successfully!',
-      data: updatedPublication
+    return res.status(200).json({
+      success: true,
+      message: "Publication updated successfully",
+      updatedPublication
     })
   } catch (err) {
-    console.error('Error:', err)
-    res.status(500).json({ error: 'Internal server error' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
   }
 }
 
@@ -55,21 +75,28 @@ export const deletePublication = async (req, res) => {
       return res.status(404).json({ message: 'Publication not found' })
 
     res.status(200).json({
+      success: true,
       message: 'Publication deleted successfully', 
       publicationToDelete
     })
       
   } catch (error) {
-    console.error('Error deleting publication:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
   }
 }
 
 // Route to render the Add Publication form
 export const renderAddPublication = async (req, res) => {
-  res.render('publication/addPublication', {
-    title: 'Add Publication'
-  })
+  try {
+    res.render('publication/addPublication', {
+      title: 'Add Publication'
+    })
+  } catch (err) {
+    res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
+  }
 }
 
 // Route to render the Edit Publication form
@@ -94,7 +121,6 @@ export const renderEditPublication = async (req, res) => {
       }
     )
   } catch (err) {
-    console.error(err)
-    res.status(500).send('Server Error')
+    res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
   }
 }

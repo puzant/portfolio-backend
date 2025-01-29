@@ -4,10 +4,17 @@ import Project from "../models/project.js"
 export const getAllProjects = async (req, res) => {
   try {
     const projects = await Project.find().lean()
-    res.status(200).json(projects)
+    res.status(200).json({
+      success: true, 
+      message: "Projects retrieved successfully",
+      count: projects.length,
+      projects: projects,
+    })
   } catch (error) {
-    console.error('Error fetching projects:', error)
-    res.status(500).json({ error: 'Failed to fetch projects' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    })
   }
 }
 
@@ -24,9 +31,17 @@ export const getAllProjectsImages = async (req, res) => {
       asset_id: resource.asset_id,
     }))
 
-    res.json({ projectImages: images, success: true })
+    res.json({ 
+      success: true,
+      message: "Projects images retrieved successfully",
+      count: images.length,
+      projectImages: images, 
+     })
   } catch(err) {
-    res.status(500).json({ error: 'Internal server error' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    })
   }
 }
 
@@ -38,7 +53,7 @@ export const addProject = async (req, res) => {
       folder: 'projects'
     })
 
-    Project.create({
+    const project = await Project.create({
       name: name,
       description: description,
       preview: result.secure_url,
@@ -47,9 +62,16 @@ export const addProject = async (req, res) => {
       link: link
     })
 
-  res.status(200).json({ message: 'Project saved successfully' })
+    res.status(201).json({
+      success: true,
+      message: "Project saved successfully",
+      project
+    })
   } catch (err) {
-    res.status(500).json({ error: 'Internal server error' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
   }
 }
 
@@ -79,9 +101,10 @@ export const editProject = async (req, res) => {
         { new: true, runValidators: true }
       )
 
-      return res.json({
-        success: 'Publication updated successfully!',
-        data: updatedProject
+      return res.status(200).json({
+        success: true,
+        message: "Project updated successfully",
+        updatedProject
       })
     }
 
@@ -92,25 +115,35 @@ export const editProject = async (req, res) => {
     )
 
     if (!updatedProject) {
-      return res.status(404).json({ error: 'Document not found' })
+      return res.status(404).json({ 
+        success: false,
+        error: 'Project was not found' 
+      })
     }
 
-    res.json({
-      success: 'Publication updated successfully!',
-      data: updatedProject
+    return res.status(200).json({
+      success: true,
+      message: "Project updated successfully",
+      updatedProject
     })
   } catch (err) {
-    console.error('Error:', err)
-    res.status(500).json({ error: 'Internal server error' })
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
   }
 }
 
 export const deleteProject = async (req, res) => {}
 
 export const renderAddProject = async (req, res) => {
-  res.render('project/addProject', {
-    title: 'Add Project'
-  })
+  try {
+    res.render('project/addProject', {
+      title: 'Add Project'
+    })
+  } catch (err) {
+    res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
+  }
 }
 
 export const renderEditProject = async (req, res) => {
@@ -133,6 +166,6 @@ export const renderEditProject = async (req, res) => {
       title: 'Edit Project'
     })
   } catch (err) {
-    
+    res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
   }
 }
