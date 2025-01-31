@@ -14,7 +14,7 @@ import {
 const router = express.Router()
 
 //  API routes
-router.get('/api/', getAllProjects)
+router.get('/api', getAllProjects)
 router.get('/api/projects-images', getAllProjectsImages)
 router.post('/api/add', upload.single('preview'), addProject)
 router.post('/api/edit/:id', upload.single('preview'), editProject)
