@@ -134,7 +134,27 @@ export const editProject = async (req, res) => {
   }
 }
 
-export const deleteProject = async (req, res) => {}
+export const deleteProject = async (req, res) => {
+  try {
+    const { public_id } = req.body
+    await cloudinary.uploader.destroy(public_id)
+    const projectToDelete = await Project.findByIdAndDelete(req.params.id)
+
+    if (!projectToDelete) 
+      return res.status(404).json({ message: 'Project not found' })
+
+    res.status(200).json({
+      success: true,
+      message: 'Project deleted successfully', 
+      publicationToDelete
+    })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
+  }
+}
 
 export const renderAddProject = async (req, res) => {
   try {

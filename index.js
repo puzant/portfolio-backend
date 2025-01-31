@@ -8,13 +8,13 @@ import { DateTime } from 'luxon'
 import { fileURLToPath } from 'url'
 import { v2 as cloudinary } from 'cloudinary'
 
-import { cache } from './cache.js'
 import { wakeupJob } from './cron.js'
 import { fetchTravelImages } from './cloudinary.js'
 import Publications from './models/publications.js'
 import Projects from './models/project.js'
 import projectsRoute from './routes/projectsRoute.js'
 import publicationsRoute from './routes/publicationsRoute.js'
+import travelImagesRoute from './routes/travelImagesRoute.js'
 
 dotenv.config()
 
@@ -38,6 +38,7 @@ app.use(cors({
 
 app.use('/publications', publicationsRoute)
 app.use('/projects', projectsRoute)
+app.use('/travel-images', travelImagesRoute)
 
 wakeupJob.start()
 
@@ -65,28 +66,6 @@ app.get('/cms', async (req, res) => {
     projects: projects,
     title: 'CMS'
   })
-})
-
-app.get('/api/travel-images', async (req, res) => {
-  try {
-    const cachedImages = cache.get('travelImages')
-    
-    if (cachedImages) {
-      return res.json({ images: cachedImages, success: true })
-    }
-
-    const webpImages = await fetchTravelImages()
-
-    cache.set('travelImages', webpImages)
-    res.json({ images: webpImages, success: true })
-    
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch images from Cloudinary",
-      error: err.message,
-    });
-  }
 })
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
