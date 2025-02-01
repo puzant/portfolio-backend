@@ -146,7 +146,7 @@ export const deleteProject = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Project deleted successfully', 
-      publicationToDelete
+      projectToDelete
     })
   } catch (err) {
     res.status(500).json({
