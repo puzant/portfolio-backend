@@ -15,6 +15,7 @@ import Projects from './models/project.js'
 import projectsRoute from './routes/projectsRoute.js'
 import publicationsRoute from './routes/publicationsRoute.js'
 import travelImagesRoute from './routes/travelImagesRoute.js'
+import authRoute from './routes/authRoute.js'
 
 dotenv.config()
 
@@ -39,6 +40,7 @@ app.use(cors({
 app.use('/publications', publicationsRoute)
 app.use('/projects', projectsRoute)
 app.use('/travel-images', travelImagesRoute)
+app.use('/auth', authRoute)
 
 wakeupJob.start()
 
