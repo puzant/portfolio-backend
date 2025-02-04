@@ -6,6 +6,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import { DateTime } from 'luxon'
 import { fileURLToPath } from 'url'
+import cookieParser from 'cookie-parser'
 import { v2 as cloudinary } from 'cloudinary'
 
 import { wakeupJob } from './cron.js'
@@ -16,6 +17,7 @@ import projectsRoute from './routes/projectsRoute.js'
 import publicationsRoute from './routes/publicationsRoute.js'
 import travelImagesRoute from './routes/travelImagesRoute.js'
 import authRoute from './routes/authRoute.js'
+import AuthMiddleware from './middlewares/authMiddleware.js'
 
 dotenv.config()
 
@@ -28,6 +30,7 @@ const __dirname = path.dirname(__fileName)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
@@ -37,9 +40,9 @@ app.use(cors({
   methods: ['GET', 'POST']
 }))
 
-app.use('/publications', publicationsRoute)
-app.use('/projects', projectsRoute)
-app.use('/travel-images', travelImagesRoute)
+app.use('/publications', AuthMiddleware, publicationsRoute)
+app.use('/projects', AuthMiddleware, projectsRoute)
+app.use('/travel-images', AuthMiddleware, travelImagesRoute)
 app.use('/auth', authRoute)
 
 wakeupJob.start()
@@ -50,7 +53,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-app.get('/cms', async (req, res) => {
+app.get('/cms', AuthMiddleware, async (req, res) => {
   const projects = await Projects.find({}).lean()
   const publications = await Publications.find({}).sort({ publishedDate: -1 }).lean()
   const webpImages = await fetchTravelImages()
