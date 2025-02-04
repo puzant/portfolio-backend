@@ -1,5 +1,5 @@
 import express from 'express'
-import upload from '../multerUpload.js'
+import upload from '../middlewares/multerUpload.js'
 
 import {
   renderAddProject,
