@@ -40,9 +40,9 @@ app.use(cors({
   methods: ['GET', 'POST']
 }))
 
-app.use('/publications', AuthMiddleware, publicationsRoute)
-app.use('/projects', AuthMiddleware, projectsRoute)
-app.use('/travel-images', AuthMiddleware, travelImagesRoute)
+app.use('/publications', publicationsRoute)
+app.use('/projects', projectsRoute)
+app.use('/travel-images', travelImagesRoute)
 app.use('/auth', authRoute)
 
 wakeupJob.start()
