@@ -2,13 +2,7 @@ import jwt from 'jsonwebtoken'
 
 const authMiddleware = (req, res, next) => {
   const token = req.cookies.token
-
-  const publicRoutes = ['/api/projects', '/api/publications', '/api/travel-images'];
-
-  if (publicRoutes.includes(req.path) && process.env.FRONT_END_URL.includes(req.headers.origin)) {
-    return next()
-  }
-
+  
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized: No token provided' })
   }
