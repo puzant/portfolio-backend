@@ -159,7 +159,8 @@ export const deleteProject = async (req, res) => {
 export const renderAddProject = async (req, res) => {
   try {
     res.render('project/addProject', {
-      title: 'Add Project'
+      title: 'Add Project',
+      user: req.user
     })
   } catch (err) {
     res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
@@ -183,7 +184,8 @@ export const renderEditProject = async (req, res) => {
         public_id: project.public_id,
         asset_id: project.asset_id
       },
-      title: 'Edit Project'
+      title: 'Edit Project',
+      user: req.user
     })
   } catch (err) {
     res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
