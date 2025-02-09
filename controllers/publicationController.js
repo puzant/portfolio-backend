@@ -92,7 +92,9 @@ export const deletePublication = async (req, res) => {
 export const renderAddPublication = async (req, res) => {
   try {
     res.render('publication/addPublication', {
-      title: 'Add Publication'
+      title: 'Add Publication',
+      user: req.user
+      
     })
   } catch (err) {
     res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
@@ -117,7 +119,8 @@ export const renderEditPublication = async (req, res) => {
         duration: publication.duration, 
         preview: publication.preview, 
       },
-       title: 'Edit Publication' 
+       title: 'Edit Publication',
+      user: req.user
       }
     )
   } catch (err) {
