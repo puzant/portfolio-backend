@@ -3,7 +3,7 @@ import https from 'https'
 
 import { cache } from './cache.js'
 
-const render_backend_URL = 'https://portfolio-backend-gq2s.onrender.com/api/travel-images'
+const render_backend_URL = `${process.env.RENDER_BACKEND_URL}/travel-images/api`
 
 const onComplete = () => {
   console.log('Cron job has completed')
