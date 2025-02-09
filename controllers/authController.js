@@ -17,7 +17,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' })
     }
 
-    const payload = { userName: user.username }
+    const payload = { 
+      id: user._id,
+      username: user.name,
+      email: user.email
+     }
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
 
     res.cookie('token', token, {
@@ -40,6 +44,10 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' })
   res.status(200).json({ success: true, message: 'Logged out successfully' })
+}
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body
 }
 
 export const createUser = async (req, res) => {
