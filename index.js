@@ -13,10 +13,14 @@ import { wakeupJob } from './cron.js'
 import { fetchTravelImages } from './cloudinary.js'
 import Publications from './models/publications.js'
 import Projects from './models/project.js'
+
+//  API Routes
 import projectsRoute from './routes/projectsRoute.js'
 import publicationsRoute from './routes/publicationsRoute.js'
 import travelImagesRoute from './routes/travelImagesRoute.js'
 import authRoute from './routes/authRoute.js'
+import settingsRoute from './routes/settingsRoute.js'
+
 import AuthMiddleware from './middlewares/authMiddleware.js'
 
 dotenv.config()
@@ -29,6 +33,7 @@ const __dirname = path.dirname(__fileName)
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
+app.use(express.static('public'))
 
 app.use(cookieParser())
 app.use(express.json())
@@ -40,10 +45,12 @@ app.use(cors({
   methods: ['GET', 'POST']
 }))
 
+//  Register routes
 app.use('/publications', publicationsRoute)
 app.use('/projects', projectsRoute)
 app.use('/travel-images', travelImagesRoute)
 app.use('/auth', authRoute)
+app.use('/settings', settingsRoute)
 
 wakeupJob.start()
 
@@ -69,7 +76,8 @@ app.get('/cms', AuthMiddleware, async (req, res) => {
     travelImages: webpImages,
     publications: tranformedPublications,
     projects: projects,
-    title: 'CMS'
+    title: 'CMS',
+    user: req.user
   })
 })
 
