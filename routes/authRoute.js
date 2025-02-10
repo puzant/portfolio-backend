@@ -3,9 +3,12 @@ import { login, logout, createUser, renderLogin } from '../controllers/authContr
 
 const router = express.Router()
 
+//  API routes
 router.post('/login', login)
-router.get('/login', renderLogin)
 router.post('/logout', logout)
 router.post('/create-user', createUser)
+
+// rendering routes
+router.get('/login', renderLogin)
 
 export default router
