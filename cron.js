@@ -1,8 +1,10 @@
+import dotenv  from 'dotenv'
 import { CronJob } from 'cron'
 import https from 'https'
 
 import { cache } from './cache.js'
 
+dotenv.config()
 const render_backend_URL = `${process.env.RENDER_BACKEND_URL}/travel-images/api`
 
 const onComplete = () => {
