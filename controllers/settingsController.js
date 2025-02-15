@@ -43,15 +43,15 @@ export const updatePassword = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
   
-    const isMatch = await bcrypt.compare(oldPassword, newPassword)
+    const isMatch = await bcrypt.compare(oldPassword, user.password)
     if (!isMatch) {
-      return res.status(404).json({ message: 'Old Password is incorrect' })
+      return res.status(404).json({ success: true, message: 'Old Password is incorrect' })
     }
   
     user.password = newPassword
     await user.save()
   
-    res.status(200).json({ message: 'Password changed successfully' })  
+    res.status(200).json({ message: 'Password updated successfully' })  
   } catch (err) {
     res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
   }
