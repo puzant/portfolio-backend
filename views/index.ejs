@@ -5,14 +5,29 @@
 </head>
 
 <body>
-  <nav class="nav p-4 ">
-    <a class="nav-link active" aria-current="page" href="https://puzant.netlify.app/" target="_blank">Portfolio</a>
-    <a class="nav-link" href="#">Settings</a>
-    <a class="nav-link" href="#">Traffic</a>
-  </nav>
-  
-  <%- include('./partials/_projects', { projects: projects }) %>
-  <%- include('./partials/_publications', { publications: publications }) %>
-  <%- include('./partials/_travelImages', { travelImages: travelImages }) %>
+  <%- include('./partials/_navigation') %>
+  <%- include('./partials/_projects', { projects }) %>
+  <%- include('./partials/_publications', { publications }) %>
+  <%- include('./partials/_travelImages', { travelImages }) %>
+
+  <script>
+    const API_BASE_URL = "<%= process.env.NODE_ENV === 'production' ? 'https://portfolio-backend-gq2s.onrender.com' : 'http://localhost:3000' %>"
+
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+       fetch('/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.removeItem('name')
+          localStorage.removeItem('email')
+          window.location.href = '/auth/login'
+        }
+      })
+    })
+  </script>
+  <script src="/js/api.js"></script>
 </body>
 </html>
