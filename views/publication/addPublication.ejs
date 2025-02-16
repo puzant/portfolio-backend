@@ -2,6 +2,8 @@
 <html lang="en">
 <%- include('../partials/_head') %>
 <body>
+  <%- include('../partials/_navigation') %>
+
   <div class="p-4">
     <div id="alertContainer"></div>
 
@@ -19,16 +21,18 @@
     }) %>
   </div>
 
+  <script src="/js/alert.js"></script>
+
   <script>
      document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('addForm');
       document.getElementById('loadingIndicator').style.display = 'none'
      
-      form.addEventListener('submit', function(event) {
+      form.addEventListener('submit', async function(event) {
         event.preventDefault()
 
         let isValid = true
-        const formData = new URLSearchParams()
+        const formData = new FormData(form)
         
         const title = document.getElementById('title').value.trim()
         const publishedDate = document.getElementById('publishedDate').value.trim()
@@ -62,54 +66,29 @@
           isValid = false
         }
 
-        Array.from(form.elements).forEach(element => {
-          if (element.name && element.value) {
-            formData.append(element.name, element.value)
-          }
-        })
-
         if (isValid) {
           document.getElementById('loadingIndicator').style.display = 'block'
 
-          fetch(this.action, {
-            method: this.method,
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData.toString(),
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.error) {
-              showAlert('danger', data.error)
-            } else {
-              showAlert('success', 'Publication updated successfully!')
+          try {
+            const response = await axios({
+              url: this.action,
+              method: this.method,
+              data: Object.fromEntries(formData),
+            })
+            
+            if (response.data.success) {
+              showAlert('success', response.data.message)
+            } else if (response.data.error) {
+              showAlert('danger', response.data.error)
             }
-          }).catch(err => {
+          } catch (err) {
             showAlert('danger', 'An unexpected error occurred.')
-            console.error(err)
-          }).finally(() => {
+          } finally {
             document.getElementById('loadingIndicator').style.display = 'none'
-          })
+          }
         }
       })
     })
-
-    function showAlert(type, message) {
-      const alert = document.createElement('div')
-      alert.className = `alert alert-${type} alert-dismissible fade show`
-      alert.role = 'alert'
-      alert.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      `
-      alertContainer.appendChild(alert)
-
-      setTimeout(() => {
-        alert.classList.remove('show')
-        alert.addEventListener('transitionend', () => alert.remove())
-      }, 5000)
-    }
   </script>
 </body>
 </html>
