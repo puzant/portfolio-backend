@@ -1,10 +1,10 @@
-<div class="card w-25">
+<div class="card w-25" id="project-<%= project._id %>">
   <div class="card-body">
     <div class="d-flex justify-content-between">
       <b class="card-title"><%= project.name %></b>
       <div class="d-flex gap-4">
         <a href="projects/edit/<%= project._id %>"><i class="bi bi-pencil"></i></a>
-        <i class="bi bi-trash3 pe-auto text-danger"></i>
+        <i role="button" class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= project._id %>"></i>
       </div>
     </div>
 

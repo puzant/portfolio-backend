@@ -1,4 +1,4 @@
-<div class="p-4">
+<div class="p-4 my-2">
   <div class="d-flex align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#projectsCollapse" aria-expanded="true" aria-controls="projectsCollapse">
@@ -21,10 +21,24 @@
       <div class="d-flex gap-4">
         <% projects.forEach(project => { %>
           <%- include('../partials/_project', { project }) %>
-          
+          <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
         <% }) %>
       </div>
     </div>
   
   <% } %>
 </div>
+
+<script>
+  const deleteButtons = document.querySelectorAll(".delete-btn");
+
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async function() {
+      const projectId = button.getAttribute("data-id");
+
+      const response = await fetch(`/projects/api/delete/${projectId}`, { method: 'DELETE' })
+      if (response.success) Swal.fire({ text: "Project Deleted!", icon: "success"});
+    })
+
+  })
+</script>
