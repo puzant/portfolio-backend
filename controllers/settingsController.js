@@ -29,6 +29,31 @@ export const updateUserInfo = async (req, res) => {
   }
 }
 
+export const deleteUserAccount = async (req, res) => {
+  try {
+    const userId = req.user.id
+    const { email } = req.body
+  
+    if (!email || email !== req.user.email) {
+      return res.status(400).json({ message: "Email confirmation does not match." })
+    }
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' })
+    }
+
+    await User.findByIdAndDelete(userId)
+    res.status(200).json({ success: true, message: 'Your account has been deleted successfully.' })
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later.",
+    })
+  }
+}
+
 export const updatePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body
