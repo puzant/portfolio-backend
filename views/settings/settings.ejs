@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/_head') %>
+<body>
+  <%- include('../partials/_navigation') %>
+  <%- include('./settingsNavigation') %>
+
+  <div class="tab-content p-4 w-75" id="myTabContent">
+    <div id="alertContainer"></div>
+
+    <%- include('./userInfo', { user }) %>
+    <%- include('./securitySettings', { user }) %>
+    <%- include('./dangerZone', { user }) %>
+  </div>
+
+  <script src="/js/alert.js"></script>
+  <script src="/js/securitySettingsFormHandler.js"></script>
+  <script src="/js/userInfoFormHandler.js"></script>
+  <script src="/js/dangerZoneFormHandler.js"></script>
+</body>
+</html>
