@@ -21,8 +21,8 @@
     <div class="collapse show" id="publicationsCollapse">
       <div class="d-flex gap-4">
         <% publications.forEach(publication => { %>
-          <%- include('../partials/_deleteModal', { publication }) %>
           <%- include('../partials/_publication', { publication }) %>
+          <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
         <% }) %>
       </div>
     </div>
@@ -31,27 +31,15 @@
 </div>
 
 <script>
+  const deleteButtons = document.querySelectorAll(".delete-btn");
 
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', async function() {
+      const publicationId = button.getAttribute("data-id");
 
-  // deleteBtns.forEach((btn) => {
-  //   btn.addEventListener('click', async (e) => {
-  //     const clickBtn = e.target
-  //     const card = clickBtn.closest('.card')
-  //     const id = card.dataset.id
+      const response = await fetch(`/publications/api/delete/${publicationId}`, { method: 'DELETE' })
+      if (response.success) Swal.fire({ text: "Publication Deleted!", icon: "success"});
+    })
 
-  //     const decision = confirm("Are you sure you want to delete this item?")
-
-  //     if (decision) {
-  //       try {
-  //         const response = await fetch(`/publications/api/delete/${id}`, { method: 'DELETE' })
-  //         if (response) {
-  //           Swal.fire({ text: "Publication Deleted!", icon: "success"});
-  //         }
-  //       } catch (err) {
-          
-  //       }
-
-  //     }
-  //   })
-  // })
+  })
 </script>
