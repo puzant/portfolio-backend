@@ -1,0 +1,30 @@
+<div class="tab-pane fade show active" id="account-settings" role="tabpanel" aria-labelledby="account-settings" tabindex="0">
+  <h2>Edit User Info </h2>
+  
+  <form id="userInfo" action="settings/update-user" method="POST">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-person"></i></span>
+          <input name="name" type="text" class="form-control" value="<%= user.username %>">
+        </div>
+      </div>
+  
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope"></i></span>
+          <input name="email" type="text" class="form-control" value="<%= user.email %>">
+        </div>
+      </div>
+    </div>
+  
+    <div class="my-4">
+      <button type="submit" class="btn btn-primary d-flex gap-2 align-items-center">
+        <div id="loadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
+        <span>Save</span>
+      </button>
+    </div>
+  </form>
+</div>
