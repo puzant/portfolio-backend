@@ -1,0 +1,31 @@
+<div class="tab-pane fade" id="security-settings" role="tabpanel" aria-labelledby="security-settings" tabindex="0">
+  <h2>Change Password</h2>
+
+  <form id="securitySettings" action="settings/update-password" method="POST">
+    <div class="row">
+      <div class="col-md-12">
+        <label class="form-label">Old Password</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-key"></i></span>
+          <input name="oldPassword" type="password" class="form-control" value="">
+        </div>
+      </div>
+  
+      <div class="col-md-12">
+        <label class="form-label">New Password</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-key"></i></span>
+          <input name="newPassword" type="password" class="form-control" value="">
+        </div>
+      </div>
+    </div>
+  
+    <div class="d-flex gap-2 my-4">
+      <button type="submit" class="btn btn-primary d-flex gap-2 align-items-center">
+        <div id="securityLoadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
+        <span>Save</span>
+      </button>
+      <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+    </div>
+  </form>
+</div>
