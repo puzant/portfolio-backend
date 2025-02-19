@@ -21,13 +21,12 @@
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          localStorage.removeItem('name')
-          localStorage.removeItem('email')
           window.location.href = '/auth/login'
         }
       })
     })
   </script>
+
   <script src="/js/api.js"></script>
 </body>
 </html>
