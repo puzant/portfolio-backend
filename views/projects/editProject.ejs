@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head') %>
+<body>
+  <%- include('../partials/_navigation') %>
+
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Project</li>
+      </ol>
+    </nav>
+
+    <h3><%= project.name %></h3>
+
+    <%- include('./_projectsForm', { 
+      formAction: `/projects/api/edit/${project._id}`,
+      formId: 'editForm',
+      project
+    }) %>
+  
+  </div>
+  
+  <script src="/js/alert.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      var project = <%-JSON.stringify(project)%>
+
+      let preivewChanged = false
+      const form = document.getElementById('editForm')
+      const fileInput = document.getElementById('fileInput')
+      const projectPreview = document.getElementById('projectPreview')
+      document.getElementById('loadingIndicator').style.display = 'none'
+
+      fileInput.addEventListener('change', function(e) {
+        const [file] = fileInput.files
+        if (file) {
+          preivewChanged = true
+          projectPreview.src = URL.createObjectURL(file)
+        }
+      })
+      
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault()
+        const formData =  new FormData(form)
+        formData.append('public_id', project.public_id)
+        formData.append('asset_id', project.asset_id)
+        formData.append('previewChanged', preivewChanged)
+
+        document.getElementById('loadingIndicator').style.display = 'block'
+
+        try {
+          const response = await axios({
+            url: this.action,
+            method: this.method,
+            data: formData,
+          })
+            
+          if (response.data.success) {
+            showAlert('success', response.data.message)
+          } else if (response.data.error) {
+            showAlert('danger', response.data.error)
+          }
+        } catch (err) {
+          showAlert('danger', 'An unexpected error occurred.')
+        } finally {
+          document.getElementById('loadingIndicator').style.display = 'none'
+        }
+      })
+
+    })
+  </script>
+  
+</body>
+</html>

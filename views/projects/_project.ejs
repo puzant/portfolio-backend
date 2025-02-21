@@ -1,0 +1,16 @@
+<div class="card w-25">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <b class="card-title"><%= project.name %></b>
+      <div class="d-flex gap-4">
+        <a href="projects/edit/<%= project._id %>"><i class="bi bi-pencil"></i></a>
+        <i role="button" class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= project._id %>"></i>
+      </div>
+    </div>
+
+    <p class="card-text"><%= project.description %></p>
+    <a href="<%= project.link %>" target="_blank"><i class="bi bi-link-45deg"></i> Project Link</a>
+    <hr>
+    <img src="<%= project.preview %>" style="width: 100%; height: 100px;" class="rounded object-fit-cover" alt="">
+  </div>
+</div>
