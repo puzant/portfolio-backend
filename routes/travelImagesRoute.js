@@ -1,12 +1,13 @@
 import express from "express"
 
-import { getAllTravelImages } from '../controllers/travelImagesController.js'
+import { getAllTravelImages, addTravelImage, deleteTravelImage, renderAddTravelImage } from '../controllers/travelImagesController.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
 router.get('/api', getAllTravelImages)
-router.post('/upload-image', authMiddleware, getAllTravelImages)
-router.delete('/delete-image', authMiddleware, getAllTravelImages)
+router.post('/api/upload-image', authMiddleware, addTravelImage)
+router.delete('/api/delete-image', authMiddleware, deleteTravelImage)
+router.get('/add', authMiddleware, renderAddTravelImage)
 
 export default router
