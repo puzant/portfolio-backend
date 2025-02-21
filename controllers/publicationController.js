@@ -91,7 +91,7 @@ export const deletePublication = async (req, res) => {
 // Route to render the Add Publication form
 export const renderAddPublication = async (req, res) => {
   try {
-    res.render('publication/addPublication', {
+    res.render('publications/addPublication', {
       title: 'Add Publication',
       user: req.user
       
@@ -109,7 +109,7 @@ export const renderEditPublication = async (req, res) => {
      if (!publication) 
       return res.status(404).send('Publication not found')
      
-     res.render('publication/editPublication', {
+     res.render('publications/editPublication', {
        publication: {
         _id: publication._id,
         title: publication.title, 
