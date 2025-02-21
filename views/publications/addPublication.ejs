@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head') %>
+<body>
+  <%- include('../partials/_navigation') %>
+
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Publication</li>
+      </ol>
+    </nav>
+
+    <%- include('./_publicationsForm', { 
+      formAction: '/publications/api/add',
+      formId: 'addForm',
+      publication: null,
+    }) %>
+  </div>
+
+  <script src="/js/alert.js"></script>
+
+  <script>
+     document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addForm');
+      document.getElementById('loadingIndicator').style.display = 'none'
+     
+      form.addEventListener('submit', async function(event) {
+        event.preventDefault()
+
+        let isValid = true
+        const formData = new FormData(form)
+        
+        const title = document.getElementById('title').value.trim()
+        const publishedDate = document.getElementById('publishedDate').value.trim()
+        const link = document.getElementById('link').value.trim()
+        const duration = document.getElementById('duration').value.trim()
+        const preview = document.getElementById('preview').value.trim()
+        const parsedDate = Date.parse(publishedDate)
+        
+        if (!title) {
+          document.getElementById('titleError').textContent = 'Title is required'
+          isValid = false
+        }
+        
+        if (isNaN(parsedDate)) {
+          document.getElementById('publishedDateError').textContent = 'Published Date is required'
+          isValid = false
+        }
+
+        if (!link) {
+          document.getElementById('linkError').textContent = 'Link is required'
+          isValid = false
+        }
+
+        if (!duration) {
+          document.getElementById('durationError').textContent = 'Duration is required'
+          isValid = false
+        }
+
+        if (!preview) {
+          document.getElementById('previewError').textContent = 'Preview is required'
+          isValid = false
+        }
+
+        if (isValid) {
+          document.getElementById('loadingIndicator').style.display = 'block'
+
+          try {
+            const response = await axios({
+              url: this.action,
+              method: this.method,
+              data: Object.fromEntries(formData),
+            })
+            
+            if (response.data.success) {
+              showAlert('success', response.data.message)
+            } else if (response.data.error) {
+              showAlert('danger', response.data.error)
+            }
+          } catch (err) {
+            showAlert('danger', 'An unexpected error occurred.')
+          } finally {
+            document.getElementById('loadingIndicator').style.display = 'none'
+          }
+        }
+      })
+    })
+  </script>
+</body>
+</html>
