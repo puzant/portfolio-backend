@@ -158,7 +158,7 @@ export const deleteProject = async (req, res) => {
 
 export const renderAddProject = async (req, res) => {
   try {
-    res.render('project/addProject', {
+    res.render('projects/addProject', {
       title: 'Add Project',
       user: req.user
     })
@@ -174,7 +174,7 @@ export const renderEditProject = async (req, res) => {
     if (!project) 
       return res.status(404).send('Project not found')
   
-    res.render('project/editProject', {
+    res.render('projects/editProject', {
       project: {
         _id: project._id,
         name: project.name,

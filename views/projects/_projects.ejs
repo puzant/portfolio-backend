@@ -20,7 +20,7 @@
     <div class="collapse show" id="projectsCollapse">
       <div class="d-flex gap-4">
         <% projects.forEach(project => { %>
-          <%- include('../partials/_project', { project }) %>
+          <%- include('./_project', { project }) %>
           <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
         <% }) %>
       </div>

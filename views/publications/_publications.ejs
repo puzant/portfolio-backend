@@ -21,7 +21,7 @@
     <div class="collapse show" id="publicationsCollapse">
       <div class="d-flex gap-4">
         <% publications.forEach(publication => { %>
-          <%- include('../partials/_publication', { publication }) %>
+          <%- include('./_publication', { publication }) %>
           <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
         <% }) %>
       </div>
@@ -31,9 +31,9 @@
 </div>
 
 <script>
-  const deleteButtons = document.querySelectorAll(".delete-btn");
+  const deletePublicationDeleteBtn = document.querySelectorAll(".delete-btn");
 
-  deleteButtons.forEach(button => {
+  deletePublicationDeleteBtn.forEach(button => {
     button.addEventListener('click', async function() {
       const publicationId = button.getAttribute("data-id");
 

@@ -10,39 +10,30 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/cms">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Edit Publication</li>
+        <li class="breadcrumb-item active" aria-current="page">Add Publication</li>
       </ol>
     </nav>
 
-    <h3><%= publication.title %></h3>
-    <a style="width: fit-content;" class="d-flex gap-1 link-offset-2 link-underline link-underline-opacity-100" href="<%= publication.link %>" target="_blank">
-      <i class="bi bi-medium"></i>
-      <p>Medium Article</p>
-    </a>
-
-    <p class="fst-italic">Last modified <%= publication.lastModified %></p>
-
-    <%- include('../partials/_publicationsForm', { 
-      formAction: `/publications/api/edit/${publication._id}`, 
-      formId: 'editForm',
-      publication 
+    <%- include('./_publicationsForm', { 
+      formAction: '/publications/api/add',
+      formId: 'addForm',
+      publication: null,
     }) %>
   </div>
 
   <script src="/js/alert.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('editForm');
+     document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addForm');
       document.getElementById('loadingIndicator').style.display = 'none'
+     
+      form.addEventListener('submit', async function(event) {
+        event.preventDefault()
 
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault()
-        
         let isValid = true
         const formData = new FormData(form)
         
-        document.getElementById('loadingIndicator').style.display = 'none'
         const title = document.getElementById('title').value.trim()
         const publishedDate = document.getElementById('publishedDate').value.trim()
         const link = document.getElementById('link').value.trim()

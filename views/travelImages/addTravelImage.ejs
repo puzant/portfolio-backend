@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/_head') %>
+<body>
+  <%- include('../partials/_navigation') %>
+
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Travel Image</li>
+      </ol>
+    </nav>
+
+    <form id="travelImagesForm" action="/travel-images/api/add" method="POST">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">Upload Image</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="bi bi-image"></i></span>
+            <input name="travelImage" id="travelImageInput" type="file" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="position-relative" id="travelImagePreviewContainer" style="width: 200px; height: 200px;">
+        <img id="travelImagePreview" class="img-thumbnail img-fluid rounded object-fit-cover" style="width: 200px; height: 200px;" src="" alt="">
+      </div>
+
+      <div class="d-flex gap-2 my-2">
+        <button type="submit" class="btn btn-primary d-flex gap-2 align-items-center">
+          <div id="loadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
+          <span>Save</span>
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+      </div>
+    </form>
+
+  </div>
+
+  <script src="/js/alert.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(e) {
+      const form = document.getElementById('travelImagesForm')
+      console.log(form)
+      const loadingIndicator = document.getElementById('loadingIndicator')
+      const fileInput = document.getElementById('travelImageInput')
+      const travelImagePreviewContainer = document.getElementById('travelImagePreviewContainer')
+      const travelImagePreview = document.getElementById('travelImagePreview')
+
+      loadingIndicator.style.display = 'none'
+
+      travelImagePreviewContainer.style.display = 'none'
+      fileInput.addEventListener('change', function(e) {
+        const file = fileInput.files[0]
+        travelImagePreview.src = URL.createObjectURL(file)
+        travelImagePreviewContainer.style.display = 'block'
+      })
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault()
+        const formData = new FormData(form)
+        loadingIndicator.style.display = 'block'
+
+        try {
+          const response = await axios({
+            url: this.action,
+            method: this.method,
+            data: formData
+          })
+          
+          if (response.data.success) {
+            showAlert('success', response.data.message)
+          }
+        } catch (err) {
+          showAlert('danger', err.response.data.message)
+        } finally {
+          loadingIndicator.style.display = 'none'
+        }
+      })
+
+
+      
+    })
+  </script>
+
+</body>
+</html>
