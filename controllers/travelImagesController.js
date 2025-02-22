@@ -22,7 +22,6 @@ export const getAllTravelImages = async (req, res) => {
 }
 
 export const addTravelImage = async (req, res) => {
-  console.log(req.file)
   try {
     const response = await uploadTravelImage(req.file.path)
     if (response.secure_url) {
@@ -32,7 +31,6 @@ export const addTravelImage = async (req, res) => {
       })
     }
   } catch (err) {
-    console.log(err)
     res.status(500).json({
       success: false,
       message: "Internal server error. Please try again later."
