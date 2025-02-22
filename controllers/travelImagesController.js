@@ -1,5 +1,5 @@
 import { cache } from '../cache.js'
-import { fetchTravelImages, removeTravelImage } from '../cloudinary.js'
+import { fetchTravelImages, removeTravelImage, uploadTravelImage } from '../cloudinary.js'
 
 export const getAllTravelImages = async (req, res) => {
   try {
@@ -22,7 +22,22 @@ export const getAllTravelImages = async (req, res) => {
 }
 
 export const addTravelImage = async (req, res) => {
-
+  console.log(req.file)
+  try {
+    const response = await uploadTravelImage(req.file.path)
+    if (response.secure_url) {
+      res.status(201).json({
+        success: true,
+        message: "Travel Image saved successfully",
+      })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
+  }
 }
 
 export const deleteTravelImage = async (req, res) => {
