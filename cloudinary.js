@@ -21,6 +21,14 @@ export const fetchTravelImages = async () => {
   return webpImages
 }
 
+export const uploadTravelImage = async (filePath) => {
+  const result = await cloudinary.uploader.upload(filePath, {
+    folder: 'travels',
+  })
+
+  return result
+}
+
 export const removeTravelImage = async (publicId) => {
   const result = await cloudinary.uploader.destroy(publicId)
   
