@@ -30,7 +30,7 @@ export const uploadTravelImage = async (filePath) => {
 }
 
 export const removeTravelImage = async (publicId) => {
-  const result = await cloudinary.uploader.destroy(publicId)
+  const result = await cloudinary.uploader.destroy('travels/' + publicId)
   
   return result
 }
