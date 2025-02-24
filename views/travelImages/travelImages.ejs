@@ -1,4 +1,6 @@
 <div class="p-4">
+  <div id="alertContainer"></div>
+
   <div class="d-flex align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#travelImagesCollapse" aria-expanded="true" aria-controls="travelImagesCollapse">
@@ -23,10 +25,10 @@
           <div class="position-relative d-flex flex-column" id="<%= image.public_id %>" >
             <img class="img-thumbnail rounded" style=" object-fit: cover; width: 177px; height: 177px" src="<%= image.url %>" alt="">
             <div role="button" class="position-absolute top end-0 rounded bg-white p-1">
-              <i class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= image.public_id.slice(8,-1) %>"></i>
+              <i class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= image.public_id.slice(8, image.public_id.length) %>"></i>
             </div>
           </div>
-          <%- include('../partials/_deleteModal', { data: {_id: image.public_id.slice(8,-1), ...image}, type: 'Travel Image' }) %>
+          <%- include('../partials/_deleteModal', { data: {_id: image.public_id.slice(8, image.public_id.length), ...image}, type: 'Travel Image' }) %>
         <% }) %>
       </div>
     </div>
@@ -39,11 +41,16 @@
   travelImagesDeleteBtns.forEach(button => {
     button.addEventListener('click', async function() {
       const travelImageId = button.getAttribute("data-id");
-      console.log("🚀 ~ button.addEventListener ~ travelImageId:", )
-      // 'travels/' + travelImageId
 
-      // const response = await fetch(`/projects/api/delete/${projectId}`, { method: 'DELETE' })
-      // if (response.success) Swal.fire({ text: "Project Deleted!", icon: "success"});
+      try {
+        const response = await axios({
+          url: `/travel-images/api/remove/${travelImageId}`,
+          method: 'delete',
+        })
+        showAlert('success', response.data.message)
+      } catch (err) {
+        showAlert('danger', 'An unexpected error occurred.')
+      }
     })
 
   })

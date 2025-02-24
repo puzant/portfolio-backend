@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.get('/api', getAllTravelImages)
 router.post('/api/add', authMiddleware, upload.single('travelImage'), addTravelImage)
-router.delete('/api/remove', authMiddleware, deleteTravelImage)
+router.delete('/api/remove/:id', authMiddleware, deleteTravelImage)
 router.get('/add', authMiddleware, renderAddTravelImage)
 
 export default router

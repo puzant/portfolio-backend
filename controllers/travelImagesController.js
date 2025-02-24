@@ -39,12 +39,25 @@ export const addTravelImage = async (req, res) => {
 }
 
 export const deleteTravelImage = async (req, res) => {
-  const { publicId } = req.body
-  if (!publicId) {
+  const { id } = req.params
+  if (!id) {
     return res.status(400).json({ success: false, message: "No publicId provided" })
   }
 
-  const response = await removeTravelImage(publicId)
+  try {
+    const response = await removeTravelImage(id)
+    if (response.result === 'ok') {
+      res.status(200).json({
+        success: true,
+        message: "Travel Image deleted successfully",
+      })
+    }
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again later."
+    })
+  }
 }
 
 export const renderAddTravelImage = async (req, res) => {
