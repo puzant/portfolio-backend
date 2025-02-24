@@ -10,7 +10,7 @@ export const fetchTravelImages = async () => {
   const webpImages = result.resources.map(resource => ({
     url: cloudinary.url(resource.public_id, {
       transformation: [
-        { width: 384, height: 288, crop: 'fill', format: 'webp', quality: 'auto' }
+        { width: 384, crop: 'fill', format: 'webp', quality: 'auto' }
       ],
     }),
     display_name: resource.display_name,
