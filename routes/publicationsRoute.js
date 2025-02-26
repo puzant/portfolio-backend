@@ -7,10 +7,10 @@ const router = express.Router()
 const publicationController = new PublicationController(logger)
 
 // API routes
-router.get('/api', publicationController.getAllPublications.bind(publicationController))
-router.post('/api/add', authMiddleware, publicationController.addPublication.bind(publicationController))
-router.post('/api/edit/:id', authMiddleware, publicationController.editPublication.bind(publicationController))
-router.delete('/api/delete/:id', authMiddleware, publicationController.deletePublication.bind(publicationController))
+router.get('/api', publicationController.getAllPublications)
+router.post('/api/add', authMiddleware, publicationController.addPublication)
+router.post('/api/edit/:id', authMiddleware, publicationController.editPublication)
+router.delete('/api/delete/:id', authMiddleware, publicationController.deletePublication)
 
 // rendering routes
 router.get('/add', authMiddleware, publicationController.renderAddPublication)
