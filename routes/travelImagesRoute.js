@@ -1,14 +1,16 @@
 import express from "express"
 
-import { getAllTravelImages, addTravelImage, deleteTravelImage, renderAddTravelImage } from '../controllers/travelImagesController.js'
+import TravelImagesController from '../controllers/travelImagesController.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 import upload from "../middlewares/multerUpload.js"
+import logger from '../logger.js'
 
 const router = express.Router()
+const travelImagesController = new TravelImagesController(logger)
 
-router.get('/api', getAllTravelImages)
-router.post('/api/add', authMiddleware, upload.single('travelImage'), addTravelImage)
-router.delete('/api/remove/:id', authMiddleware, deleteTravelImage)
-router.get('/add', authMiddleware, renderAddTravelImage)
+router.get('/api', travelImagesController.getAllTravelImages)
+router.post('/api/add', authMiddleware, upload.single('travelImage'), travelImagesController.addTravelImage)
+router.delete('/api/remove/:id', authMiddleware, travelImagesController.deleteTravelImage)
+router.get('/add', authMiddleware, travelImagesController.renderAddTravelImage)
 
 export default router
