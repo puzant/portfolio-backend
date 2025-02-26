@@ -4,6 +4,10 @@ import Publication from '../models/publications.js'
 class PublicationController {
   constructor(logger) {
     this.logger = logger
+    this.getAllPublications = this.getAllPublications.bind(this)
+    this.addPublication = this.addPublication.bind(this)
+    this.editPublication = this.editPublication.bind(this)
+    this.deletePublication = this.deletePublication.bind(this)
   }
 
   async getAllPublications (req, res) {
