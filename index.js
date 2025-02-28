@@ -10,7 +10,7 @@ import cookieParser from 'cookie-parser'
 import { v2 as cloudinary } from 'cloudinary'
 
 import { wakeupJob } from './cron.js'
-import { fetchTravelImages } from './cloudinary.js'
+import cloudinaryService from './cloudinary.js'
 import Publications from './models/publications.js'
 import Projects from './models/project.js'
 
@@ -63,7 +63,7 @@ cloudinary.config({
 app.get('/cms', AuthMiddleware, async (req, res) => {
   const projects = await Projects.find({}).lean()
   const publications = await Publications.find({}).sort({ publishedDate: -1 }).lean()
-  const webpImages = await fetchTravelImages()
+  const webpImages = await cloudinaryService.fetchTravelImages()
 
   const tranformedPublications = publications.map(p => {
     return {
