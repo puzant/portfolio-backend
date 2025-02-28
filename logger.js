@@ -11,7 +11,7 @@ class Logger {
 
   logError(error) {
     const timestamp = this.getTimeStamp()
-    const stack = error.stack.split('\n').slice(0, 5).join('\n');
+    const stack = error.stack ? error.stack.split('\n').slice(0, 5).join('\n') : 'No stack trace available';
     const logMessage = `\n[${timestamp}] [ERROR] ${error.message}\n\n${stack}\n`;
 
     console.error(logMessage)
