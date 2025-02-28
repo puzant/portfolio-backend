@@ -8,10 +8,9 @@
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
-This repository contains the backend for the portfolio website. It is built using Node.js, Express, MongoDB, EJS, and the Cloudinary SDK.
-The backend functions as a content management system (CMS) to manage and serve various types of content
+This project is a backend system built using Node.js, Express, and MongoDB to manage projects, publications, and associated media. It includes features like CRUD operations, user authentication, file uploads with Cloudinary integration, caching with Node-cache, and a server-side rendered CMS using EJS templates. This backend system is designed with modern software development practices like MVC, dependency injection, and design patterns to ensure maintainability and scalability.
 
-Access the API at `https://portfolio-backend-gq2s.onrender.com`.
+Access the API at `https://portfolio-backend-gq2s.onrender.com/cms`.
 
 ## API Endpoints
 **Projects**
@@ -32,22 +31,23 @@ Access the API at `https://portfolio-backend-gq2s.onrender.com`.
 | /publications/api/delete/:id  | DELETE    |  Delete publication  | id
 
 **Travel Images**
-| **Endpoint**   | **Method**  | **Description**  |
-| -------- | ------- | ------- |
-| /travel-images/api  | GET    |  Get all travel images |
-| /travel-images/api/add  | POST    | Add new travel image |
-| /travel-images/api/delete/:imageName  | DELETE |  Delete travel image  |
+| **Endpoint**   | **Method**  | **Description**  | **Data Fields** |
+| -------- | ------- | ------- | ------ |
+| /travel-images/api  | GET    |  Get all travel images | N/A
+| /travel-images/api/add  | POST    | Add new travel image | N/A
+| /travel-images/api/delete/:id  | DELETE |  Delete travel image  | N/A
 
 ## Features
 - **Node.js**: The backend runtime environment.
 - **Express**: Lightweight and flexible web framework.
 - **MongoDB**: Database for storing and managing dynamic content.
 - **EJS Templates**: Render the views of the CMS, enabling dynamic server-side content generation.
+- **CRUD operations**: Get/ Add / Edit / Delete over projects, publications, travel images
 - **Cloudinary SDK**: Used for fetching and managing images stored in Cloudinary.
 - **Deployed on Render**: Easily accessible and scalable deployment.
 - **WebP Image Format**: Optimized image format for faster load times.
 - **Cron Job**: Set to run every 13 minutes, sending an HTTP request to the API to prevent it from entering hibernation mode.
-- **Node Cache:** Caches Cloudinary images with a 12-hour TTL, improving performance and reducing redundant requests.
+- **Node Cache**: Caches Cloudinary images with a 12-hour TTL, improving performance and reducing redundant requests.
 
 ## Dependencies
 - **Node.js**: Runtime environment
