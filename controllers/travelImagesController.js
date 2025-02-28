@@ -1,9 +1,9 @@
 import { cache } from '../cache.js'
-import { fetchTravelImages, removeTravelImage, uploadTravelImage } from '../cloudinary.js'
 
 class TravelImagesController {
-  constructor(logger) {
+  constructor(logger, cloudinaryService) {
     this.logger = logger
+    this.cloudinaryService = cloudinaryService
     this.getAllTravelImages = this.getAllTravelImages.bind(this)
     this.addTravelImage = this.addTravelImage.bind(this)
     this.deleteTravelImage = this.deleteTravelImage.bind(this)
@@ -17,7 +17,7 @@ class TravelImagesController {
         return res.json({ images: cachedImages, success: true })
       }
   
-      const webpImages = await fetchTravelImages()
+      const webpImages = await this.cloudinaryService.fetchTravelImages()
       cache.set('travelImages', webpImages)
       res.json({ images: webpImages, success: true })
     } catch (error) {
@@ -32,7 +32,7 @@ class TravelImagesController {
 
   async addTravelImage(req, res) {
     try {
-      const response = await uploadTravelImage(req.file.path)
+      const response = await this.cloudinaryService.uploadTravelImage(req.file.path)
       if (response.secure_url) {
         res.status(201).json({
           success: true,
@@ -55,7 +55,7 @@ class TravelImagesController {
     }
   
     try {
-      const response = await removeTravelImage(id)
+      const response = await this.cloudinaryService.removeTravelImage(id)
       if (response.result === 'ok') {
         res.status(200).json({
           success: true,
