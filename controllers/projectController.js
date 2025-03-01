@@ -59,7 +59,14 @@ class ProjectController {
   
   async addProject(req, res) {
     const { name, description, link } = req.body
-  
+    
+    if (!name || !description || !link) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required: name, description, link"
+      })
+    }
+
     try {
       const result = await cloudinary.uploader.upload(req.file.path, {
         folder: 'projects'
@@ -92,6 +99,13 @@ class ProjectController {
     const { id } = req.params
     const { name, description, preview, link, public_id, asset_id, previewChanged } = req.body
   
+    if (!name || !description || !link) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required: name, description, link"
+      })
+    }
+    
     try {
       const isPreviewChanged = (previewChanged === 'true');
   
