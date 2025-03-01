@@ -11,7 +11,8 @@
 This project is a backend system built using Node.js, Express, and MongoDB to manage projects, publications, and associated media. It includes features like CRUD operations, user authentication, file uploads with Cloudinary integration, caching with Node-cache, and a server-side rendered CMS using EJS templates. This backend system is designed with modern software development practices like MVC, dependency injection, and design patterns to ensure maintainability and scalability.
 
 Access the API at `https://portfolio-backend-gq2s.onrender.com/cms`.
-![app-screenshot](./public/app-preview.png)
+
+![app-screenshot](./public/assets/app-preview.png)
 
 ## API Endpoints
 **Projects**
