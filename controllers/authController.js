@@ -15,8 +15,12 @@ class AuthController {
   }
 
   async login(req, res) {
+    const { email, password } = req.body
+
     try {
-      const { email, password } = req.body
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" })
+      }
       const user = await User.findOne({ email })
   
       if (!user) {
@@ -125,6 +129,10 @@ class AuthController {
     const { email, password, name } = req.body
   
     try {
+      if (!email || !password || !name) {
+        return res.status(400).json({ message: "Email and password, and Name fields are required" });
+      }
+
       const existingUser = await User.findOne({ email })
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" })
