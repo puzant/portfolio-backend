@@ -105,7 +105,7 @@ class ProjectController {
         message: "All fields are required: name, description, link"
       })
     }
-    
+
     try {
       const isPreviewChanged = (previewChanged === 'true');
   
@@ -163,8 +163,16 @@ class ProjectController {
   }
 
   async deleteProject(req, res) {
+    const { public_id } = req.body
+
+    if (!public_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Project public ID is required"
+      })
+    }
+
     try {
-      const { public_id } = req.body
       await cloudinary.uploader.destroy(public_id)
       const projectToDelete = await Project.findByIdAndDelete(req.params.id)
   
