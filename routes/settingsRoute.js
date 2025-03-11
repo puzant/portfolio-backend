@@ -1,10 +1,9 @@
 import express from "express"
 import SettingsController from "../controllers/settingsController.js"
 import authMiddleware from '../middlewares/authMiddleware.js'
-import logger from '../logger.js'
 
 const router = express.Router()
-const settingsController = new SettingsController(logger)
+const settingsController = new SettingsController()
 
 router.post('/update-user', authMiddleware, settingsController.updateUserInfo)
 router.post('/update-password', authMiddleware, settingsController.updatePassword)

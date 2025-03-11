@@ -1,10 +1,9 @@
 import express from 'express'
 import PublicationController from '../controllers/publicationController.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
-import logger from '../logger.js'
 
 const router = express.Router()
-const publicationController = new PublicationController(logger)
+const publicationController = new PublicationController()
 
 // API routes
 router.get('/api', publicationController.getAllPublications)
