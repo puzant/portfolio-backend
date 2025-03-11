@@ -1,57 +1,45 @@
 import { DateTime } from 'luxon'
+import asyncHandler from 'express-async-handler'
 import Publication from '../models/publications.js'
+import AppError from '../appError.js'
 
 class PublicationController {
-  constructor(logger) {
-    this.logger = logger
+  constructor() {
     this.getAllPublications = this.getAllPublications.bind(this)
     this.addPublication = this.addPublication.bind(this)
     this.editPublication = this.editPublication.bind(this)
     this.deletePublication = this.deletePublication.bind(this)
+
+    this.getAllPublications = asyncHandler(this.getAllPublications)
+    this.addPublication = asyncHandler(this.addPublication)
+    this.editPublication = asyncHandler(this.editPublication)
+    this.deletePublication = asyncHandler(this.deletePublication)
   }
 
   async getAllPublications (req, res) {
-    try {
-      const publications = await Publication.find().sort({ publishedDate: -1 }).lean()
-      res.status(200).json({
-        success: true, 
-        message: "Publications retrieved successfully",
-        count: publications.length,
-        publications: publications,
-      })
-    } catch (error) {
-      this.logger.logError(error)
-      res.status(500).json({
-        success: false,
-        message: "Internal server error. Please try again later.",
-      })
-    }
+    const publications = await Publication.find().sort({ publishedDate: -1 }).lean()
+    
+    res.status(200).json({
+      success: true, 
+      message: "Publications retrieved successfully",
+      count: publications.length,
+      publications: publications,
+    })
   }
 
   async addPublication(req, res) {  
     const { title, publishedDate, link, duration, preview } = req.body
   
     if (!title || !publishedDate || !link || !duration || !preview) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required: title, publishedDate, link, duration, preview"
-      })
+      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
     }
 
-    try {
-      const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
-      res.status(201).json({
-        success: true,
-        message: "Publication saved successfully",
-        publication
-      })
-    } catch (err) {
-      logger.logError(err)
-      res.status(500).json({
-        success: false,
-        message: "Internal server error. Please try again later."
-      })
-    }
+    const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
+    res.status(201).json({
+      success: true,
+      message: "Publication saved successfully",
+      publication
+    })
   }
 
   async editPublication(req, res) {
@@ -59,60 +47,38 @@ class PublicationController {
     const { title, publishedDate, link, duration, preview } = req.body
   
     if (!title || !publishedDate || !link || !duration || !preview) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required: title, publishedDate, link, duration, preview"
-      })
+      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
     }
 
-    try {
-      const updatedPublication = await Publication.findByIdAndUpdate(
-        id,
-        { title, publishedDate: new Date(publishedDate), link, duration, preview, lastModified: new Date() },
-        { new: true, runValidators: true }
-      )
+    const updatedPublication = await Publication.findByIdAndUpdate(
+      id,
+      { title, publishedDate: new Date(publishedDate), link, duration, preview, lastModified: new Date() },
+      { new: true, runValidators: true }
+    )
   
-      if (!updatedPublication) {
-        return res.status(404).json({ 
-          success: false,
-          error: 'Publication was not found' 
-        })
-      }
-  
-      return res.status(200).json({
-        success: true,
-        message: "Publication updated successfully",
-        updatedPublication
-      })
-    } catch (err) {
-      logger.logError(err)
-      res.status(500).json({
-        success: false,
-        message: "Internal server error. Please try again later."
-      })
+    if (!updatedPublication) {
+      throw new AppError("Publication was not found", 404)
     }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Publication updated successfully",
+      updatedPublication
+    })
   }
 
   async deletePublication(req, res) {
-    try {
-      const publicationToDelete = await Publication.findByIdAndDelete(req.params.id)
+    const publicationToDelete = await Publication.findByIdAndDelete(req.params.id)
   
-      if (!publicationToDelete) 
-        return res.status(404).json({ message: 'Publication not found' })
-  
-      res.status(200).json({
-        success: true,
-        message: 'Publication deleted successfully', 
-        publicationToDelete
-      })
-        
-    } catch (error) {
-      logger.logError(err)
-      res.status(500).json({
-        success: false,
-        message: "Internal server error. Please try again later."
-      })
+    if (!publicationToDelete) {
+      throw new AppError("Publication not found", 404)
     }
+  
+    res.status(200).json({
+      success: true,
+      message: 'Publication deleted successfully', 
+      publicationToDelete
+    })
   }
 
   // Route to render the Add Publication form
