@@ -52,10 +52,7 @@ class ProjectController {
   async addProject(req, res) {
     const { name, description, link } = req.body
     
-    if (!name || !description || !link) {
-      throw new AppError("All fields are required: name, description, link", 400)
-    }
-
+    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", 400)
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: 'projects'
     })
@@ -80,10 +77,7 @@ class ProjectController {
     const { id } = req.params
     const { name, description, preview, link, public_id, asset_id, previewChanged } = req.body
   
-    if (!name || !description || !link) {
-      throw new AppError("All fields are required: name, description, link", 400)
-    }
-
+    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", 400)
     const isPreviewChanged = (previewChanged === 'true')
   
     if (isPreviewChanged) {
@@ -118,9 +112,7 @@ class ProjectController {
       { new: true, runValidators: true }
     )
   
-    if (!updatedProject) {
-      throw new AppError("Project was not found", 404)
-    }
+    if (!updatedProject) throw new AppError("Project was not found", 404)
   
     return res.status(200).json({
       success: true,
@@ -132,16 +124,12 @@ class ProjectController {
   async deleteProject(req, res) {
     const { public_id } = req.body
 
-    if (!public_id) {
-      throw new AppError("Project public ID is required", 400)
-    }
+    if (!public_id) throw new AppError("Project public ID is required", 400)
 
     await cloudinary.uploader.destroy(public_id)
     const projectToDelete = await Project.findByIdAndDelete(req.params.id)
-  
-    if (!projectToDelete) {
-      throw new AppError("Project not found", 404)
-    }
+
+    if (!projectToDelete) throw new AppError("Project not found", 404)
   
     res.status(200).json({
       success: true,
@@ -165,8 +153,7 @@ class ProjectController {
     try {
       const project = await Project.findById(req.params.id)
   
-      if (!project) 
-        return res.status(404).send('Project not found')
+      if (!project) return res.status(404).send('Project not found')
     
       res.render('projects/editProject', {
         project: {

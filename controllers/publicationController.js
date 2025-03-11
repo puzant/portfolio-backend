@@ -30,9 +30,8 @@ class PublicationController {
   async addPublication(req, res) {  
     const { title, publishedDate, link, duration, preview } = req.body
   
-    if (!title || !publishedDate || !link || !duration || !preview) {
+    if (!title || !publishedDate || !link || !duration || !preview) 
       throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
-    }
 
     const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
     res.status(201).json({
@@ -46,9 +45,8 @@ class PublicationController {
     const { id } = req.params
     const { title, publishedDate, link, duration, preview } = req.body
   
-    if (!title || !publishedDate || !link || !duration || !preview) {
+    if (!title || !publishedDate || !link || !duration || !preview)
       throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
-    }
 
     const updatedPublication = await Publication.findByIdAndUpdate(
       id,
@@ -56,9 +54,7 @@ class PublicationController {
       { new: true, runValidators: true }
     )
   
-    if (!updatedPublication) {
-      throw new AppError("Publication was not found", 404)
-    }
+    if (!updatedPublication) throw new AppError("Publication was not found", 404)
   
     return res.status(200).json({
       success: true,
@@ -70,9 +66,7 @@ class PublicationController {
   async deletePublication(req, res) {
     const publicationToDelete = await Publication.findByIdAndDelete(req.params.id)
   
-    if (!publicationToDelete) {
-      throw new AppError("Publication not found", 404)
-    }
+    if (!publicationToDelete) throw new AppError("Publication not found", 404)
   
     res.status(200).json({
       success: true,
@@ -98,8 +92,7 @@ class PublicationController {
     try {
       const publication = await Publication.findById(req.params.id)
     
-      if (!publication) 
-        return res.status(404).send('Publication not found')
+      if (!publication) return res.status(404).send('Publication not found')
      
       res.render('publications/editPublication', {
          publication: {

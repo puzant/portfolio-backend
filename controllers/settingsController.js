@@ -23,9 +23,7 @@ class SettingsController {
       runValidators: true 
     })
   
-    if (!updatedUser) {
-      throw new Error("User not found", 404)
-    }
+    if (!updatedUser) throw new Error("User not found", 404)
   
     res.status(200).json({
       success: true, 
@@ -38,14 +36,10 @@ class SettingsController {
     const userId = req.user.id
     const { email } = req.body
     
-    if (!email || email !== req.user.email) {
-      throw new AppError("Email confirmation does not match", 400)
-    }
+    if (!email || email !== req.user.email) throw new AppError("Email confirmation does not match", 400)
   
     const user = await User.findById(userId)
-    if (!user) {
-      throw new AppError("User not found", 404)
-    }
+    if (!user) throw new AppError("User not found", 404)
   
     await User.findByIdAndDelete(userId)
     res.status(200).json({ success: true, message: 'Your account has been deleted successfully.' })
@@ -55,19 +49,13 @@ class SettingsController {
     const { oldPassword, newPassword } = req.body
     const userId = req.user.id
     
-    if (!oldPassword || !newPassword) {
-      throw new AppError("Old password and new password fields are required", 400)
-    }
+    if (!oldPassword || !newPassword) throw new AppError("Old password and new password fields are required", 400)
     
     const user = await User.findById(userId)
-    if (!user) {
-      throw new AppError("User not found", 400)
-    }
+    if (!user) throw new AppError("User not found", 400)
     
     const isMatch = await bcrypt.compare(oldPassword, user.password)
-    if (!isMatch) {
-      throw new AppError("Old password is incorrect", 400)
-    }
+    if (!isMatch) throw new AppError("Old password is incorrect", 400)
 
     user.password = newPassword
     await user.save()

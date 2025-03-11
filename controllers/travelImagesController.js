@@ -16,9 +16,7 @@ class TravelImagesController {
 
   async getAllTravelImages(req, res) {
     const cachedImages = cache.get('travelImages')
-    if (cachedImages) {
-      return res.json({ images: cachedImages, success: true })
-    }
+    if (cachedImages) return res.json({ images: cachedImages, success: true })
   
     const webpImages = await this.cloudinaryService.fetchTravelImages()
     cache.set('travelImages', webpImages)
@@ -37,9 +35,7 @@ class TravelImagesController {
 
   async deleteTravelImage(req, res) {
     const { id } = req.params
-    if (!id) {
-      throw new AppError("No publicId provided", 400)
-    }
+    if (!id) throw new AppError("No publicId provided", 400)
   
     const response = await this.cloudinaryService.removeTravelImage(id)
     if (response.result === 'ok') {
