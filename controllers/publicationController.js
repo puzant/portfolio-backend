@@ -5,15 +5,10 @@ class PublicationController {
   constructor() {
     this.publicationService = new PublicationService()
 
-    this.getAllPublications = this.getAllPublications.bind(this)
-    this.addPublication = this.addPublication.bind(this)
-    this.editPublication = this.editPublication.bind(this)
-    this.deletePublication = this.deletePublication.bind(this)
-
-    this.getAllPublications = asyncHandler(this.getAllPublications)
-    this.addPublication = asyncHandler(this.addPublication)
-    this.editPublication = asyncHandler(this.editPublication)
-    this.deletePublication = asyncHandler(this.deletePublication)
+    this.getAllPublications = asyncHandler(this.getAllPublications.bind(this))
+    this.addPublication = asyncHandler(this.addPublication.bind(this))
+    this.editPublication = asyncHandler(this.editPublication.bind(this))
+    this.deletePublication = asyncHandler(this.deletePublication.bind(this))
   }
 
   async getAllPublications (req, res) {
