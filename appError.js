@@ -1,3 +1,5 @@
+import { StatusCodes } from 'http-status-codes'
+
 class AppError extends Error {
   constructor(message, statusCode) {
     super(message)
@@ -10,11 +12,11 @@ class AppError extends Error {
 
   getErrorType(statusCode) {
     const statusTypeMap = {
-      400: 'Validation Error',
-      401: 'Unauthorized Error',
-      403: 'Forbidden Error',
-      404: 'Not Found Error',
-      500: 'Internal Error'
+      [StatusCodes.BAD_REQUEST]: 'Validation Error',
+      [StatusCodes.UNAUTHORIZED]: 'Unauthorized Error',
+      [StatusCodes.FORBIDDEN]: 'Forbidden Error',
+      [StatusCodes.NOT_FOUND]: 'Not Found Error',
+      [StatusCodes.INTERNAL_SERVER_ERROR]: 'Internal Error'
     }
 
     return statusTypeMap[statusCode] || 'General Error'
