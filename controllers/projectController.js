@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
-import { v2 as cloudinary } from 'cloudinary'
 import Project from "../models/project.js"
+import ProjectService from '../services/projectService.js'
 import AppError from '../appError.js'
 
 class ProjectController {
@@ -19,7 +19,7 @@ class ProjectController {
   }
 
   async getAllProjects(req, res) {
-    const projects = await Project.find().lean()
+    const projects = await ProjectService.getAll()
     
     res.status(200).json({
       success: true, 
@@ -30,17 +30,8 @@ class ProjectController {
   }
 
   async getAllProjectsImages(req, res) {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: 'projects',
-    });
-  
-    const images = result.resources.map((resource) => ({
-      url: resource.secure_url,
-      public_id: resource.public_id,
-      asset_id: resource.asset_id,
-    }))
-  
+    const images = await ProjectService.fetchProjectImages()
+
     res.json({ 
       success: true,
       message: "Projects images retrieved successfully",
@@ -50,22 +41,9 @@ class ProjectController {
   }
   
   async addProject(req, res) {
-    const { name, description, link } = req.body
-    
-    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", 400)
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'projects'
-    })
-  
-    const project = await Project.create({
-      name: name,
-      description: description,
-      preview: result.secure_url,
-      public_id: result.public_id,
-      asset_id: result.asset_id,
-      link: link
-    })
-  
+
+    const project = await ProjectService.addProject(req.body, req.file.path)
+
     res.status(201).json({
       success: true,
       message: "Project saved successfully",
