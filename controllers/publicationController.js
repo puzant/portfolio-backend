@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import PublicationService from '../services/publicationService.js'
+import AppError from '../appError.js'
 
 class PublicationController {
   constructor() {
@@ -9,6 +10,8 @@ class PublicationController {
     this.addPublication = asyncHandler(this.addPublication.bind(this))
     this.editPublication = asyncHandler(this.editPublication.bind(this))
     this.deletePublication = asyncHandler(this.deletePublication.bind(this))
+    this.renderAddPublication = this.renderAddPublication.bind(this)
+    this.renderEditPublication = this.renderEditPublication.bind(this)
   }
 
   async getAllPublications (req, res) {
@@ -53,19 +56,19 @@ class PublicationController {
   }
 
   // Route to render the Add Publication form
-  async renderAddPublication(req, res) {
+  async renderAddPublication(req, res, next) {
     try {
       res.render('publications/addPublication', {
         title: 'Add Publication',
         user: req.user
       })
     } catch (err) {
-      res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
+      next(new AppError(err.message, 500))
     }
   }
 
   // Route to render the Edit Publication form
-  async renderEditPublication (req, res) {
+  async renderEditPublication (req, res, next) {
     try {
       const publication = await this.publicationService.getById(req.params.id)
     
@@ -80,7 +83,7 @@ class PublicationController {
         }
       )
     } catch (err) {
-      res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
+      next(new AppError(err.message, 500))
     }
   }
 }
