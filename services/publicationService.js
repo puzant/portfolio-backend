@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import AppError from "../appError.js"
 import Publication from '../models/publications.js'
+import mongoose from 'mongoose'
 
 class PublicationService {
   async getAll() {
@@ -27,13 +28,17 @@ class PublicationService {
     if (!title || !publishedDate || !link || !duration || !preview)
       throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
 
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new AppError("Invalid Publication ID", 400)
+
     const updatedPublication = await Publication.findByIdAndUpdate(
       id,
       { title, publishedDate: new Date(publishedDate), link, duration, preview, lastModified: new Date() },
       { new: true, runValidators: true }
     )
 
-    if (!updatedPublication) throw new AppError("Publication was not found", 404)
+    if (!updatedPublication) 
+      throw new AppError("Publication was not found", 404);
     
     return updatedPublication
   }
