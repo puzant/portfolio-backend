@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
-import mongoose, { STATES } from 'mongoose'
+import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
 import Project from "../models/project.js"
 import AppError from '../appError.js'
