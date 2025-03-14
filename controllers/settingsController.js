@@ -1,96 +1,65 @@
 import bcrypt from 'bcrypt'
 import User from '../models/user.js'
+import asyncHandler from 'express-async-handler'
+import AppError from '../appError.js'
 
 class SettingsController {
-  constructor(logger) {
-    this.logger = logger
+  constructor() {
     this.updateUserInfo = this.updateUserInfo.bind(this)
     this.deleteUserAccount = this.deleteUserAccount.bind(this)
     this.updatePassword = this.updatePassword.bind(this)
+
+    this.updateUserInfo = asyncHandler(this.updateUserInfo)
+    this.deleteUserAccount = asyncHandler(this.deleteUserAccount)
+    this.updatePassword = asyncHandler(this.updatePassword)
   }
 
   async updateUserInfo(req, res) {
-    try {
-      const { email, name } = req.body
-      const userId = req.user.id
+    const { email, name } = req.body
+    const userId = req.user.id
   
-      const updatedUser = await User.findByIdAndUpdate(userId, { email, name }, {
-        new: true, 
-        runValidators: true 
-      })
+    const updatedUser = await User.findByIdAndUpdate(userId, { email, name }, {
+      new: true, 
+      runValidators: true 
+    })
   
-      if (!updatedUser) {
-        return res.status(404).json({ message: "User not found" })
-      }
+    if (!updatedUser) throw new Error("User not found", 404)
   
-      res.status(200).json({
-        success: true, 
-        message: "User updated successfully",
-        user: updatedUser,
-      })
-  
-    } catch (error) {
-      this.logger.logError(error)
-      res.status(500).json({
-        success: false,
-        message: "Internal server error. Please try again later.",
-      })
-    }
+    res.status(200).json({
+      success: true, 
+      message: "User updated successfully",
+      user: updatedUser,
+    })
   }
 
   async deleteUserAccount(req, res) {
-    try {
-      const userId = req.user.id
-      const { email } = req.body
+    const userId = req.user.id
+    const { email } = req.body
     
-      if (!email || email !== req.user.email) {
-        return res.status(400).json({ message: "Email confirmation does not match." })
-      }
+    if (!email || email !== req.user.email) throw new AppError("Email confirmation does not match", 400)
   
-      const user = await User.findById(userId)
+    const user = await User.findById(userId)
+    if (!user) throw new AppError("User not found", 404)
   
-      if (!user) {
-        return res.status(404).json({ message: 'User not found.' })
-      }
-  
-      await User.findByIdAndDelete(userId)
-      res.status(200).json({ success: true, message: 'Your account has been deleted successfully.' })
-    } catch (error) {
-      this.logger.logError(error)
-      res.status(500).json({
-        success: false,
-        message: "Internal server error. Please try again later.",
-      })
-    }
+    await User.findByIdAndDelete(userId)
+    res.status(200).json({ success: true, message: 'Your account has been deleted successfully.' })
   }
 
   async updatePassword(req, res) {
-    try {
-      const { oldPassword, newPassword } = req.body
-      const userId = req.user.id
+    const { oldPassword, newPassword } = req.body
+    const userId = req.user.id
     
-      if (!oldPassword || !newPassword) {
-        return res.status(400).json({ message: 'All fields are required' })
-      }
+    if (!oldPassword || !newPassword) throw new AppError("Old password and new password fields are required", 400)
     
-      const user = await User.findById(userId)
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' })
-      }
+    const user = await User.findById(userId)
+    if (!user) throw new AppError("User not found", 400)
     
-      const isMatch = await bcrypt.compare(oldPassword, user.password)
-      if (!isMatch) {
-        return res.status(404).json({ success: true, message: 'Old Password is incorrect' })
-      }
-    
-      user.password = newPassword
-      await user.save()
-    
-      res.status(200).json({ message: 'Password updated successfully' })  
-    } catch (error) {
-      this.logger.logError(error)
-      res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
-    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password)
+    if (!isMatch) throw new AppError("Old password is incorrect", 400)
+
+    user.password = newPassword
+    await user.save()
+    res.status(200).json({ message: 'Password updated successfully' })  
   }
 
   async renderSettings(req, res) {
@@ -100,7 +69,6 @@ class SettingsController {
         user: req.user
       })
     } catch (error) {
-      this.logger.logError(error)
       res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
     }
   }

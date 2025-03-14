@@ -1,115 +1,89 @@
-import User from '../models/user.js'
-import RefreshToken from '../models/refreshToken.js'
-
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import asyncHandler from 'express-async-handler'
+import User from '../models/user.js'
+import RefreshToken from '../models/refreshToken.js'
+import AppError from '../appError.js'
 
 class AuthController {
-  constructor(logger) {
-    this.logger = logger
+  constructor() {
     this.login = this.login.bind(this)
     this.refreshToken = this.refreshToken.bind(this)
     this.logout = this.logout.bind(this)
     this.forgotPassword = this.forgotPassword.bind(this)
     this.createUser = this.createUser.bind(this)
+
+    this.login = asyncHandler(this.login)
+    this.refreshToken = asyncHandler(this.refreshToken)
+    this.logout = asyncHandler(this.logout)
+    this.refreshToken = asyncHandler(this.refreshToken)
+    this.createUser = asyncHandler(this.createUser)
   }
 
   async login(req, res) {
     const { email, password } = req.body
+    if (!email || !password) throw new AppError("Email and password are required", 400)
 
-    try {
-      if (!email || !password) {
-        return res.status(400).json({ message: "Email and password are required" })
-      }
-      const user = await User.findOne({ email })
-  
-      if (!user) {
-        return res.status(400).json({ message: 'Invalid credentials' })
-      }
+    const user = await User.findOne({ email })
+    if (!user) throw new AppError("User is not found", 404)
       
-      const isMatch = await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) throw new AppError("Invalid credentials", 400)
   
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' })
-      }
+    const payload = { id: user._id, username: user.name, email: user.email}
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
+    // const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
   
-      const payload = { 
-        id: user._id,
-        username: user.name,
-        email: user.email
-       }
+    // const newRefreshToken = new RefreshToken({
+    //   refreshToken: refreshToken,
+    //   expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    //   userId: user._id
+    // })
   
-      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' })
-      // const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
+    // await newRefreshToken.save()
   
-      // const newRefreshToken = new RefreshToken({
-      //   refreshToken: refreshToken,
-      //   expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      //   userId: user._id
-      // })
+    // res.cookie('refreshToken', refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    //   maxAge: 7 * 24 * 60 * 60 * 1000
+    // })
   
-      // await newRefreshToken.save()
+    res.cookie('token', token, {
+      httpOnly: true, 
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict', 
+      maxAge: 3600000 
+    })
   
-      // res.cookie('refreshToken', refreshToken, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === 'production',
-      //   sameSite: 'strict',
-      //   maxAge: 7 * 24 * 60 * 60 * 1000
-      // })
-  
-      res.cookie('token', token, {
-        httpOnly: true, 
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict', 
-        maxAge: 3600000 
-      })
-  
-      res.status(200).json({
-        success: true,
-        message: 'Login successful',
-        user,
-      })
-    } catch (error) {
-      this.logger.logError(error)
-      return res.status(500).json({ message: 'Server error' })
-    }
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      user,
+    })
   }
 
   async refreshToken(req, res) {
-    try {
-      const refreshToken = req.cookies.refreshToken
+    const refreshToken = req.cookies.refreshToken
   
-      if (!refreshToken) {
-        return res.status(403).json({ message: 'Refresh token is missing, please log in again' })
-      }
+    if (!refreshToken) throw new AppError("Refresh token is missing, please login in again", 403)
   
-      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-      const storedToken = Refresh.findOne({ refreshToken })
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+    const storedToken = Refresh.findOne({ refreshToken })
   
-      if (!storedToken) {
-        return res.status(403).json({ message: 'Refresh token not found in the database' })
-      }
+    if (!storedToken) throw new AppError("Refresh token not found in the database", 403)
+
+    const payload = { id: decoded._id, username: decoded.name, email: decoded.email }
+    const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1hr' })
   
-      const payload = { 
-        id: decoded._id,
-        username: decoded.name,
-        email: decoded.email
-       }
-  
-       const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1hr' })
-  
-       res.cookie('token', newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 3600000
-      })
-  
-      return res.status(200).json({ message: 'Token refreshed successfully' });
-    } catch (error) {
-      this.logger.logError(error)
-      return res.status(500).json({ message: 'Server error' });
-    }
+    res.cookie('token', newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 3600000
+    })
+    
+    return res.status(200).json({ message: 'Token refreshed successfully' });
   }
 
   async logout(req, res) {
@@ -128,30 +102,20 @@ class AuthController {
   async createUser(req, res) {
     const { email, password, name } = req.body
   
-    try {
-      if (!email || !password || !name) {
-        return res.status(400).json({ message: "Email and password, and Name fields are required" });
-      }
+    if (!email || !password || !name) throw new AppError("Email, Password, Name fields are required", 400)
 
-      const existingUser = await User.findOne({ email })
-      if (existingUser) {
-        return res.status(400).json({ message: "User already exists" })
-      }
+    const existingUser = await User.findOne({ email })
+    if (existingUser) throw new AppError("User already exists", 400)
   
-      const newUser = new User({
-        email,
-        password,
-        name,
-        isActive: true,
-      })
+    const newUser = new User({
+      email,
+      password,
+      name,
+      isActive: true,
+    })
   
-      await newUser.save()
-      res.status(201).json({ message: "User created successfully", user: newUser })
-  
-    } catch (error) {
-      this.logger.logError(error)
-      res.status(500).json({ message: "Server error", error: err });
-    }
+    await newUser.save()
+    res.status(201).json({ message: "User created successfully", user: newUser })
   }
 
   async renderLogin(req, res) {
