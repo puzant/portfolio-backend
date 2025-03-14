@@ -1,7 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary'
+import mongoose, { STATES } from 'mongoose'
+import { StatusCodes } from 'http-status-codes'
 import Project from "../models/project.js"
 import AppError from '../appError.js'
-import mongoose from 'mongoose'
 
 class ProjectService {
   async getAll() {
@@ -12,7 +13,7 @@ class ProjectService {
     const project = await Project.findById(id)
     
     if (!project) 
-      throw new AppError("Project was not found", 404)
+      throw new AppError("Project was not found", StatusCodes.NOT_FOUND)
     return project
   }
 
@@ -34,7 +35,7 @@ class ProjectService {
   async addProject(reqBody, filePath) {
     const { name, description, link } = reqBody
 
-    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", 400)
+    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", StatusCodes.BAD_REQUEST)
       const result = await cloudinary.uploader.upload(filePath, {
         folder: 'projects'
       })
@@ -54,10 +55,10 @@ class ProjectService {
   async editProject(reqBody, id, filePath) {
     const { name, description, preview, link, public_id, asset_id, previewChanged } = reqBody
 
-    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", 400)
+    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", StatusCodes.BAD_REQUEST)
 
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError("Invalid Project ID", 400)
+      throw new AppError("Invalid Project ID", StatusCodes.NOT_FOUND)
 
     let updatedFields = { name, description, link };
     const isPreviewChanged = (previewChanged === 'true')
@@ -71,7 +72,7 @@ class ProjectService {
       updatedFields.public_id = uploadingResult.public_id;
       updatedFields.asset_id = uploadingResult.asset_id;
      } catch (error) {
-      throw new AppError(`Cloudinary Error ${error.message}`, 500)
+      throw new AppError(`Cloudinary Error ${error.message}`, StatusCodes.INTERNAL_SERVER_ERROR)
      }
     } else {
       updatedFields.preview = preview
@@ -81,15 +82,15 @@ class ProjectService {
 
     const updatedProject = await Project.findByIdAndUpdate(id, updatedFields, { new: true, runValidators: true });
     if (!updatedProject) 
-      throw new AppError("Project was not found", 404)
+      throw new AppError("Project was not found", StatusCodes.NOT_FOUND)
     return updatedProject
   }
 
   async deleteProject(publicId, id) {
-    if (!publicId) throw new AppError("Project public ID is required", 400)
+    if (!publicId) throw new AppError("Project public ID is required", StatusCodes.BAD_REQUEST)
 
     const projectToDelete = await Project.findById(id)
-    if (!projectToDelete) throw new AppError("Project not found", 404)
+    if (!projectToDelete) throw new AppError("Project not found", StatusCodes.NOT_FOUND)
 
     await cloudinary.uploader.destroy(publicId)
     await Project.findByIdAndDelete(id)

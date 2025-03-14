@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
+import mongoose from 'mongoose'
+import { StatusCodes } from 'http-status-codes'
 import AppError from "../appError.js"
 import Publication from '../models/publications.js'
-import mongoose from 'mongoose'
 
 class PublicationService {
   async getAll() {
@@ -16,7 +17,7 @@ class PublicationService {
     const { title, publishedDate, link, duration, preview } = reqBody
   
     if (!title || !publishedDate || !link || !duration || !preview) 
-      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
+      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", StatusCodes.BAD_REQUEST)
 
     const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
     return publication
@@ -26,10 +27,10 @@ class PublicationService {
     const { title, publishedDate, link, duration, preview } = reqBody
 
     if (!title || !publishedDate || !link || !duration || !preview)
-      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", 400)
+      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", StatusCodes.BAD_REQUEST)
 
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError("Invalid Publication ID", 400)
+      throw new AppError("Invalid Publication ID", StatusCodes.BAD_REQUEST)
 
     const updatedPublication = await Publication.findByIdAndUpdate(
       id,
@@ -38,14 +39,14 @@ class PublicationService {
     )
 
     if (!updatedPublication) 
-      throw new AppError("Publication was not found", 404);
+      throw new AppError("Publication was not found", StatusCodes.NOT_FOUND);
     
     return updatedPublication
   }
 
   async deletePublication(id) {
     const publicationToDelete = await Publication.findByIdAndDelete(id)
-    if (!publicationToDelete) throw new AppError("Publication not found", 404)
+    if (!publicationToDelete) throw new AppError("Publication not found", StatusCodes.BAD_REQUEST)
     
     return publicationToDelete
   }
