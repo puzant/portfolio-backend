@@ -1,11 +1,11 @@
 import asyncHandler from 'express-async-handler'
-import Project from "../models/project.js"
-import ProjectService from '../services/projectService.js'
+import { StatusCodes } from 'http-status-codes'
+import AppError from '../utils/appError.js'
+import ApiResponse from '../utils/apiResponse.js'
 
 class ProjectController {
-  constructor() {
-    this.projectService = new ProjectService()
-
+  constructor(projectService) {
+    this.projectService = projectService
     this.getAllProjects = asyncHandler(this.getAllProjects.bind(this))
     this.getAllProjectsImages = asyncHandler(this.getAllProjectsImages.bind(this))
     this.addProject = asyncHandler(this.addProject.bind(this))
@@ -17,64 +17,37 @@ class ProjectController {
 
   async getAllProjects(req, res) {
     const projects = await this.projectService.getAll()
-    
-    res.status(200).json({
-      success: true, 
-      message: "Projects retrieved successfully",
-      count: projects.length,
-      projects: projects,
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Projects retrieved successfully", projects))
   }
 
   async getAllProjectsImages(req, res) {
     const images = await this.projectService.fetchProjectImages()
-
-    res.json({ 
-      success: true,
-      message: "Projects images retrieved successfully",
-      count: images.length,
-      projectImages: images, 
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Projects images retrieved successfully", images))
   }
   
   async addProject(req, res) {
-
-    const project = await ProjectService.addProject(req.body, req.file.path)
-
-    res.status(201).json({
-      success: true,
-      message: "Project saved successfully",
-      project
-    })
+    const project = await this.projectService.addProject(req.body, req.file.path)
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Project saved successfully", project))
   }
   
   async editProject (req, res) {
     const updatedProject = await this.projectService.editProject(req.body, req.params.id, req.file.path)
- 
-    return res.status(200).json({
-      success: true,
-      message: "Project updated successfully",
-      updatedProject
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Project updated successfully", updatedProject))
   }
 
   async deleteProject(req, res) {
     await this.projectService.deleteProject(req.body.public_id, req.params.id)
-  
-    res.status(200).json({
-      success: true,
-      message: 'Project deleted successfully', 
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Project deleted successfully"))
   }
 
   async renderAddProject(req, res, next) {
     try {
-      res.render('projects/addProject', {
+      return res.render('projects/addProject', {
         title: 'Add Project',
         user: req.user
       })
     } catch (err) {
-      next(new AppError(err.message, 500))
+      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
     }
   }
 
@@ -82,13 +55,13 @@ class ProjectController {
     try {
       const project = await this.projectService.getById(req.params.id)
     
-      res.render('projects/editProject', {
+      return res.render('projects/editProject', {
         project,
         title: 'Edit Project',
         user: req.user
       })
     } catch (err) {
-      next(new AppError(err.message, 500))
+      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
     }
   }
 }
