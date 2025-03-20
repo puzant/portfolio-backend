@@ -1,7 +1,9 @@
-import { DateTime } from 'luxon'
 import mongoose from 'mongoose'
+import { DateTime } from 'luxon'
 import { StatusCodes } from 'http-status-codes'
-import AppError from "../appError.js"
+import { validationResult } from 'express-validator'
+
+import AppError from "../utils/appError.js"
 import Publication from '../models/publications.js'
 
 class PublicationService {
@@ -13,11 +15,12 @@ class PublicationService {
     return Publication.findById(id)
   }
 
-  async addPublication(reqBody) {
-    const { title, publishedDate, link, duration, preview } = reqBody
-  
-    if (!title || !publishedDate || !link || !duration || !preview) 
-      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", StatusCodes.BAD_REQUEST)
+  async addPublication(req) {
+    const { title, publishedDate, link, duration, preview } = req.body
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) 
+      throw new AppError("Validation error", StatusCodes.BAD_REQUEST, errors.array())
 
     const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
     return publication
@@ -26,8 +29,8 @@ class PublicationService {
   async editPublication(reqBody, id) {
     const { title, publishedDate, link, duration, preview } = reqBody
 
-    if (!title || !publishedDate || !link || !duration || !preview)
-      throw new AppError("All fields are required: title, publishedDate, link, duration, preview", StatusCodes.BAD_REQUEST)
+    if (!errors.isEmpty()) 
+      throw new AppError("Validation error", StatusCodes.BAD_REQUEST, errors.array())
 
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError("Invalid Publication ID", StatusCodes.BAD_REQUEST)
