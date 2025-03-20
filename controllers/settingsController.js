@@ -1,61 +1,40 @@
 import bcrypt from 'bcrypt'
-import User from '../models/user.js'
 import asyncHandler from 'express-async-handler'
-import AppError from '../appError.js'
+import { StatusCodes } from 'http-status-codes'
+import AppError from '../utils/appError.js'
+import User from '../models/user.js'
+import ApiResponse from '../utils/apiResponse.js'
 
 class SettingsController {
-  constructor() {
-    this.updateUserInfo = this.updateUserInfo.bind(this)
-    this.deleteUserAccount = this.deleteUserAccount.bind(this)
-    this.updatePassword = this.updatePassword.bind(this)
-
-    this.updateUserInfo = asyncHandler(this.updateUserInfo)
-    this.deleteUserAccount = asyncHandler(this.deleteUserAccount)
-    this.updatePassword = asyncHandler(this.updatePassword)
+  constructor(settingsService) {
+    this.settingsService = settingsService
+    this.updateUserInfo = asyncHandler(this.updateUserInfo.bind(this))
+    this.deleteUserAccount = asyncHandler(this.deleteUserAccount.bind(this))
+    this.updatePassword = asyncHandler(this.updatePassword.bind(this))
+    this.renderSettings = this.renderSettings.bind(this)
   }
 
   async updateUserInfo(req, res) {
-    const { email, name } = req.body
-    const userId = req.user.id
-  
-    const updatedUser = await User.findByIdAndUpdate(userId, { email, name }, {
-      new: true, 
-      runValidators: true 
-    })
-  
-    if (!updatedUser) throw new Error("User not found", 404)
-  
-    res.status(200).json({
-      success: true, 
-      message: "User updated successfully",
-      user: updatedUser,
-    })
+    const updatedUser = await this.settingsService.updateUserInfo(req)
+    res.status(StatusCodes.OK).json("User updated successfully", updatedUser)
   }
 
   async deleteUserAccount(req, res) {
-    const userId = req.user.id
-    const { email } = req.body
-    
-    if (!email || email !== req.user.email) throw new AppError("Email confirmation does not match", 400)
-  
-    const user = await User.findById(userId)
-    if (!user) throw new AppError("User not found", 404)
-  
-    await User.findByIdAndDelete(userId)
-    res.status(200).json({ success: true, message: 'Your account has been deleted successfully.' })
+    const user = await this.settingsService.deleteUserAccount(req)
+    res.status(StatusCodes.OK).json("User updated successfully", user)
   }
 
   async updatePassword(req, res) {
     const { oldPassword, newPassword } = req.body
     const userId = req.user.id
     
-    if (!oldPassword || !newPassword) throw new AppError("Old password and new password fields are required", 400)
+    if (!oldPassword || !newPassword) throw new AppError("Old password and new password fields are required", StatusCodes.BAD_REQUEST)
     
     const user = await User.findById(userId)
-    if (!user) throw new AppError("User not found", 400)
+    if (!user) throw new AppError("User not found", StatusCodes.BAD_REQUEST)
     
     const isMatch = await bcrypt.compare(oldPassword, user.password)
-    if (!isMatch) throw new AppError("Old password is incorrect", 400)
+    if (!isMatch) throw new AppError("Old password is incorrect", StatusCodes.BAD_REQUEST)
 
     user.password = newPassword
     await user.save()
