@@ -1,10 +1,12 @@
 import express from 'express'
 import ProjectController from '../controllers/projectController.js'
+import ProjectService from '../services/projectService.js'
 import upload from '../middlewares/multerUpload.js'
 import authMiddleware from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
-const projectController = new ProjectController()
+const projectService = new ProjectService()
+const projectController = new ProjectController(projectService)
 
 //  API routes
 router.get('/api', projectController.getAllProjects)
