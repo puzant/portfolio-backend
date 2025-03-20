@@ -1,11 +1,11 @@
 import asyncHandler from 'express-async-handler'
-import PublicationService from '../services/publicationService.js'
-import AppError from '../appError.js'
+import { StatusCodes } from 'http-status-codes'
+import AppError from '../utils/appError.js'
+import ApiResponse from '../utils/apiResponse.js'
 
 class PublicationController {
-  constructor() {
-    this.publicationService = new PublicationService()
-
+  constructor(publicationService) {
+    this.publicationService = publicationService
     this.getAllPublications = asyncHandler(this.getAllPublications.bind(this))
     this.addPublication = asyncHandler(this.addPublication.bind(this))
     this.editPublication = asyncHandler(this.editPublication.bind(this))
@@ -16,54 +16,35 @@ class PublicationController {
 
   async getAllPublications (req, res) {
     const publications = await this.publicationService.getAll()
-    
-    res.status(200).json({
-      success: true, 
-      message: "Publications retrieved successfully",
-      count: publications.length,
-      publications: publications,
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publications retrived successfully", publications))
   }
 
   async addPublication(req, res) {  
-    const publication = await this.publicationService.addPublication(req.body)
-
-    res.status(201).json({
-      success: true,
-      message: "Publication saved successfully",
-      publication
-    })
+    const publication = await this.publicationService.addPublication(req)
+    return res.status(StatusCodes.CREATED).json(ApiResponse.successResponse("Publication saved successfully", publication ))
   }
 
   async editPublication(req, res) {
     const { id } = req.params
     const updatedPublication = await this.publicationService.editPublication(req.body, id)
 
-    return res.status(200).json({
-      success: true,
-      message: "Publication updated successfully",
-      updatedPublication
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publication updated successfully", updatedPublication))
   }
 
   async deletePublication(req, res) {
     await this.publicationService.deletePublication(req.params.id)
-    
-    res.status(200).json({
-      success: true,
-      message: 'Publication deleted successfully', 
-    })
+    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publication deleted successfully"))
   }
 
   // Route to render the Add Publication form
   async renderAddPublication(req, res, next) {
     try {
-      res.render('publications/addPublication', {
+      return res.render('publications/addPublication', {
         title: 'Add Publication',
         user: req.user
       })
     } catch (err) {
-      next(new AppError(err.message, 500))
+      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
     }
   }
 
@@ -72,18 +53,19 @@ class PublicationController {
     try {
       const publication = await this.publicationService.getById(req.params.id)
     
-      if (!publication) return res.status(404).send('Publication not found')
+      if (!publication) 
+        return res.status(StatusCodes.NOT_FOUND).send('Publication not found')
      
       const formattedPublication = this.publicationService.formatPublicationData(publication)
       
-      res.render('publications/editPublication', {
+      return res.render('publications/editPublication', {
         publication: formattedPublication,
         title: 'Edit Publication',
         user: req.user
         }
       )
     } catch (err) {
-      next(new AppError(err.message, 500))
+      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
     }
   }
 }
