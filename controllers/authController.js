@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/user.js'
 import RefreshToken from '../models/refreshToken.js'
-import AppError from '../appError.js'
+import AppError from '../utils/appError.js'
 
 class AuthController {
   constructor() {
