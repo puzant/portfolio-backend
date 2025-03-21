@@ -26,7 +26,7 @@ class PublicationController {
 
   async editPublication(req, res) {
     const { id } = req.params
-    const updatedPublication = await this.publicationService.editPublication(req.body, id)
+    const updatedPublication = await this.publicationService.editPublication(req, id)
 
     return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publication updated successfully", updatedPublication))
   }

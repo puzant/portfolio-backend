@@ -26,8 +26,9 @@ class PublicationService {
     return publication
   }
 
-  async editPublication(reqBody, id) {
-    const { title, publishedDate, link, duration, preview } = reqBody
+  async editPublication(req, id) {
+    const { title, publishedDate, link, duration, preview } = req.body
+    const errors = validationResult(req)
 
     if (!errors.isEmpty()) 
       throw new AppError("Validation error", StatusCodes.BAD_REQUEST, errors.array())
