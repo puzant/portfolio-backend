@@ -18,6 +18,8 @@ import settingsRoute from './routes/settingsRoute.js'
 import publicationsRoute from './routes/publicationsRoute.js'
 import travelImagesRoute from './routes/travelImagesRoute.js'
 
+import renderRoutes from './routes/renderRoutes.js'
+
 import errorHandler from './middlewares/errorMiddleware.js'
 import notFoundHandler from './middlewares/notFoundHandler.js'
 
@@ -50,11 +52,15 @@ app.use(cors({
 
 //  Register routes
 app.use(cmsRoute)
-app.use('/publications', publicationsRoute)
-app.use('/projects', projectsRoute)
-app.use('/travel-images', travelImagesRoute)
-app.use('/auth', authRoute)
-app.use('/settings', settingsRoute)
+app.use(renderRoutes)
+
+app.use('/v1/publications', publicationsRoute)
+app.use('/v1/projects', projectsRoute)
+app.use('/v1/travel-images', travelImagesRoute)
+app.use('/v1/auth', authRoute)
+app.use('/v1/settings', settingsRoute)
+
+
 app.use("*", notFoundHandler)
 app.use(errorHandler)
 
