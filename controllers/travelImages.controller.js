@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import { cache } from '../cache.js'
-import AppError from '../utils/appError.js'
+import AppError from '@kutils/appError.js'
 
 class TravelImagesController {
   constructor(cloudinaryService) {
