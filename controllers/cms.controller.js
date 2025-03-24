@@ -1,4 +1,4 @@
-import cmsService from "../services/cmsService.js"
+import cmsService from "@services/cmsService.js"
 
 const renderCmsPage = async (req, res, next) => {
   try {

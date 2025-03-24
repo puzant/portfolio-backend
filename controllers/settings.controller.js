@@ -16,12 +16,12 @@ class SettingsController {
 
   async updateUserInfo(req, res) {
     const updatedUser = await this.settingsService.updateUserInfo(req)
-    res.status(StatusCodes.OK).json("User updated successfully", updatedUser)
+    res.status(StatusCodes.OK).json(ApiResponse.successResponse("User updated successfully", updatedUser))
   }
 
   async deleteUserAccount(req, res) {
     const user = await this.settingsService.deleteUserAccount(req)
-    res.status(StatusCodes.OK).json("User updated successfully", user)
+    res.status(StatusCodes.OK).json(ApiResponse.successResponse("User updated successfully", user))
   }
 
   async updatePassword(req, res) {
@@ -38,7 +38,7 @@ class SettingsController {
 
     user.password = newPassword
     await user.save()
-    res.status(200).json({ message: 'Password updated successfully' })  
+    res.status(200).json(ApiResponse.successResponse("Password updated successfully"))
   }
 
   async renderSettings(req, res) {

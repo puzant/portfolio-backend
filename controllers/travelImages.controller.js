@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import { cache } from '../cache.js'
-import AppError from '@kutils/appError.js'
+import ApiResponse from '@utils/apiResponse.js'
+import AppError from '@utils/appError.js'
 
 class TravelImagesController {
   constructor(cloudinaryService) {
@@ -16,11 +17,11 @@ class TravelImagesController {
 
   async getAllTravelImages(req, res) {
     const cachedImages = cache.get('travelImages')
-    if (cachedImages) return res.json({ images: cachedImages, success: true })
+    if (cachedImages) return res.json(ApiResponse.successResponse("Travel images retrieved successfully", cachedImages))
   
     const webpImages = await this.cloudinaryService.fetchTravelImages()
     cache.set('travelImages', webpImages)
-    res.json({ images: webpImages, success: true })
+    res.json(ApiResponse.successResponse("Travel images retrieved successfully", webpImages))
   }
 
   async addTravelImage(req, res) {
