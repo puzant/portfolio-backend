@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import User from "@models/user.js"
+import User from "#models/user.js"
 
 class SettingsService {
   async updateUserInfo(req) {

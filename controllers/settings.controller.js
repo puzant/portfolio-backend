@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt'
 import asyncHandler from 'express-async-handler'
 import { StatusCodes } from 'http-status-codes'
-import User from '@models/user.js'
-import AppError from '@utils/appError.js'
-import ApiResponse from '@utils/apiResponse.js'
+import User from '#models/user.js'
+import AppError from '#utils/appError.js'
+import ApiResponse from '#utils/apiResponse.js'
 
 class SettingsController {
   constructor(settingsService) {

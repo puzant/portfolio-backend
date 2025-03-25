@@ -1,7 +1,7 @@
 import express from "express"
-import SettingsController from "@controllers/settings.controller.js"
-import authMiddleware from '@middlewares/authMiddleware.js'
-import SettingsService from "@services/settingsService.js"
+import SettingsController from "#controllers/settings.controller.js"
+import authMiddleware from '#middlewares/authMiddleware.js'
+import SettingsService from "#services/settingsService.js"
 
 const router = express.Router()
 const settingsService = new SettingsService()

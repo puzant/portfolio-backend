@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import { StatusCodes } from 'http-status-codes'
-import AppError from '@utils/appError.js'
-import ApiResponse from '@utils/apiResponse.js'
+import AppError from '#utils/appError.js'
+import ApiResponse from '#utils/apiResponse.js'
 
 class ProjectController {
   constructor(projectService) {

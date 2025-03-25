@@ -1,8 +1,8 @@
 import express from 'express'
-import ProjectController from '@controllers/project.controller.js'
-import ProjectService from '@services/projectService.js'
-import upload from '@middlewares/multerUpload.js'
-import authMiddleware from '@middlewares/authMiddleware.js'
+import ProjectController from '#controllers/project.controller.js'
+import ProjectService from '#services/projectService.js'
+import upload from '#middlewares/multerUpload.js'
+import authMiddleware from '#middlewares/authMiddleware.js'
 
 const router = express.Router()
 const projectService = new ProjectService()
