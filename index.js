@@ -11,12 +11,12 @@ import { v2 as cloudinary } from 'cloudinary'
 import { wakeupJob } from './cron.js'
 
 //  API Routes
-import cmsRoute from './routes/cmsRoute.js'
-import authRoute from './routes/authRoute.js'
-import projectsRoute from './routes/projectsRoute.js'
-import settingsRoute from './routes/settingsRoute.js'
-import publicationsRoute from './routes/publicationsRoute.js'
-import travelImagesRoute from './routes/travelImagesRoute.js'
+import cmsRoute from './routes/cms.route.js'
+import authRoute from './routes/auth.route.js'
+import projectsRoute from './routes/projects.route.js'
+import settingsRoute from './routes/settings.route.js'
+import publicationsRoute from './routes/publications.route.js'
+import travelImagesRoute from './routes/travelImages.route.js'
 
 import renderRoutes from './routes/renderRoutes.js'
 
