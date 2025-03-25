@@ -3,8 +3,8 @@ import { DateTime } from 'luxon'
 import { StatusCodes } from 'http-status-codes'
 import { validationResult } from 'express-validator'
 
-import AppError from "../utils/appError.js"
-import Publication from '../models/publications.js'
+import AppError from "@utils/appError.js"
+import Publication from '@models/publications.js'
 
 class PublicationService {
   async getAll() {

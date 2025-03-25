@@ -1,8 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary'
 import mongoose from 'mongoose'
 import { StatusCodes } from 'http-status-codes'
-import Project from "../models/project.js"
-import AppError from '../utils/appError.js'
+import Project from "@models/project.js"
+import AppError from '@utils/appError.js'
 
 class ProjectService {
   async getAll() {
