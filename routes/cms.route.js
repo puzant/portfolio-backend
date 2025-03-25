@@ -1,6 +1,6 @@
 import express from 'express'
-import CmsController from '../controllers/cmsController.js'
-import authMiddleware from '../middlewares/authMiddleware.js'
+import CmsController from '@controllers/cms.controller.js'
+import authMiddleware from '@middlewares/authMiddleware.js'
 
 const router = express.Router()
 
