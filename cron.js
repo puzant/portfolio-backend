@@ -5,7 +5,7 @@ import https from 'https'
 import { cache } from './cache.js'
 
 dotenv.config()
-const render_backend_URL = `${process.env.RENDER_BACKEND_URL}v1/travel-images/`
+const render_backend_URL = `${process.env.RENDER_BACKEND_URL}/v1/travel-images/`
 
 const onComplete = () => {
   console.log('Cron job has completed')
