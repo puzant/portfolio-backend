@@ -7,15 +7,6 @@
     "start": "nodemon --loader=./custom-loader.mjs --no-warnings index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "aliases": {
-    "@controllers": "./controllers",
-    "@services": "./services",
-    "@routes": "./routes",
-    "@validations": "./validations",
-    "@models": "./models",
-    "@middlewares": "./middlewares",
-    "@utils": "./utils"
-  },
   "type": "module",
   "keywords": [],
   "author": "",
