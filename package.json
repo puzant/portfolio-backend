@@ -4,10 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --loader=./custom-loader.mjs --no-warnings index.js",
+    "start": "nodemon --no-warnings index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
+  "imports": {
+    "#controllers/*": "./controllers/*",
+    "#services/*": "./services/*",
+    "#routes/*": "./routes/*",
+    "#validations/*": "./validations/*",
+    "#models/*": "./models/*",
+    "#middlewares/*": "./middlewares/*",
+    "#utils/*": "./utils/*"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
