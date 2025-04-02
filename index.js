@@ -20,8 +20,8 @@ import travelImagesRoute from './routes/travelImages.route.js'
 
 import renderRoutes from './routes/renderRoutes.js'
 
-import errorHandler from './middlewares/errorMiddleware.js'
-import notFoundHandler from './middlewares/notFoundHandler.js'
+import errorHandler from './middlewares/error.middleware.js'
+import notFoundHandler from './middlewares/notFoundHandler.middleware.js'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
 app.use(cors({
-  origin: [process.env.FRONT_END_URL, "http://localhost:8080"],
+  origin: [process.env.FRONT_END_URL, process.env.FRONT_END_LOCAL_URL],
   methods: ['GET', 'POST']
 }))
 
@@ -59,7 +59,6 @@ app.use('/v1/projects', projectsRoute)
 app.use('/v1/travel-images', travelImagesRoute)
 app.use('/v1/auth', authRoute)
 app.use('/v1/settings', settingsRoute)
-
 
 app.use("*", notFoundHandler)
 app.use(errorHandler)
