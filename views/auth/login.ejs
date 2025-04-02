@@ -40,16 +40,17 @@
         const formData = new FormData(form)
 
         try {
-          const response = await axios({
-          url: this.action,
-          method: this.method,
-          data: Object.fromEntries(formData),
-        })
+          const response = await api({
+            url: this.action,
+            method: this.method,
+            data: Object.fromEntries(formData),
+          })
 
-        if (response.data.success) {
-          window.location.href = '/cms' 
-        }
+          if (response.success) {
+            window.location.href = '/cms' 
+          }
         } catch (err) {
+          console.log(err)
           showAlert('danger', err.response.data.message) 
         }
       })

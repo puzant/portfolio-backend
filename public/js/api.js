@@ -1,5 +1,10 @@
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: 'http://localhost:3000',
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 })
+
+api.interceptors.response.use(
+  (response) => response.data,
+  (error) => Promise.reject(error)
+);

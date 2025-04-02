@@ -1,6 +1,6 @@
 class ApiResponse {
   static successResponse(message, data = null) {
-    return { message, data }
+    return { message, data, success: true }
   }
 }
 
