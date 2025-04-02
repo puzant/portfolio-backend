@@ -1,6 +1,6 @@
 import express from 'express'
-import authMiddleware from '#middlewares/authMiddleware.js'
-import PublicationService from '#services/publicationService.js'
+import authMiddleware from '#middlewares/auth.middleware.js'
+import PublicationService from '#services/publication.service.js'
 import PublicationController from '#controllers/publication.controller.js'
 import publicationValidation from '#validations/publication.validation.js'
 
