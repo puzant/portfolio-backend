@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import { StatusCodes } from 'http-status-codes'
+import { StatusCodes as Status } from 'http-status-codes'
 import ApiResponse from '#utils/apiResponse.js'
 
 class SettingsController {
@@ -13,12 +13,12 @@ class SettingsController {
 
   async updateUserInfo(req, res) {
     const updatedUser = await this.settingsService.updateUserInfo(req)
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("User updated successfully", updatedUser))
+    return res.status(Status.OK).json(ApiResponse.successResponse("User updated successfully", updatedUser))
   }
 
   async deleteUserAccount(req, res) {
     const user = await this.settingsService.deleteUserAccount(req)
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("User updated successfully", user))
+    return res.status(Status.OK).json(ApiResponse.successResponse("User updated successfully", user))
   }
 
   async updatePassword(req, res) {

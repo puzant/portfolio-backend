@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { DateTime } from 'luxon'
-import { StatusCodes } from 'http-status-codes'
+import { StatusCodes as Status } from 'http-status-codes'
 import { validationResult } from 'express-validator'
 
 import AppError from "#utils/appError.js"
@@ -20,7 +20,7 @@ class PublicationService {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) 
-      throw new AppError("Validation error", StatusCodes.BAD_REQUEST, errors.array())
+      throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
 
     const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
     return publication
@@ -31,10 +31,10 @@ class PublicationService {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) 
-      throw new AppError("Validation error", StatusCodes.BAD_REQUEST, errors.array())
+      throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
 
     if (!mongoose.Types.ObjectId.isValid(id))
-      throw new AppError("Invalid Publication ID", StatusCodes.BAD_REQUEST)
+      throw new AppError("Invalid Publication ID", Status.BAD_REQUEST)
 
     const updatedPublication = await Publication.findByIdAndUpdate(
       id,
@@ -43,14 +43,14 @@ class PublicationService {
     )
 
     if (!updatedPublication) 
-      throw new AppError("Publication was not found", StatusCodes.NOT_FOUND);
+      throw new AppError("Publication was not found", Status.NOT_FOUND);
     
     return updatedPublication
   }
 
   async deletePublication(id) {
     const publicationToDelete = await Publication.findByIdAndDelete(id)
-    if (!publicationToDelete) throw new AppError("Publication not found", StatusCodes.BAD_REQUEST)
+    if (!publicationToDelete) throw new AppError("Publication not found", Status.BAD_REQUEST)
     
     return publicationToDelete
   }

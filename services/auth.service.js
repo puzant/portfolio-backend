@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { validationResult } from 'express-validator'
+import { StatusCodes as Status } from "http-status-codes"
 
 import User from "#models/user.js"
 import AppError from "#utils/appError.js"
-import { StatusCodes as Status } from "http-status-codes"
 
 class AuthService {
   async login(req) {

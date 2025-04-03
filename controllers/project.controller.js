@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import { StatusCodes } from 'http-status-codes'
+import { StatusCodes as Status } from 'http-status-codes'
 import AppError from '#utils/appError.js'
 import ApiResponse from '#utils/apiResponse.js'
 
@@ -17,27 +17,27 @@ class ProjectController {
 
   async getAllProjects(req, res) {
     const projects = await this.projectService.getAll()
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Projects retrieved successfully", projects))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Projects retrieved successfully", projects))
   }
 
   async getAllProjectsImages(req, res) {
     const images = await this.projectService.fetchProjectImages()
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Projects images retrieved successfully", images))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Projects images retrieved successfully", images))
   }
   
   async addProject(req, res) {
     const project = await this.projectService.addProject(req.body, req.file.path)
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Project saved successfully", project))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Project saved successfully", project))
   }
   
   async editProject (req, res) {
     const updatedProject = await this.projectService.editProject(req.body, req.params.id, req.file.path)
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Project updated successfully", updatedProject))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Project updated successfully", updatedProject))
   }
 
   async deleteProject(req, res) {
     await this.projectService.deleteProject(req.body.public_id, req.params.id)
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Project deleted successfully"))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Project deleted successfully"))
   }
 
   async renderAddProject(req, res, next) {
@@ -47,7 +47,7 @@ class ProjectController {
         user: req.user
       })
     } catch (err) {
-      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
+      next(new AppError(err.message, Status.INTERNAL_SERVER_ERROR))
     }
   }
 
@@ -61,7 +61,7 @@ class ProjectController {
         user: req.user
       })
     } catch (err) {
-      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
+      next(new AppError(err.message, Status.INTERNAL_SERVER_ERROR))
     }
   }
 }

@@ -1,4 +1,4 @@
-import { StatusCodes } from 'http-status-codes'
+import { StatusCodes as Status } from 'http-status-codes'
 import asyncHandler from 'express-async-handler'
 import AppError from '#utils/appError.js'
 import ApiResponse from '#utils/apiResponse.js'
@@ -16,24 +16,24 @@ class PublicationController {
 
   async getAllPublications (req, res) {
     const publications = await this.publicationService.getAll()
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publications retrived successfully", publications))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Publications retrived successfully", publications))
   }
 
   async addPublication(req, res) {  
     const publication = await this.publicationService.addPublication(req)
-    return res.status(StatusCodes.CREATED).json(ApiResponse.successResponse("Publication saved successfully", publication ))
+    return res.status(Status.CREATED).json(ApiResponse.successResponse("Publication saved successfully", publication ))
   }
 
   async editPublication(req, res) {
     const { id } = req.params
     const updatedPublication = await this.publicationService.editPublication(req, id)
 
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publication updated successfully", updatedPublication))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Publication updated successfully", updatedPublication))
   }
 
   async deletePublication(req, res) {
     await this.publicationService.deletePublication(req.params.id)
-    return res.status(StatusCodes.OK).json(ApiResponse.successResponse("Publication deleted successfully"))
+    return res.status(Status.OK).json(ApiResponse.successResponse("Publication deleted successfully"))
   }
 
   // Route to render the Add Publication form
@@ -44,7 +44,7 @@ class PublicationController {
         user: req.user
       })
     } catch (err) {
-      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
+      next(new AppError(err.message, Status.INTERNAL_SERVER_ERROR))
     }
   }
 
@@ -54,7 +54,7 @@ class PublicationController {
       const publication = await this.publicationService.getById(req.params.id)
     
       if (!publication) 
-        return res.status(StatusCodes.NOT_FOUND).send('Publication not found')
+        return res.status(Status.NOT_FOUND).send('Publication not found')
      
       const formattedPublication = this.publicationService.formatPublicationData(publication)
       
@@ -65,7 +65,7 @@ class PublicationController {
         }
       )
     } catch (err) {
-      next(new AppError(err.message, StatusCodes.INTERNAL_SERVER_ERROR))
+      next(new AppError(err.message, Status.INTERNAL_SERVER_ERROR))
     }
   }
 }
