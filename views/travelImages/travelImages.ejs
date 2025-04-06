@@ -4,7 +4,7 @@
   <div class="d-flex align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#travelImagesCollapse" aria-expanded="true" aria-controls="travelImagesCollapse">
-        <i class="bi bi-caret-right-fill"></i>
+        <i class="bi bi-caret-down-fill" id="travelImagesCollapseIcon"></i>
       </a>
       Travel Images
     </h2>
@@ -37,6 +37,18 @@
 
 <script>
   const travelImagesDeleteBtns = document.querySelectorAll(".delete-btn");
+  const travelImagesCollapse = document.getElementById('travelImagesCollapse');
+  const travelImagesCollapseIcon = document.getElementById('travelImagesCollapseIcon');
+
+  travelImagesCollapse.addEventListener('hide.bs.collapse', () => {
+    travelImagesCollapseIcon.classList.remove('bi-caret-down-fill');
+    travelImagesCollapseIcon.classList.add('bi-caret-right-fill');
+  });
+
+  travelImagesCollapse.addEventListener('show.bs.collapse', () => {
+    travelImagesCollapseIcon.classList.remove('bi-caret-right-fill');
+    travelImagesCollapseIcon.classList.add('bi-caret-down-fill');
+  });
 
   travelImagesDeleteBtns.forEach(button => {
     button.addEventListener('click', async function() {
