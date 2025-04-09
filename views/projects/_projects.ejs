@@ -2,7 +2,7 @@
   <div class="d-flex align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#projectsCollapse" aria-expanded="true" aria-controls="projectsCollapse">
-        <i class="bi bi-caret-right-fill"></i>
+        <i class="bi bi-caret-down-fill" id="projectCollapseIcon"></i>
       </a>
       Projects
     </h2>  
@@ -31,6 +31,18 @@
 
 <script>
   const deleteButtons = document.querySelectorAll(".delete-btn");
+  const projectCollapseEl = document.getElementById('projectsCollapse');
+  const projectCollapseIcon = document.getElementById('projectCollapseIcon');
+
+  projectCollapseEl.addEventListener('hide.bs.collapse', () => {
+    projectCollapseIcon.classList.remove('bi-caret-down-fill');
+    projectCollapseIcon.classList.add('bi-caret-right-fill');
+  });
+
+  projectCollapseEl.addEventListener('show.bs.collapse', () => {
+    projectCollapseIcon.classList.remove('bi-caret-right-fill');
+    projectCollapseIcon.classList.add('bi-caret-down-fill');
+  });
 
   deleteButtons.forEach(button => {
     button.addEventListener('click', async function() {

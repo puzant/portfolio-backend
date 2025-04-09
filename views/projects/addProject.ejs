@@ -15,7 +15,7 @@
     </nav>
 
     <%- include('./_projectsForm', { 
-      formAction: '/projects/api/add',
+      formAction: '/v1/projects/add',
       formId: 'addForm',
       project: null,
     }) %>
@@ -23,6 +23,7 @@
   </div>
 
   <script src="/js/alert.js"></script>
+  <script src="/js/validator.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -42,28 +43,37 @@
         }
       })
 
-      form.addEventListener('submit', function(event) {
+      form.addEventListener('submit', async function(event) {
         event.preventDefault()
+
+        let errorsMap = {}
+        let fieldsMap = [
+          { path: 'name' },
+          { path: 'link' },
+          { path: 'description' },
+          { path: 'file' },
+        ]
         const formData = new FormData(form)
         document.getElementById('loadingIndicator').style.display = 'block'
-      
-        fetch(this.action, {
-          method: this.method,
-          body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            showAlert('danger', data.error)
-          } else {
-            showAlert('success', 'Project added successfully!')
+
+        try {
+          const response = await axios({
+            url: this.action,
+            method: this.method,
+            data: formData,
+          })
+
+          if (response.data.success) {
+            showAlert('success', response.data.message)
+            errorsMap = []
           }
-        }).catch(err => {
-          showAlert('danger', 'An unexpected error occurred.')
-          console.error(err)
-        }).finally(() => {
+        } catch (err) {
+          errorsMap = err.response.data.errors
+          validator(errorsMap, fieldsMap)
+          showAlert('danger', err.response.data.message)
+        } finally {
           document.getElementById('loadingIndicator').style.display = 'none'
-        })
+        }
       })
     })
   </script>
