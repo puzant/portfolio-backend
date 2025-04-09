@@ -15,13 +15,14 @@
     </nav>
 
     <%- include('./_publicationsForm', { 
-      formAction: '/publications/api/add',
+      formAction: '/v1/publications/add',
       formId: 'addForm',
       publication: null,
     }) %>
   </div>
 
   <script src="/js/alert.js"></script>
+  <script src="/js/validator.js"></script>
 
   <script>
      document.addEventListener('DOMContentLoaded', () => {
@@ -31,61 +32,35 @@
       form.addEventListener('submit', async function(event) {
         event.preventDefault()
 
-        let isValid = true
+        let errorsMap = {}
+        let fieldsMap = [
+          { path: 'title' },
+          { path: 'publishedDate' },
+          { path: 'link' },
+          { path: 'duration' },
+          { path: 'preview' },
+        ]
+
         const formData = new FormData(form)
-        
-        const title = document.getElementById('title').value.trim()
-        const publishedDate = document.getElementById('publishedDate').value.trim()
-        const link = document.getElementById('link').value.trim()
-        const duration = document.getElementById('duration').value.trim()
-        const preview = document.getElementById('preview').value.trim()
-        const parsedDate = Date.parse(publishedDate)
-        
-        if (!title) {
-          document.getElementById('titleError').textContent = 'Title is required'
-          isValid = false
-        }
-        
-        if (isNaN(parsedDate)) {
-          document.getElementById('publishedDateError').textContent = 'Published Date is required'
-          isValid = false
-        }
+        document.getElementById('loadingIndicator').style.display = 'block'
 
-        if (!link) {
-          document.getElementById('linkError').textContent = 'Link is required'
-          isValid = false
-        }
-
-        if (!duration) {
-          document.getElementById('durationError').textContent = 'Duration is required'
-          isValid = false
-        }
-
-        if (!preview) {
-          document.getElementById('previewError').textContent = 'Preview is required'
-          isValid = false
-        }
-
-        if (isValid) {
-          document.getElementById('loadingIndicator').style.display = 'block'
-
-          try {
-            const response = await axios({
-              url: this.action,
-              method: this.method,
-              data: Object.fromEntries(formData),
-            })
+        try {
+          const response = await axios({
+            url: this.action,
+            method: this.method,
+            data: Object.fromEntries(formData),
+          })
             
-            if (response.data.success) {
-              showAlert('success', response.data.message)
-            } else if (response.data.error) {
-              showAlert('danger', response.data.error)
-            }
-          } catch (err) {
-            showAlert('danger', 'An unexpected error occurred.')
-          } finally {
-            document.getElementById('loadingIndicator').style.display = 'none'
+          if (response.data.success) {
+            showAlert('success', response.data.message)
+            errorsMap = []
           }
+        } catch (err) {
+          errorsMap = err.response.data.errors
+          validator(errorsMap, fieldsMap)
+          showAlert('danger', err.response.data.message)
+        } finally {
+          document.getElementById('loadingIndicator').style.display = 'none'
         }
       })
     })
