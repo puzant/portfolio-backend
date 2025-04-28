@@ -1,13 +1,13 @@
 <div class="tab-pane fade show active" id="account-settings" role="tabpanel" aria-labelledby="account-settings" tabindex="0">
   <h2>Edit User Info </h2>
   
-  <form id="userInfo" action="settings/update-user" method="POST">
+  <form id="userInfo" action="v1/settings/update-user" method="POST">
     <div class="row">
       <div class="col-md-6">
         <label class="form-label">Name</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1"><i class="bi bi-person"></i></span>
-          <input name="name" type="text" class="form-control" value="<%= user.username %>">
+          <input name="name" type="text" class="form-control" value="<%= user.username || '' %>">
         </div>
       </div>
   
@@ -15,7 +15,23 @@
         <label class="form-label">Email</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope"></i></span>
-          <input name="email" type="text" class="form-control" value="<%= user.email %>">
+          <input name="email" type="text" class="form-control" value="<%= user.email || '' %>">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Country</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope"></i></span>
+          <input name="country" type="text" class="form-control" value="<%= user.country || '' %>">
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">City</label>
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope"></i></span>
+          <input name="city" type="text" class="form-control" value="<%= user.city || '' %>">
         </div>
       </div>
     </div>
