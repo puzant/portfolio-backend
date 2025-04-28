@@ -27,6 +27,7 @@ router.get('/projects/add', authMiddleware, projectController.renderAddProject)
 router.get('/projects/edit/:id', authMiddleware, projectController.renderEditProject)
 
 router.get('/login', authController.renderLogin)
+router.get('/forgot-password', authController.renderPasswordReset)
 router.get('/settings', authMiddleware, settingsController.renderSettings)
 
 
