@@ -26,12 +26,12 @@ class ProjectController {
   }
   
   async addProject(req, res) {
-    const project = await this.projectService.addProject(req.body, req.file.path)
+    const project = await this.projectService.addProject(req)
     return res.status(Status.OK).json(ApiResponse.successResponse("Project saved successfully", project))
   }
   
   async editProject (req, res) {
-    const updatedProject = await this.projectService.editProject(req.body, req.params.id, req.file.path)
+    const updatedProject = await this.projectService.editProject(req, req.params.id)
     return res.status(Status.OK).json(ApiResponse.successResponse("Project updated successfully", updatedProject))
   }
 

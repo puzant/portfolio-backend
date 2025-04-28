@@ -43,6 +43,16 @@ class AuthController {
     res.status(Status.CREATED).json(ApiResponse.successResponse("User created successfully", { user: newUser }))
   }
 
+  async renderPasswordReset(req, res) {
+    try {
+      res.render('auth/forgotPassword', {
+        title: 'Reset Password'
+      })
+    } catch (err) {
+      res.status(Status.INTERNAL_SERVER_ERROR).render('error', { message: 'Internal Server Error. Please try again later.' })
+    }
+  }
+
   async renderLogin(req, res) {
     try {
       res.render('auth/login', {

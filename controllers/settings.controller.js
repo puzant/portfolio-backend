@@ -18,7 +18,7 @@ class SettingsController {
 
   async deleteUserAccount(req, res) {
     const user = await this.settingsService.deleteUserAccount(req)
-    return res.status(Status.OK).json(ApiResponse.successResponse("User updated successfully", user))
+    return res.status(Status.OK).json(ApiResponse.successResponse("User deleted successfully", user))
   }
 
   async updatePassword(req, res) {
