@@ -1,5 +1,3 @@
-console.log("api.js loaded!"); // ✅ Check if script runs
-
 function showAlert(type, message) {
   const alert = document.createElement('div')
   alert.className = `alert alert-${type} alert-dismissible fade show`
