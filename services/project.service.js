@@ -3,6 +3,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import { StatusCodes as Status } from 'http-status-codes'
 import Project from "#models/project.js"
 import AppError from '#utils/appError.js'
+import { validationResult } from 'express-validator'
 
 class ProjectService {
   async getAll() {
@@ -32,13 +33,16 @@ class ProjectService {
     return images
   }
 
-  async addProject(reqBody, filePath) {
-    const { name, description, link } = reqBody
+  async addProject(req) {
+    const { name, description, link } = req.body
+    const errors = validationResult(req)
 
-    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", Status.BAD_REQUEST)
-      const result = await cloudinary.uploader.upload(filePath, {
-        folder: 'projects'
-      })
+    if (!errors.isEmpty()) 
+      throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
+  
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'projects'
+    })
 
     const project = await Project.create({
       name: name,
@@ -52,10 +56,12 @@ class ProjectService {
     return project
   }
 
-  async editProject(reqBody, id, filePath) {
-    const { name, description, preview, link, public_id, asset_id, previewChanged } = reqBody
+  async editProject(req, id) {
+    const { name, description, preview, link, public_id, asset_id, previewChanged } = req.body
+    const errors = validationResult(req)
 
-    if (!name || !description || !link) throw new AppError("All fields are required: name, description, link", Status.BAD_REQUEST)
+    if (!errors.isEmpty()) 
+      throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
 
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError("Invalid Project ID", Status.NOT_FOUND)
@@ -64,16 +70,16 @@ class ProjectService {
     const isPreviewChanged = (previewChanged === 'true')
 
     if (isPreviewChanged) {
-     try {
-      await cloudinary.uploader.destroy(public_id)
-      const uploadingResult =  await cloudinary.uploader.upload(filePath, { folder: 'projects' })
+      try {
+        await cloudinary.uploader.destroy(public_id)
+        const uploadingResult =  await cloudinary.uploader.upload(req.file.path, { folder: 'projects' })
 
-      updatedFields.preview = uploadingResult.secure_url;
-      updatedFields.public_id = uploadingResult.public_id;
-      updatedFields.asset_id = uploadingResult.asset_id;
-     } catch (error) {
-      throw new AppError(`Cloudinary Error ${error.message}`, Status.INTERNAL_SERVER_ERROR)
-     }
+        updatedFields.preview = uploadingResult.secure_url;
+        updatedFields.public_id = uploadingResult.public_id;
+        updatedFields.asset_id = uploadingResult.asset_id;
+      } catch (error) {
+        throw new AppError(`Cloudinary Error ${error.message}`, Status.INTERNAL_SERVER_ERROR)
+      }
     } else {
       updatedFields.preview = preview
       updatedFields.asset_id = asset_id
