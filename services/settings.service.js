@@ -4,6 +4,11 @@ import User from "#models/user.js"
 import AppError from "#utils/appError.js"
 
 class SettingsService {
+  async handleNetlifyDeployment() {
+    const response = await fetch('https://api.netlify.com/build_hooks/6815023f7e3bdc22bcb9e832', { method: 'POST' })
+    return response
+  }
+
   async updateUserInfo(req) {
     const { email, name } = req.body
     const userId = req.user.id
