@@ -8,14 +8,26 @@
   <div class="tab-content p-4 w-75" id="myTabContent">
     <div id="alertContainer"></div>
 
+    <%- include('./actions', { user }) %>
     <%- include('./userInfo', { user }) %>
     <%- include('./securitySettings', { user }) %>
     <%- include('./dangerZone', { user }) %>
-  </div>
+  </div>  
 
   <script src="/js/alert.js"></script>
   <script src="/js/securitySettingsFormHandler.js"></script>
   <script src="/js/userInfoFormHandler.js"></script>
   <script src="/js/dangerZoneFormHandler.js"></script>
+
+  <script>
+    document.getElementById('deploy-btn').addEventListener('click', async () => {
+      const response = await axios({
+        url: '/v1/settings/trigger-deploy',
+        method: 'POST',
+        data: {}
+      })
+    })
+  </script>
+
 </body>
 </html>
