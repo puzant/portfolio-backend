@@ -5,10 +5,16 @@ import ApiResponse from '#utils/apiResponse.js'
 class SettingsController {
   constructor(settingsService) {
     this.settingsService = settingsService
+    this.triggerNetlifyDeployment = asyncHandler(this.triggerNetlifyDeployment.bind(this))
     this.updateUserInfo = asyncHandler(this.updateUserInfo.bind(this))
     this.deleteUserAccount = asyncHandler(this.deleteUserAccount.bind(this))
     this.updatePassword = asyncHandler(this.updatePassword.bind(this))
     this.renderSettings = this.renderSettings.bind(this)
+  }
+
+  async triggerNetlifyDeployment(req, res) {
+    const response = await this.settingsService.handleNetlifyDeployment()
+    return res.status(Status.OK).json(ApiResponse.successResponse("Deployment started", response))
   }
 
   async updateUserInfo(req, res) {
