@@ -4,6 +4,7 @@ import AuthController from "#controllers/auth.controller.js"
 import ProjectController from "#controllers/project.controller.js"
 import SettingsController from "#controllers/settings.controller.js"
 import PublicationController from "#controllers/publication.controller.js"
+import TravelImagesController from '#controllers/travelImages.controller.js'
 
 import ProjectService from "#services/project.service.js"
 import SettingsService from "#services/settings.service.js"
@@ -19,12 +20,15 @@ const publicationService = new PublicationService()
 const projectController = new ProjectController(projectService)
 const settingsController = new SettingsController(settingsService)
 const publicationController = new PublicationController(publicationService)
+const travelImagesController = new TravelImagesController()
 
 router.get('/publication/add', authMiddleware, publicationController.renderAddPublication)
 router.get('/publication/edit/:id', authMiddleware, publicationController.renderEditPublication)
 
 router.get('/projects/add', authMiddleware, projectController.renderAddProject)
 router.get('/projects/edit/:id', authMiddleware, projectController.renderEditProject)
+
+router.get('/travel-images/add', authMiddleware, travelImagesController.renderAddTravelImage)
 
 router.get('/login', authController.renderLogin)
 router.get('/forgot-password', authController.renderPasswordReset)

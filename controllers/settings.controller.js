@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import { StatusCodes as Status } from 'http-status-codes'
 import ApiResponse from '#utils/apiResponse.js'
+import User from '#models/user.js'
 
 class SettingsController {
   constructor(settingsService) {
@@ -33,10 +34,12 @@ class SettingsController {
   }
 
   async renderSettings(req, res) {
+    const user = await User.findById(req.user.id)
+
     try {
       res.render('settings/settings', {
         title: 'Settings',
-        user: req.user
+        user: user
       })
     } catch (error) {
       res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })

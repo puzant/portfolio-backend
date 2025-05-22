@@ -10,10 +10,10 @@ class SettingsService {
   }
 
   async updateUserInfo(req) {
-    const { email, name } = req.body
+    const { email, name, country, city } = req.body
     const userId = req.user.id
   
-    const updatedUser = await User.findByIdAndUpdate(userId, { email, name }, {
+    const updatedUser = await User.findByIdAndUpdate(userId, { email, name, country, city }, {
       new: true, 
       runValidators: true 
     })
