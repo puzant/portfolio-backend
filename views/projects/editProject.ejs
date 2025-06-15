@@ -17,7 +17,7 @@
     <h3><%= project.name %></h3>
 
     <%- include('./_projectsForm', { 
-      formAction: `/projects/api/edit/${project._id}`,
+      formAction: `/v1/projects/edit/${project._id}`,
       formId: 'editForm',
       project
     }) %>
