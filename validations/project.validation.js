@@ -22,7 +22,9 @@ const projectValidation = [
     .isString()
     .withMessage("Link should be string"),
   check("file")
-    .custom((value, { req,  }) => {
+    .custom((value, { req }) => {
+      if (req.body.previewChanged === 'false') return true
+
       if (!req.file || !req.file.path) {
         throw new AppError("Preview is required", Status.BAD_REQUEST)
       }
