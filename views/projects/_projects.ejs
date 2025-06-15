@@ -16,13 +16,17 @@
       There are no projects yet!
     </div>
     <% } else { %>
-    
-    <div class="collapse show" id="projectsCollapse">
-      <div class="d-flex gap-4">
-        <% projects.forEach(project => { %>
-          <%- include('./_project', { project }) %>
-          <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
-        <% }) %>
+   
+    <div class="collapse show " id="projectsCollapse">
+      <div class="container-fluid">
+        <div class="row">
+          <% projects.forEach(project => { %>
+            <div class="col-md-3 mb-3">
+              <%- include('./_project', { project }) %>
+              <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
+            </div>
+          <% }) %>
+        </div>
       </div>
     </div>
   
