@@ -17,11 +17,11 @@
     </div>
     <% } else { %>
    
-    <div class="collapse show " id="projectsCollapse">
+    <div class="collapse show" id="projectsCollapse">
       <div class="container-fluid">
-        <div class="row">
+        <div class="row" id="items-container">
           <% projects.forEach(project => { %>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-3 mb-3" data-id="<%= project._id %>">
               <%- include('./_project', { project }) %>
               <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
             </div>
@@ -33,7 +33,33 @@
   <% } %>
 </div>
 
+<script src="/js/alert.js"></script>
 <script>
+  const itemsContainer = document.getElementById('items-container')
+
+  const sortable = new Sortable(itemsContainer, {
+    animation: 150,
+    ghostClass: 'sortable-ghost', 
+    onEnd: async (evt) => {
+      const order = Array.from(evt.from.children).map(child => child.dataset.id)
+      
+      try {
+        const response = await axios({
+          url: '/v1/projects/reorder-project',
+          method: 'POST',
+          data: order,
+        })
+     
+        if (response.data.success) {
+          console.log('inside')
+          showAlert('success', response.data.message)
+        }
+      } catch (err) {
+        showAlert('danger', err.response.data.message)
+      }
+    }
+  })
+
   const deleteButtons = document.querySelectorAll(".delete-btn");
   const projectCollapseEl = document.getElementById('projectsCollapse');
   const projectCollapseIcon = document.getElementById('projectCollapseIcon');
