@@ -6,6 +6,8 @@
 
 <body>
   <%- include('./partials/_navigation') %>
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;" id="alertContainer"></div>
+
   <%- include('./projects/_projects', { projects }) %>
   <%- include('./publications/_publications', { publications }) %>
   <%- include('./travelImages/travelImages', { travelImages }) %>
