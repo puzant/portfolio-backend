@@ -7,7 +7,7 @@ import { validationResult } from 'express-validator'
 
 class ProjectService {
   async getAll() {
-    return Project.find().lean()
+    return Project.find().sort({ priority: 1 }).lean()
   }
 
   async getById(id) {
@@ -101,6 +101,16 @@ class ProjectService {
     await cloudinary.uploader.destroy(publicId)
     await Project.findByIdAndDelete(id)
   }
+
+  async reorderProject(order) {
+    const bulkOps = order.map((id, index) => ({
+      updateOne: { filter: { _id: id }, update: { priority: index } }
+    }))
+
+    const res = await Project.bulkWrite(bulkOps)
+    return res
+  }
+
 }
 
 export default ProjectService
