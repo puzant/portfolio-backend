@@ -13,6 +13,7 @@ class ProjectController {
     this.deleteProject = asyncHandler(this.deleteProject.bind(this))
     this.renderAddProject = this.renderAddProject.bind(this)
     this.renderEditProject = this.renderEditProject.bind(this)
+    this.reorderProject = this.reorderProject.bind(this)
   }
 
   async getAllProjects(req, res) {
@@ -38,6 +39,11 @@ class ProjectController {
   async deleteProject(req, res) {
     await this.projectService.deleteProject(req.body.public_id, req.params.id)
     return res.status(Status.OK).json(ApiResponse.successResponse("Project deleted successfully"))
+  }
+
+  async reorderProject(req, res) {
+    await this.projectService.reorderProject(req.body)
+    return res.status(Status.OK).json(ApiResponse.successResponse("Project reordered sucessfully"))
   }
 
   async renderAddProject(req, res, next) {
