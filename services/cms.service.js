@@ -5,7 +5,7 @@ import cloudinaryService from '../cloudinary.js'
 
 class CmsService {
   async getProjects() {
-    return Projects.find({}).lean()
+    return Projects.find().sort({ priority: 1 }).lean()
   }
 
   async getPublications() {
