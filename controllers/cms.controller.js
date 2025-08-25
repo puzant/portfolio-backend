@@ -6,7 +6,18 @@ const renderCmsPage = async (req, res, next) => {
     const publications = await cmsService.getPublications()
     const travelImages = await cmsService.getTravelImages()
 
-    res.render('index', { travelImages, publications, projects, title: 'CMS', user: req.user })
+    const projectsOrder = projects
+                          .sort((a, b) => a.priority - b.priority)
+                          .map(project => project._id.toString())
+
+    res.render('index', { 
+      travelImages,
+      publications, 
+      projects, 
+      title: 'CMS', 
+      user: req.user, 
+      projectsOrder 
+    })
   } catch (error) {
     next(error)
   }
