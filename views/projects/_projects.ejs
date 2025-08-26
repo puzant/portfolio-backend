@@ -44,15 +44,16 @@
       const order = Array.from(evt.from.children).map(child => child.dataset.id)
       
       try {
-        const response = await axios({
-          url: '/v1/projects/reorder-project',
-          method: 'POST',
-          data: order,
-        })
-     
-        if (response.data.success) {
-          console.log('inside')
-          showAlert('success', response.data.message)
+        if (evt.oldIndex !== evt.newIndex) {
+          const response = await axios({
+            url: '/v1/projects/reorder-project',
+            method: 'POST',
+            data: order,
+          })
+        
+          if (response.data.success) {
+            showAlert('success', response.data.message)
+          }
         }
       } catch (err) {
         showAlert('danger', err.response.data.message)
