@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { v2 as cloudinary } from 'cloudinary'
 import { StatusCodes as Status } from 'http-status-codes'
-import Project from "#models/project.js"
+import Project from "#models/project.model.js"
 import AppError from '#utils/appError.js'
 import { validationResult } from 'express-validator'
 

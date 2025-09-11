@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import { StatusCodes as Status } from 'http-status-codes'
 import ApiResponse from '#utils/apiResponse.js'
-import User from '#models/user.js'
+import User from '#models/user.model.js'
 
 class SettingsController {
   constructor(settingsService) {

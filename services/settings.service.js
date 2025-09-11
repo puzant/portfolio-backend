@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { StatusCodes as Status } from "http-status-codes"
-import User from "#models/user.js"
+import User from "#models/user.model.js"
 import AppError from "#utils/appError.js"
 
 class SettingsService {
