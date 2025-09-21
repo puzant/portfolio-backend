@@ -8,7 +8,6 @@ class AuthController {
     this.authService = authService
     this.login = asyncHandler(this.login.bind(this))
     this.logout = asyncHandler(this.logout.bind(this))
-    this.forgotPassword = asyncHandler(this.forgotPassword.bind(this))
     this.createUser = asyncHandler(this.createUser.bind(this))
   }
 
@@ -28,14 +27,6 @@ class AuthController {
   async logout(req, res) {
     res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' })
     res.status(Status.OK).json(ApiResponse.successResponse("Logged out successfully"))
-  }
-  
-  async forgotPassword(req, res) {
-    try {
-  
-    } catch (err) {
-      
-    }
   }
 
   async createUser(req, res) {
