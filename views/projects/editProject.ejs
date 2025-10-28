@@ -28,9 +28,8 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      let project = <%-JSON.stringify(project)%>
       
-      var project = <%-JSON.stringify(project)%>
-
       let preivewChanged = false
       const form = document.getElementById('editForm')
       const fileInput = document.getElementById('fileInput')
