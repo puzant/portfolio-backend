@@ -14,7 +14,7 @@ Access the API at [https://portfolio-backend-gq2s.onrender.com/cms](https://port
 
 ![app-screenshot](./public/assets/app-preview.png)
 
-## API Endpoints V2
+## API Endpoints V1
 **Projects**
 | **Endpoint**   | **Method**  | **Description**  | **Data Fields** |
 | -------- | ------- | ------- | ------- |
