@@ -9,8 +9,8 @@ const router = express.Router()
 const travelImagesController = new TravelImagesController(cloudinaryService)
 
 router.get('/', travelImagesController.getAllTravelImages)
+router.get('/add', authMiddleware, travelImagesController.renderAddTravelImage)
 router.post('/add', authMiddleware, upload.single('travelImage'), travelImagesController.addTravelImage)
 router.delete('/remove/:id', authMiddleware, travelImagesController.deleteTravelImage)
-router.get('/add', authMiddleware, travelImagesController.renderAddTravelImage)
 
 export default router

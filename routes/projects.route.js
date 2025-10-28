@@ -13,7 +13,7 @@ router.get('/', projectController.getAllProjects)
 router.get('/projects-images', authMiddleware, projectController.getAllProjectsImages)
 router.post('/add', authMiddleware, upload.single('preview'), projectValidation, projectController.addProject)
 router.post('/edit/:id', authMiddleware, upload.single('preview'), projectValidation, projectController.editProject)
-router.delete('/delete/:id', authMiddleware, projectController.deleteProject)
 router.post('/reorder-project', authMiddleware, projectController.reorderProject)
+router.delete('/delete/:id', authMiddleware, projectController.deleteProject)
 
 export default router
