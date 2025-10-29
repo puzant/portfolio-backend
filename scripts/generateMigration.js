@@ -19,7 +19,7 @@ import ${modelName} from "../models/${modelNameLowerCased}.model.js"
 
 export async function up() {
   await mongoose.connect(process.env.MONGO_URI)
-  await ${modelName}.updateMany({ w${fieldName}: { $exists: false } }, { $set: { ${fieldName}: null } });
+  await ${modelName}.updateMany({ ${fieldName}: { $exists: false } }, { $set: { ${fieldName}: null } });
   console.log("✅ Migration ${migrationName} applied")
   await mongoose.disconnect()  
 }

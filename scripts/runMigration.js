@@ -1,31 +1,33 @@
+import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'url'
-import dotenv  from 'dotenv'
+import dotenv from 'dotenv'
 
 dotenv.config()
-const migrationFile = process.argv[2]
-
-if (!migrationFile) {
-  console.error("❌ Please provide a migration file name")
-  process.exit(1)
-}
+const direction = process.argv[2] || 'up'
 
 async function run() {
   try {
-    const migrationPath = path.join(process.cwd(), 'migrations', migrationFile)
+    const files = fs.readdirSync(path.join(process.cwd(), 'migrations'));
+    const migrations = files.filter(f => f.endsWith('.js'))
+    migrations.sort()
+
+    const latestMigration = migrations[migrations.length - 1]
+    const migrationPath = path.join(process.cwd(), 'migrations', latestMigration)
     const migrationURL = pathToFileURL(migrationPath).href
     const migration = await import(migrationURL)
 
-    if (!migration.up) {
-      console.error("❌ Migration does not export an 'up' function")
+    if (!migration[direction]) {
+      console.error(`❌ Migration does not export a ${direction} function`)
       process.exit(1)
     }
 
-    await migration.up()
-    console.log(`✅ Migration ${migrationFile} executed successfully`);
+    console.log(`🚀 Running '${direction}' for migration: ${latestMigration}`)
+    await migration[direction]()
+    console.log(`✅ Migration ${latestMigration} ${direction} executed successfully`)
     process.exit(0)
   } catch (err) {
-    console.error("❌ Migration failed:", err);
+    console.error(`❌ Migration ${direction} failed:`, err);
     process.exit(1);
   }
 }
