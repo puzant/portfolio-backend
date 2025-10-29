@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --no-warnings index.js",
     "generate:migration": "node scripts/generateMigration.js",
-    "migrate": "node scripts/runMigration.js",
+    "migrate:latest": "node scripts/runMigration.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
