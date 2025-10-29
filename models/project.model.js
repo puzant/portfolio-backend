@@ -8,7 +8,8 @@ const projectSchema = new mongoose.Schema({
   public_id: { type: String, required: true },
   asset_id: { type: String, required: true },
   priority: { type: Number, default: 0 },
-  active: { type: Boolean, default: true }
+  active: { type: Boolean, default: true },
+  repo: { type: String, required: true }
 })
 
 export default mongoose.model('Porject', projectSchema)
