@@ -58,8 +58,9 @@ class ProjectService {
   }
 
   async editProject(req, id) {
-    const { name, description, preview, link, public_id, asset_id, previewChanged, active } = req.body
+    const { name, description, preview, link, public_id, asset_id, previewChanged, active, repo } = req.body
     const errors = validationResult(req)
+    let activeValue
 
     if (!errors.isEmpty()) 
       throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
@@ -67,7 +68,13 @@ class ProjectService {
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError("Invalid Project ID", Status.NOT_FOUND)
 
-    let updatedFields = { name, description, link, active };
+    if (Array.isArray(req.body.active)) {
+      activeValue = active.includes('true')
+    } else {
+      activeValue = active === 'true'
+    }
+
+    let updatedFields = { name, description, link, activeValue, repo }
     const isPreviewChanged = (previewChanged === 'true')
 
     if (isPreviewChanged) {
