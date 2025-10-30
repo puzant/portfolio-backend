@@ -29,6 +29,17 @@
       <span class="error text-danger" id="linkError"></span>
     </div>
 
+   <div class="col-md-6">
+      <label class="form-label">Github Repo</label>
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="basic-addon1"><i class="bi bi-github"></i></span>
+        <input name="repo" type="text" class="form-control" value="<%= project?.repo || '' %>">
+      </div>
+      <span class="error text-danger" id="linkError"></span>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-md-6">
       <label class="form-label">Preview</label>
       <div class="input-group mb-3">
