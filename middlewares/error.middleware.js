@@ -5,6 +5,8 @@ const errorMiddleware = (err, req, res, next) => {
   const errorDate = err.timeStamp
   const errors = err.errors || []
 
+  console.error('🔥 ERROR:', err)
+
   res.status(statusCode).json({
     success: false,
     message,
