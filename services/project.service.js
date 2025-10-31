@@ -34,12 +34,19 @@ class ProjectService {
   }
 
   async addProject(req) {
-    const { name, description, link } = req.body
+    const { name, description, link, repo, active } = req.body
     const errors = validationResult(req)
+    let activeValue
 
     if (!errors.isEmpty()) 
       throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
   
+    if (Array.isArray(req.body.active)) {
+      activeValue = active.includes('true')
+    } else {
+      activeValue = active === 'true'
+    }
+
     const result = await cloudinary.uploader.upload(req.file.path, {
       folder: 'projects'
     })
@@ -51,7 +58,8 @@ class ProjectService {
       public_id: result.public_id,
       asset_id: result.asset_id,
       link: link,
-      active: result.active
+      active: activeValue,
+      repo: repo
     })
 
     return project
