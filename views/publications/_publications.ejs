@@ -1,5 +1,5 @@
 <div class="p-4 my-2">
-  <div class="d-flex align-items-center gap-3">
+  <div class="d-flex justify-content-between justify-content-md-start align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#publicationsCollapse" aria-expanded="true" aria-controls="publicationsCollapse">
         <i class="bi bi-caret-down-fill" id="publicationCollapseIcon"></i>
@@ -19,11 +19,15 @@
   <% } else { %>
 
     <div class="collapse show" id="publicationsCollapse">
-      <div class="d-flex gap-4">
-        <% publications.forEach(publication => { %>
-          <%- include('./_publication', { publication }) %>
-          <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
+      <div class="container-fluid">
+        <div class="row">
+          <% publications.forEach(publication => { %>
+          <div class="col-md-3 mb-3">
+            <%- include('./_publication', { publication }) %>
+            <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
+          </div>
         <% }) %>
+        </div>
       </div>
     </div>
   <% } %>
