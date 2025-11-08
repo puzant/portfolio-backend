@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import Projects from '#models/project.model.js'
-import Publications from '#models/publications.model.js'
+import Publications from '#models/publication.model.js'
 import cloudinaryService from '../cloudinary.js'
 
 class CmsService {

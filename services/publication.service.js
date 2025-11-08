@@ -4,7 +4,7 @@ import { StatusCodes as Status } from 'http-status-codes'
 import { validationResult } from 'express-validator'
 
 import AppError from "#utils/appError.js"
-import Publication from '#models/publications.model.js'
+import Publication from '#models/publication.model.js'
 
 class PublicationService {
   async getAll() {
