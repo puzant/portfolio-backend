@@ -4,28 +4,26 @@ import ApiResponse from '#utils/apiResponse.js'
 import AppError from '#utils/appError.js'
 
 class TravelImagesController {
-  constructor(cloudinaryService) {
-    this.cloudinaryService = cloudinaryService
+  constructor(TravelImageService) {
+    this.TravelImageService = TravelImageService
     this.getAllTravelImages = this.getAllTravelImages.bind(this)
     this.addTravelImage = this.addTravelImage.bind(this)
     this.deleteTravelImage = this.deleteTravelImage.bind(this)
+    this.syncCloudinaryToMongo = this.syncCloudinaryToMongo.bind(this)
 
     this.getAllTravelImages = asyncHandler(this.getAllTravelImages)
     this.addTravelImage = asyncHandler(this.addTravelImage)
     this.deleteTravelImage = asyncHandler(this.deleteTravelImage)
+    this.syncCloudinaryToMongo = asyncHandler(this.syncCloudinaryToMongo)
   }
 
   async getAllTravelImages(req, res) {
-    const cachedImages = cache.get('travelImages')
-    if (cachedImages) return res.json(ApiResponse.successResponse("Travel images retrieved successfully", cachedImages))
-  
-    const webpImages = await this.cloudinaryService.fetchTravelImages()
-    cache.set('travelImages', webpImages)
-    res.json(ApiResponse.successResponse("Travel images retrieved successfully", webpImages))
+    const travelImages = await this.TravelImageService.getAll()
+    res.json(ApiResponse.successResponse("Travel images retrieved successfully", travelImages))
   }
 
   async addTravelImage(req, res) {
-    const response = await this.cloudinaryService.uploadTravelImage(req.file.path)
+    const response = await this.TravelImageService.uploadTravelImage(req.file.path)
     if (response.secure_url) {
       res.status(201).json({
         success: true,
@@ -38,7 +36,7 @@ class TravelImagesController {
     const { id } = req.params
     if (!id) throw new AppError("No publicId provided", 400)
   
-    const response = await this.cloudinaryService.removeTravelImage(id)
+    const response = await this.TravelImageService.removeTravelImage(id)
     if (response.result === 'ok') {
       res.status(200).json({
         success: true,
@@ -56,6 +54,12 @@ class TravelImagesController {
     } catch (err) {
       res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
     }
+  }
+
+  async syncCloudinaryToMongo(req, res) {
+    const reuslts = await this.TravelImageService.syncCloudinaryImagesToMongo()
+    res.json(ApiResponse.successResponse("Travel images synced successfully", reuslts))
+
   }
 }
 

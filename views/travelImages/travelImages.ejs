@@ -23,8 +23,10 @@
           <div class="position-relative d-flex flex-column" id="<%= image.public_id %>" >
             <img class="img-thumbnail rounded" style=" object-fit: cover; width: 177px; height: 177px" src="<%= image.url %>" alt="">
             <div role="button" class="position-absolute top end-0 rounded bg-white p-1">
+              <a href=""><i class="bi bi-pencil mx-1"></i></a>
               <i class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= image.public_id.slice(8, image.public_id.length) %>"></i>
             </div>
+            <p class="small"><%= image.display_name %></p>
           </div>
           <%- include('../partials/_deleteModal', { data: {_id: image.public_id.slice(8, image.public_id.length), ...image}, type: 'Travel Image' }) %>
         <% }) %>

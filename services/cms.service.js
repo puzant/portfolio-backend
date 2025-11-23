@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import Projects from '#models/project.model.js'
 import Publications from '#models/publication.model.js'
-import cloudinaryService from '../cloudinary.js'
+import TravelImageService from '#services/travelImage.service.js'
 
 class CmsService {
   async getProjects() {
@@ -20,7 +20,7 @@ class CmsService {
   }
 
   async getTravelImages() {
-    return cloudinaryService.fetchTravelImages()
+    return TravelImageService.getAll()
   }
 }
 
