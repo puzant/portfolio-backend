@@ -5,10 +5,12 @@
         <i class="bi bi-caret-down-fill" id="projectCollapseIcon"></i>
       </a>
       Projects
-    </h2>  
-    <a href="projects/add">
-      <h5><i class="bi bi-plus-circle-fill"></i></h5>
-    </a>
+    </h2>
+    <% if (userRole === 'admin') { %>
+      <a href="projects/add">
+        <h5><i class="bi bi-plus-circle-fill"></i></h5>
+      </a>
+    <% } %>
   </div>
   
   <% if (projects.length == 0) { %>
@@ -17,16 +19,14 @@
     </div>
     <% } else { %>
    
-    <div class="collapse show" id="projectsCollapse">
-      <div class="container-fluid">
-        <div class="row" id="items-container">
-          <% projects.forEach(project => { %>
-            <div class="col-md-3 mb-3 drag-handle cursor-grab" data-id="<%= project._id %>">
-              <%- include('./_project', { project }) %>
-              <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
-            </div>
-          <% }) %>
-        </div>
+    <div class="container-fluid  show" id="projectsCollapse">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4" id="<%= userRole === 'admin' ? 'admin-items-container' : 'items-container' %>">
+        <% projects.forEach(project => { %>
+          <div class="mb-3 drag-handle cursor-grab" data-id="<%= project._id %>">
+            <%- include('./_project', { project, userRole: userRole }) %>
+            <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
+          </div>
+        <% }) %>
       </div>
     </div>
   
@@ -35,7 +35,7 @@
 
 <script src="/js/alert.js"></script>
 <script>
-  const itemsContainer = document.getElementById('items-container')
+  const itemsContainer = document.getElementById('admin-items-container')
 
   const sortable = new Sortable(itemsContainer, {
     animation: 150,

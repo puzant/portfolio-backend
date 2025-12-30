@@ -8,9 +8,9 @@
   <%- include('./partials/_navigation') %>
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;" id="alertContainer"></div>
 
-  <%- include('./projects/_projects', { projects }) %>
-  <%- include('./publications/_publications', { publications }) %>
-  <%- include('./travelImages/travelImages', { travelImages }) %>
+  <%- include('./projects/_projects', { projects, userRole: user.role }) %>
+  <%- include('./publications/_publications', { publications, userRole: user.role }) %>
+  <%- include('./travelImages/travelImages', { travelImages, userRole: user.role }) %>
   
   <script>
     document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -21,7 +21,7 @@
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          window.location.href = '/auth/login'
+          window.location.href = '/login'
         }
       })
     })

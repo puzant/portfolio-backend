@@ -7,9 +7,11 @@
       Publications
     </h2>
 
-    <a href="publication/add">
-      <h5><i class="bi bi-plus-circle-fill"></i></h5>
-    </a>
+    <% if (userRole === 'admin') { %>
+      <a href="publication/add">
+        <h5><i class="bi bi-plus-circle-fill"></i></h5>
+      </a>
+    <% } %>
   </div>
 
   <% if (publications.length == 0) { %>
@@ -22,11 +24,11 @@
       <div class="container-fluid">
         <div class="row">
           <% publications.forEach(publication => { %>
-          <div class="col-md-3 mb-3">
-            <%- include('./_publication', { publication }) %>
-            <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
-          </div>
-        <% }) %>
+            <div class="col-md-3 mb-3">
+              <%- include('./_publication', { publication, userRole: userRole }) %>
+              <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
+            </div>
+          <% }) %>
         </div>
       </div>
     </div>
