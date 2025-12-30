@@ -1,6 +1,11 @@
 class ApiResponse {
   static successResponse(message, data = null) {
-    return { message, data, success: true }
+    return { 
+      message, 
+      data, 
+      length: Array.isArray(data) ? data.length : null,
+      success: true, 
+    }
   }
 }
 
