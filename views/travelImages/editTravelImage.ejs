@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/_head') %>
+<body>
+  <%- include('../partials/_navigation') %>
+  
+  <div class="p-4">
+    <div id="alertContainer"></div>
+
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/cms">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Travel Image</li>
+      </ol>
+    </nav>
+
+    <form action="/v1/travel-images/edit/<%= travelImage?._id %>" id="update-travel-image">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-4 d-flex flex-column">
+            <img class="rounded object-fit-cover" src="<%= travelImage?.url %>" alt="">
+
+            <div class="d-flex justify-content-between">
+              <% if (prevImage) { %>
+                <a href="/travel-images/edit/<%=prevImage?._id %>"><i class="bi bi-arrow-left-circle fs-1"></i></a>              
+              <% } %>
+
+              <% if (nextImage) { %>
+                <a href="/travel-images/edit/<%=nextImage?._id %>"><i class="bi bi-arrow-right-circle fs-1"></i></a>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="col-md-8">
+            <label class="form-label">Display Name</label>
+          
+            <div class="input-group mb-3 w-50">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-lightbulb-fill"></i></span>
+              <input name="display_name" type="text" class="form-control" value="<%= travelImage?.display_name || '' %>">
+            </div>
+
+            <label class="form-label">Order</label>
+
+            <div class="input-group mb-3 w-50">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-border-all"></i></span>
+              <input disabled name="order" type="text" class="form-control" value="<%= travelImage?.order || '' %>">
+            </div>
+      
+            <span class="error text-danger" id="nameError"></span>
+
+            <p>Public ID: <span class="text-info fw-bold"><%= travelImage?.public_id %></span></p>
+            <button class="btn btn-primary" type="submit">
+              <div id="loadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
+              <span>Save</span>
+            </button>
+            <button onclick="window.location.href = '/cms'" type="button" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+  <script src="/js/alert.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('update-travel-image')
+      document.getElementById('loadingIndicator').style.display = 'none'
+
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault()
+        const formData = new FormData(form)
+        document.getElementById('loadingIndicator').style.display = 'block'
+
+        try {
+          const response = await axios({
+            url: this.action,
+            method: 'PATCH',
+            data: Object.fromEntries(formData),
+          })
+
+           if (response.data.success) {
+            showAlert('success', response.data.message)
+          } else if (response.data.error) {
+            showAlert('danger', response.data.error)
+          }
+        } catch (err) {
+          showAlert('danger', 'An unexpected error occurred.')
+        } finally {
+          document.getElementById('loadingIndicator').style.display = 'none'
+        }
+      })
+    })
+  </script>
+</body>
+</html>
