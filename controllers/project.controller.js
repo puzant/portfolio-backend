@@ -1,6 +1,5 @@
 import asyncHandler from 'express-async-handler'
 import { StatusCodes as Status } from 'http-status-codes'
-import AppError from '#utils/appError.js'
 import ApiResponse from '#utils/apiResponse.js'
 
 class ProjectController {
@@ -11,9 +10,10 @@ class ProjectController {
     this.addProject = asyncHandler(this.addProject.bind(this))
     this.editProject = asyncHandler(this.editProject.bind(this))
     this.deleteProject = asyncHandler(this.deleteProject.bind(this))
-    this.renderAddProject = this.renderAddProject.bind(this)
-    this.renderEditProject = this.renderEditProject.bind(this)
-    this.reorderProject = this.reorderProject.bind(this)
+    this.reorderProject = asyncHandler(this.reorderProject.bind(this))
+
+    this.renderAddProject = asyncHandler(this.renderAddProject.bind(this))
+    this.renderEditProject = asyncHandler(this.renderEditProject.bind(this))
   }
 
   async getAllProjects(req, res) {
@@ -47,28 +47,18 @@ class ProjectController {
   }
 
   async renderAddProject(req, res, next) {
-    try {
-      return res.render('projects/addProject', {
-        title: 'Add Project',
-        user: req.user
-      })
-    } catch (err) {
-      next(new AppError(err.message, Status.INTERNAL_SERVER_ERROR))
-    }
+    return res.render('projects/addProject', {
+      title: 'Add Project',
+    })
   }
 
   async renderEditProject(req, res, next) {
-    try {
-      const project = await this.projectService.getById(req.params.id)
+    const project = await this.projectService.getById(req.params.id)
     
-      return res.render('projects/editProject', {
-        project,
-        title: 'Edit Project',
-        user: req.user
-      })
-    } catch (err) {
-      next(new AppError(err.message, Status.INTERNAL_SERVER_ERROR))
-    }
+    return res.render('projects/editProject', {
+      project,
+      title: 'Edit Project',
+    })
   }
 }
 

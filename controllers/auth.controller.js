@@ -2,30 +2,47 @@ import asyncHandler from 'express-async-handler'
 import { StatusCodes as Status } from 'http-status-codes'
 
 import ApiResponse from '#utils/apiResponse.js'
+import setAuthCookies from '#utils/setAuthCookies.js'
 
 class AuthController {
   constructor(authService) {
     this.authService = authService
+    this.guestLogin = asyncHandler(this.guestLogin.bind(this))
     this.login = asyncHandler(this.login.bind(this))
     this.logout = asyncHandler(this.logout.bind(this))
     this.createUser = asyncHandler(this.createUser.bind(this))
   }
 
-  async login(req, res) {
-    const { token, user } = await this.authService.login(req)
+  async guestLogin(req, res) {
+    const { guestToken, guestRefreshToken, guest } = await this.authService.createGuestUser()
+    setAuthCookies(res, guestToken, guestRefreshToken)
 
-    res.cookie('token', token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict', 
-      maxAge: 3600000 
-    })
-  
-    return res.status(Status.OK).json(ApiResponse.successResponse("Login successful", user))
+    guest.refreshToken = guestRefreshToken
+    await guest.save()
+
+    return res.status(Status.OK).json(ApiResponse.successResponse("Login successful", {
+      id: guest._id,
+      username: guest.username,
+    }))
+  }
+
+  async login(req, res) {
+    const { token, refreshToken, user } = await this.authService.login(req)
+    setAuthCookies(res, token, refreshToken)
+
+    user.refreshToken = refreshToken
+    await user.save()
+
+    return res.status(Status.OK).json(ApiResponse.successResponse("Login successful", {
+      id: user._id,
+      username: user.username,
+      email: user.email
+    }))
   }
 
   async logout(req, res) {
     res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' })
+    res.clearCookie('refresh_token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' })
     res.status(Status.OK).json(ApiResponse.successResponse("Logged out successfully"))
   }
 
