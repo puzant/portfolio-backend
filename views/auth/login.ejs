@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('../partials/_head') %>
+<%- include('../partials/_head') %>
 
 <body>
   <div class="container-fluid p-3">
@@ -31,28 +31,30 @@
     
           <button class="btn btn-primary my-2" type="submit">Login</button>
         </form>
-          
-        <button class="btn btn-secondary" id="guest-login" type="button">Guest Login</button>
+
+        <form id="guestLoginForm" class="form" action="v1/auth/guest-login" method="POST">
+          <button class="btn btn-secondary" id="guestLogin" type="submit">Guest Login</button>
+        </form>
       </div>
     </div>
   </div>
-
 
   <script src="/js/alert.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('loginForm')
-      const guestLoginBtn = document.getElementById('guest-login')
+      const guestLoginForm = document.getElementById('guestLoginForm')
 
-      guestLoginBtn.addEventListener('click', async function(e) {
+      guestLoginForm.addEventListener('submit', async function(e) {
+        e.preventDefault()
         try {
-          const response = await api({
-            url: 'v1/auth/guest-login',
-            method: 'POST',
-            data: null,
+          const guestLoginResponse = await api({
+            url: this.action,
+            method: this.method,
+            data: {},
           })
 
-          if (response.success) {
+          if (guestLoginResponse.success) {
             window.location.href = '/cms'
           }
         } catch (err) {

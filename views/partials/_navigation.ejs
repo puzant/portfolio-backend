@@ -1,15 +1,31 @@
-<nav class="bg-black nav d-flex align-items-center justify-content-between p-1">
-  <div class="d-flex align-items-center gap-1">
-    <a href="/cms" class="text-white nav-link"><i class="fs-3 bi bi-house-door-fill"></i></a>
-    <a class="text-white nav-link" aria-current="page" href="https://puzant.netlify.app/" target="_blank">Portfolio</a>
-    <a class="text-white nav-link" href="#">Insights</a>
-    <a class="text-white nav-link" href="#">Traffic</a>
-  </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-black">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="d-flex align-items-center">
-    <% if (user.role === 'admin') { %>
-      <a href="/settings"><i class="bi bi-person-circle text-white fs-1"></i></a>
-    <% } %>
-    <div role="button" class="nav-link text-white" id="logoutBtn">Logout</div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-2 align-items-lg-center align-items-start">
+        <li class="nav-item">
+          <a class="d-flex align-items-center gap-2 nav-link text-white" aria-current="page" href="/cms"><i class="fs-3 bi bi-house-door-fill"></i>Home</a>
+        </li>
+        <% if (user.role === 'admin') { %>
+          <li class="nav-item">
+            <a class="d-flex align-items-center gap-2 nav-link text-white" href="#"><i class="fs-3 bi bi-graph-up"></i>Insights</a>
+          </li>
+          <li class="nav-item">
+            <a class="d-flex align-items-center gap-2 nav-link text-white" href="#"><i class="fs-3 bi bi-stoplights"></i>Traffic</a>
+          </li>
+        <% } %>
+      </ul>
+
+      <div class="d-flex align-items-lg-center align-items-start gap-3 flex-column flex-lg-row">
+        <% if (user.role === 'admin') { %>
+          <a class="d-flex align-items-center gap-2 nav-link text-white" href="/settings"><i class="bi bi-person-circle fs-3"></i>User</a>
+        <% } %>
+        <div role="button" class="nav-link text-white" id="logoutBtn">Logout</div>
+      </div>
+    </div>
+
   </div>
 </nav>

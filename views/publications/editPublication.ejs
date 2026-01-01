@@ -22,7 +22,7 @@
 
     <p class="fst-italic">Last modified <%= publication.lastModified %></p>
 
-    <%- include('./_publicationsForm', { 
+    <%- include('./publicationsForm', { 
       formAction: `/v1/publications/edit/${publication._id}`, 
       formId: 'editForm',
       publication 
