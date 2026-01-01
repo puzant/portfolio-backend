@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import { v2 as cloudinary } from 'cloudinary'
 
-import { wakeupJob } from './cron.js'
+import { keepAliveJob } from './jobs/keepAlive.js'
+import { cacheWarmerJob } from './jobs/cacheWarmer.js'
 
 //  API Routes
 import cmsRoute from './routes/cms.route.js'
@@ -18,7 +19,7 @@ import settingsRoute from './routes/settings.route.js'
 import publicationsRoute from './routes/publications.route.js'
 import travelImagesRoute from './routes/travelImages.route.js'
 
-import renderRoutes from './routes/renderRoutes.js'
+import renderRoutes from './routes/render.route.js'
 
 import errorHandler from './middlewares/error.middleware.js'
 import notFoundHandler from './middlewares/notFoundHandler.middleware.js'
@@ -46,8 +47,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
 app.use(cors({
+  credentials: true,
   origin: [process.env.FRONT_END_URL, process.env.FRONT_END_LOCAL_URL],
-  methods: ['GET', 'POST']
+  methods: ['GET', 'POST', 'DELETE', 'PATCH', 'OPTIONS']
 }))
 
 //  Register routes
@@ -63,7 +65,8 @@ app.use('/v1/settings', settingsRoute)
 app.use("*", notFoundHandler)
 app.use(errorHandler)
 
-wakeupJob.start()
+keepAliveJob.start()
+cacheWarmerJob.start()
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
