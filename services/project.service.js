@@ -1,20 +1,40 @@
 import mongoose from 'mongoose'
 import { v2 as cloudinary } from 'cloudinary'
 import { StatusCodes as Status } from 'http-status-codes'
-import Project from "#models/project.model.js"
-import AppError from '#utils/appError.js'
 import { validationResult } from 'express-validator'
 
+import Project from "#models/project.model.js"
+import AppError from '#utils/appError.js'
+
 class ProjectService {
+  constructor(cache) {
+    this.cache = cache
+    this.cacheKey = 'projects'
+  }
+
+  async _getCachedProjects() {
+    let projects = this.cache.get(this.cacheKey)
+
+    if (!projects) {
+      projects = await Project.find().sort({ priority: 1 }).lean()
+      this.cache.set(this.cacheKey, projects, 43200)
+    }
+    
+    return projects
+  }
+
   async getAll() {
-    return Project.find().sort({ priority: 1 }).lean()
+    return await this._getCachedProjects()
   }
 
   async getById(id) {
-    const project = await Project.findById(id)
-    
-    if (!project) 
-      throw new AppError("Project was not found", Status.NOT_FOUND)
+    const projects = await this._getCachedProjects()
+    const project = projects.find(p => p._id.toString() === id.toString())
+
+    if (!project) {
+      throw new AppError('Project not found', StatusCodes.NOT_FOUND);
+    }
+
     return project
   }
 
@@ -62,6 +82,7 @@ class ProjectService {
       repo: repo
     })
 
+    this.cache.del(this.cacheKey)
     return project
   }
 
@@ -105,6 +126,8 @@ class ProjectService {
     const updatedProject = await Project.findByIdAndUpdate(id, updatedFields, { new: true, runValidators: true });
     if (!updatedProject) 
       throw new AppError("Project was not found", Status.NOT_FOUND)
+
+    this.cache.del(this.cacheKey)
     return updatedProject
   }
 
@@ -116,6 +139,7 @@ class ProjectService {
 
     await cloudinary.uploader.destroy(publicId)
     await Project.findByIdAndDelete(id)
+    this.cache.del(this.cacheKey)
   }
 
   async reorderProject(order) {
@@ -126,7 +150,6 @@ class ProjectService {
     const res = await Project.bulkWrite(bulkOps)
     return res
   }
-
 }
 
 export default ProjectService

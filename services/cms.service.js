@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import Projects from '#models/project.model.js'
 import Publications from '#models/publication.model.js'
-import TravelImageService from '#services/travelImage.service.js'
+import TravelImages from '#models/travelImage.model.js'
 
 class CmsService {
   async getProjects() {
@@ -20,7 +20,7 @@ class CmsService {
   }
 
   async getTravelImages() {
-    return TravelImageService.getAll()
+    return TravelImages.find().sort({ order: 1 }).lean()
   }
 }
 
