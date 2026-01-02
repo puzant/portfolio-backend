@@ -46,13 +46,13 @@ class ProjectController {
     return res.status(Status.OK).json(ApiResponse.successResponse("Project reordered sucessfully"))
   }
 
-  async renderAddProject(req, res, next) {
+  async renderAddProject(req, res) {
     return res.render('projects/addProject', {
       title: 'Add Project',
     })
   }
 
-  async renderEditProject(req, res, next) {
+  async renderEditProject(req, res) {
     const project = await this.projectService.getById(req.params.id)
     
     return res.render('projects/editProject', {

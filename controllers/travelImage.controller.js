@@ -1,6 +1,5 @@
 import { StatusCodes as Status } from 'http-status-codes'
 import asyncHandler from 'express-async-handler'
-import { cache } from '../cache.js'
 import ApiResponse from '#utils/apiResponse.js'
 import AppError from '#utils/appError.js'
 
