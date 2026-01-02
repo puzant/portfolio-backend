@@ -12,7 +12,6 @@ import { keepAliveJob } from './jobs/keepAlive.js'
 import { cacheWarmerJob } from './jobs/cacheWarmer.js'
 
 //  API Routes
-import cmsRoute from './routes/cms.route.js'
 import authRoute from './routes/auth.route.js'
 import projectsRoute from './routes/projects.route.js'
 import settingsRoute from './routes/settings.route.js'
@@ -53,9 +52,7 @@ app.use(cors({
 }))
 
 //  Register routes
-app.use(cmsRoute)
 app.use(renderRoutes)
-
 app.use('/v1/publications', publicationsRoute)
 app.use('/v1/projects', projectsRoute)
 app.use('/v1/travel-images', travelImagesRoute)
