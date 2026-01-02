@@ -7,12 +7,38 @@ import AppError from "#utils/appError.js"
 import Publication from '#models/publication.model.js'
 
 class PublicationService {
+  constructor(cache) {
+    this.cache = cache
+    this.cacheKey = 'publications'
+  }
+
+  async _getCachedPublications() {
+    let pubilcations = this.cache.get(this.cacheKey)
+
+    if (!pubilcations) {
+      pubilcations = await Publication.find().sort({ publishedDate: -1 }).lean()
+      this.cache.set(this.cacheKey, pubilcations, 43200)
+    }
+    
+    return pubilcations
+  }
+
   async getAll() {
-    return Publication.find().sort({ publishedDate: -1 }).lean()
+    let publications = await this._getCachedPublications()
+    publications = publications.map( p => this.formatPublicationData(p))
+
+    return publications
   }
 
   async getById(id) {
-    return Publication.findById(id)
+    const publications = await this._getCachedPublications()
+    const publication = publications.find(p => p._id.toString() === id.toString())
+
+    if (!publication) {
+      throw new AppError('Publication not found', StatusCodes.NOT_FOUND)
+    }
+
+    return publication
   }
 
   async addPublication(req) {
@@ -23,6 +49,8 @@ class PublicationService {
       throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
 
     const publication = await Publication.create({ title, publishedDate: new Date(publishedDate), link, duration, preview })
+
+    this.cache.del(this.cacheKey)
     return publication
   }
 
@@ -45,6 +73,7 @@ class PublicationService {
     if (!updatedPublication) 
       throw new AppError("Publication was not found", Status.NOT_FOUND);
     
+    this.cache.del(this.cacheKey)
     return updatedPublication
   }
 
@@ -52,6 +81,7 @@ class PublicationService {
     const publicationToDelete = await Publication.findByIdAndDelete(id)
     if (!publicationToDelete) throw new AppError("Publication not found", Status.BAD_REQUEST)
     
+    this.cache.del(this.cacheKey)
     return publicationToDelete
   }
 

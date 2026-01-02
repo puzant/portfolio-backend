@@ -4,14 +4,32 @@ import TravelImage from '#models/travelImage.model.js'
 import AppError from '#utils/appError.js'
 
 class TravelImageService {
+  constructor(cache) {
+    this.cache = cache
+    this.cacheKey = 'travelImages'
+  }
+
+  async _getCachedTravelImages() {
+    let travelImages = this.cache.get(this.cacheKey)
+  
+    if (!travelImages) {
+      travelImages = await TravelImage.find().sort({ order: 1 })
+      this.cache.set(this.cacheKey, travelImages, 43200)
+    }
+      
+    return travelImages
+  }
+
   async getAll() {
-    return await TravelImage.find().sort({ order: 1 })
+    return await this._getCachedTravelImages()
   }
 
   async getById(id) {
-    const travelImage = await TravelImage.findById(id)
+    const travelImages = await this._getCachedTravelImages()
+    const travelImage = travelImages.find(t => t._id.toString() === id.toString())
+
     if (!travelImage) {
-      throw new AppError("Travel image was not found", Status.NOT_FOUND)
+      throw new AppError('Travel Image was not found', StatusCodes.NOT_FOUND)
     }
 
     return travelImage
@@ -45,6 +63,7 @@ class TravelImageService {
   async uploadTravelImage(filePath) {
     const totalDocuments = await this.getAll()
 
+    // todo: return webp format to save in the DB
     const result = await cloudinary.uploader.upload(filePath, {
       folder: 'travels',
     })
@@ -62,6 +81,7 @@ class TravelImageService {
     })
     
     imageDoc.save()
+    this.cache.del(this.cacheKey)
     return imageDoc
   }
 
@@ -73,6 +93,7 @@ class TravelImageService {
     Object.assign(travelImage, updates)
     await travelImage.save()
 
+    this.cache.del(this.cacheKey)
     return travelImage
   }
 
@@ -82,6 +103,7 @@ class TravelImageService {
 
     await cloudinary.uploader.destroy('travels/' + publicId)
     await TravelImage.findByIdAndDelete(id)
+    this.cache.del(this.cacheKey)
   }
 
   async removeFromCloudinary(publicId) {
