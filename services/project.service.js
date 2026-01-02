@@ -32,7 +32,7 @@ class ProjectService {
     const project = projects.find(p => p._id.toString() === id.toString())
 
     if (!project) {
-      throw new AppError('Project not found', StatusCodes.NOT_FOUND);
+      throw new AppError('Project not found', StatusCodes.NOT_FOUND)
     }
 
     return project
