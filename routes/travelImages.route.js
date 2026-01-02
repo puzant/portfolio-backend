@@ -1,4 +1,5 @@
 import express from "express"
+import { cache } from "../cache.js"
 import authMiddleware from '#middlewares/auth.middleware.js'
 import upload from "#middlewares/multerUpload.middleware.js"
 import restrictTo from "#middlewares/role.middleware.js"
@@ -6,7 +7,7 @@ import TravelImageService from '#services/travelImage.service.js'
 import TravelImagesController from '#controllers/travelImage.controller.js'
 
 const router = express.Router()
-const travelImageService = new TravelImageService()
+const travelImageService = new TravelImageService(cache)
 const travelImagesController = new TravelImagesController(travelImageService)
 
 router.get('/', travelImagesController.getAllTravelImages)

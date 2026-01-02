@@ -1,4 +1,5 @@
 import express from 'express'
+import { cache } from '../cache.js'
 import authMiddleware from '#middlewares/auth.middleware.js'
 import restrictTo from '#middlewares/role.middleware.js'
 import PublicationService from '#services/publication.service.js'
@@ -6,7 +7,7 @@ import PublicationController from '#controllers/publication.controller.js'
 import publicationValidation from '#validations/publication.validation.js'
 
 const router = express.Router()
-const publicationService = new PublicationService()
+const publicationService = new PublicationService(cache)
 const publicationController = new PublicationController(publicationService)
 
 router.get('/', publicationController.getAllPublications)
