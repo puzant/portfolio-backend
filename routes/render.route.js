@@ -3,6 +3,7 @@ import { cache } from "../cache.js"
 import authMiddleware from "#middlewares/auth.middleware.js"
 import restrictTo from '#middlewares/role.middleware.js'
 
+import CMSController from "#controllers/cms.controller.js"
 import AuthController from "#controllers/auth.controller.js"
 import ProjectController from "#controllers/project.controller.js"
 import SettingsController from "#controllers/settings.controller.js"
@@ -16,16 +17,19 @@ import TravelImageService from '#services/travelImage.service.js'
 
 const router = express.Router()
 
-const authController = new AuthController()
 const projectService = new ProjectService(cache)
 const publicationService = new PublicationService(cache)
 const travelImageService = new TravelImageService(cache)
 const settingsService = new SettingsService()
 
+const cmsController = new CMSController(projectService, publicationService, travelImageService)
 const projectController = new ProjectController(projectService)
 const settingsController = new SettingsController(settingsService)
 const publicationController = new PublicationController(publicationService)
 const travelImagesController = new TravelImagesController(travelImageService)
+const authController = new AuthController()
+
+router.get('/cms', authMiddleware, cmsController.renderCmsPage)
 
 router.get('/publication/add', authMiddleware, restrictTo('admin'), publicationController.renderAddPublication)
 router.get('/publication/edit/:id', authMiddleware, restrictTo('admin'), publicationController.renderEditPublication)
