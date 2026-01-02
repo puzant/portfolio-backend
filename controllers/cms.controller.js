@@ -1,22 +1,25 @@
-import cmsService from "#services/cms.service.js"
+import asyncHandler from 'express-async-handler'
 
-const renderCmsPage = async (req, res, next) => {
-  try {
+class CMSController {
+  constructor(projectService, publicationService, travelImageService) {
+    this.projectService = projectService
+    this.publicationService = publicationService
+    this.travelImageService = travelImageService
+    this.renderCmsPage = asyncHandler(this.renderCmsPage.bind(this))
+  }
+
+  async renderCmsPage(req, res) {
     const [projects, publications, travelImages] = await Promise.all([
-      cmsService.getProjects(),
-      cmsService.getPublications(),
-      cmsService.getTravelImages()
+      this.projectService.getAll(),
+      this.publicationService.getAll(),
+      this.travelImageService.getAll()
     ])
 
-    res.render('index', { 
-      travelImages,
-      publications, 
-      projects, 
-      title: 'CMS', 
+    res.render('index', {
+      projects, publications, travelImages,
+      title: 'CMS'
     })
-  } catch (error) {
-    next(error)
   }
 }
 
-export default renderCmsPage
+export default CMSController
