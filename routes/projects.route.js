@@ -12,10 +12,10 @@ const projectService = new ProjectService(cache)
 const projectController = new ProjectController(projectService)
 
 router.get('/', projectController.getAllProjects)
-router.get('/projects-images', authMiddleware, projectController.getAllProjectsImages)
+router.get('/projects-images', authMiddleware, restrictTo('admin'), projectController.getAllProjectsImages)
 router.post('/add', authMiddleware, restrictTo('admin'), upload.single('preview'), projectValidation, projectController.addProject)
 router.post('/edit/:id', authMiddleware, restrictTo('admin'), upload.single('preview'), projectValidation, projectController.editProject)
-router.post('/reorder-project', authMiddleware, restrictTo('admin'), projectController.reorderProject)
+router.patch('/reorder-project', authMiddleware, restrictTo('admin'), projectController.reorderProject)
 router.delete('/delete/:id', authMiddleware, restrictTo('admin'), projectController.deleteProject)
 
 export default router

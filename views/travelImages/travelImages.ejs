@@ -44,20 +44,20 @@
 </div>
 
 <script>
-  const travelImagesDeleteBtns = document.querySelectorAll(".delete-btn");
-  const travelImagesCollapse = document.getElementById('travelImagesCollapse');
-  const travelImagesCollapseIcon = document.getElementById('travelImagesCollapseIcon');
+  const travelImagesDeleteBtns = document.querySelectorAll(".delete-btn")
+  const travelImagesCollapse = document.getElementById('travelImagesCollapse')
+  const travelImagesCollapseIcon = document.getElementById('travelImagesCollapseIcon')
   const travelImagesContainer = document.getElementById('admin-travel-images-container')
 
   travelImagesCollapse.addEventListener('hide.bs.collapse', () => {
-    travelImagesCollapseIcon.classList.remove('bi-caret-down-fill');
-    travelImagesCollapseIcon.classList.add('bi-caret-right-fill');
-  });
+    travelImagesCollapseIcon.classList.remove('bi-caret-down-fill')
+    travelImagesCollapseIcon.classList.add('bi-caret-right-fill')
+  })
 
   travelImagesCollapse.addEventListener('show.bs.collapse', () => {
-    travelImagesCollapseIcon.classList.remove('bi-caret-right-fill');
-    travelImagesCollapseIcon.classList.add('bi-caret-down-fill');
-  });
+    travelImagesCollapseIcon.classList.remove('bi-caret-right-fill')
+    travelImagesCollapseIcon.classList.add('bi-caret-down-fill')
+  })
 
   const travelImagesSortable = new Sortable(travelImagesContainer, {
     animation: 150,
