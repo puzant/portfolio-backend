@@ -47,7 +47,7 @@
         if (evt.oldIndex !== evt.newIndex) {
           const response = await axios({
             url: '/v1/projects/reorder-project',
-            method: 'POST',
+            method: 'PATCH',
             data: order,
           })
         
