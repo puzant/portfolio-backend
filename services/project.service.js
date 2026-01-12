@@ -103,7 +103,7 @@ class ProjectService {
       activeValue = active === 'true'
     }
 
-    let updatedFields = { name, description, link, activeValue, repo }
+    let updatedFields = { name, description, link, active: activeValue, repo }
     const isPreviewChanged = (previewChanged === 'true')
 
     if (isPreviewChanged) {
