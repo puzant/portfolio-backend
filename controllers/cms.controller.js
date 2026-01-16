@@ -5,10 +5,9 @@ class CMSController {
     this.projectService = projectService
     this.publicationService = publicationService
     this.travelImageService = travelImageService
-    this.renderCmsPage = asyncHandler(this.renderCmsPage.bind(this))
   }
 
-  async renderCmsPage(req, res) {
+  renderCmsPage = asyncHandler(async (req, res) => {
     const [projects, publications, travelImages] = await Promise.all([
       this.projectService.getAll(),
       this.publicationService.getAll(),
@@ -19,7 +18,7 @@ class CMSController {
       projects, publications, travelImages,
       title: 'CMS'
     })
-  }
+  })
 }
 
 export default CMSController
