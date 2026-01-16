@@ -7,13 +7,9 @@ import setAuthCookies from '#utils/setAuthCookies.js'
 class AuthController {
   constructor(authService) {
     this.authService = authService
-    this.guestLogin = asyncHandler(this.guestLogin.bind(this))
-    this.login = asyncHandler(this.login.bind(this))
-    this.logout = asyncHandler(this.logout.bind(this))
-    this.createUser = asyncHandler(this.createUser.bind(this))
   }
 
-  async guestLogin(req, res) {
+  guestLogin = asyncHandler(async (req, res) => {
     const { guestToken, guestRefreshToken, guest } = await this.authService.createGuestUser()
     setAuthCookies(res, guestToken, guestRefreshToken)
 
@@ -24,9 +20,9 @@ class AuthController {
       id: guest._id,
       username: guest.username,
     }))
-  }
+  })
 
-  async login(req, res) {
+  login = asyncHandler(async (req, res) => {
     const { token, refreshToken, user } = await this.authService.login(req)
     setAuthCookies(res, token, refreshToken)
 
@@ -38,20 +34,20 @@ class AuthController {
       username: user.username,
       email: user.email
     }))
-  }
+  })
 
-  async logout(req, res) {
+  logout = asyncHandler((req, res) => {
     res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' })
     res.clearCookie('refresh_token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' })
     res.status(Status.OK).json(ApiResponse.successResponse("Logged out successfully"))
-  }
+  })
 
-  async createUser(req, res) {
+  createUser = asyncHandler(async (req, res) => {
     const newUser = await this.authService.createUser(req)
     res.status(Status.CREATED).json(ApiResponse.successResponse("User created successfully", { user: newUser }))
-  }
+  })
 
-  async renderPasswordReset(req, res) {
+  renderPasswordReset = asyncHandler(async (req, res) => {
     try {
       res.render('auth/forgotPassword', {
         title: 'Reset Password'
@@ -59,9 +55,9 @@ class AuthController {
     } catch (err) {
       res.status(Status.INTERNAL_SERVER_ERROR).render('error', { message: 'Internal Server Error. Please try again later.' })
     }
-  }
+  })
 
-  async renderLogin(req, res) {
+  renderLogin = asyncHandler(async (req, res) => {
     try {
       res.render('auth/login', {
         title: 'Login'
@@ -69,7 +65,7 @@ class AuthController {
     } catch (err) {
       res.status(Status.INTERNAL_SERVER_ERROR).render('error', { message: 'Internal Server Error. Please try again later.' })
     }
-  }
+  })
 }
 
 export default AuthController
