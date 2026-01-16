@@ -6,18 +6,9 @@ import AppError from '#utils/appError.js'
 class TravelImagesController {
   constructor(TravelImageService) {
     this.TravelImageService = TravelImageService
-    this.getAllTravelImages = asyncHandler(this.getAllTravelImages.bind(this))
-    this.addTravelImage = asyncHandler(this.addTravelImage.bind(this))
-    this.editTravelImage = asyncHandler(this.editTravelImage.bind(this))
-    this.deleteTravelImage = asyncHandler(this.deleteTravelImage.bind(this))
-    this.syncCloudinaryToMongo = asyncHandler(this.syncCloudinaryToMongo.bind(this))
-    this.reorderTravelImages = asyncHandler(this.reorderTravelImages.bind(this))
-
-    this.renderAddTravelImage = asyncHandler(this.renderAddTravelImage.bind(this))
-    this.renderEditTravelImage = asyncHandler(this.renderEditTravelImage.bind(this))
   }
 
-  async getAllTravelImages(req, res) {
+  getAllTravelImages = asyncHandler(async (req, res) => {
     const { source } = req.query
     let travelImages = []
 
@@ -28,19 +19,19 @@ class TravelImagesController {
     }
 
     res.json(ApiResponse.successResponse("Travel images retrieved successfully", travelImages))
-  }
+  })
 
-  async addTravelImage(req, res) {
+  addTravelImage = asyncHandler(async (req, res) => {
     const response = await this.TravelImageService.uploadTravelImage(req.file.path)
     return res.status(Status.OK).json(ApiResponse.successResponse("Travel Image added successfully", response))
-  }
+  })
 
-  async editTravelImage(req, res) {
+  editTravelImage = asyncHandler(async (req, res) => {
     const updatedTravelImage = await this.TravelImageService.updateTravelImage(req.params.id, req.body)
     return res.status(Status.OK).json(ApiResponse.successResponse("Travel Image updated successfully", updatedTravelImage))
-  }
+  })
 
-  async deleteTravelImage(req, res) {
+  deleteTravelImage = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { target } = req.query
 
@@ -53,18 +44,18 @@ class TravelImagesController {
     }
 
     return res.status(Status.OK).json(ApiResponse.successResponse("Travel Image deleted successfully"))
-  }
+  })
 
-  async renderAddTravelImage(req, res) {
+  renderAddTravelImage = asyncHandler(async (req, res) => {
     res.render('travelImages/addTravelImage', {
       title: 'Travel Images',
       user: req.user
     })
     
     res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
-  }
+  })
 
-  async renderEditTravelImage(req, res) {
+  renderEditTravelImage = asyncHandler(async (req, res) => {
     const travelImage = await this.TravelImageService.getById(req.params.id)
     const travelImages = await this.TravelImageService.getAll()
       
@@ -78,17 +69,17 @@ class TravelImagesController {
       travelImage,
       title: 'Travel Images',
     })
-  }
+  })
 
-  async syncCloudinaryToMongo(req, res) {
+  syncCloudinaryToMongo = asyncHandler(async (req, res) => {
     const reuslts = await this.TravelImageService.syncCloudinaryImagesToMongo()
     res.json(ApiResponse.successResponse("Travel images synced successfully", reuslts))
-  }
+  })
 
-  async reorderTravelImages(req, res) {
+  reorderTravelImages = asyncHandler(async (req, res) => {
     await this.TravelImageService.reorderTravelImages(req.body)
     return res.status(Status.OK).json(ApiResponse.successResponse("Travel Images reordered sucessfully"))
-  }
+  })
 }
 
 export default TravelImagesController
