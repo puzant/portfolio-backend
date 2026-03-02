@@ -15,7 +15,19 @@
     </nav>
 
     <form id="travelImagesForm" action="/v1/travel-images/add" method="POST">
-      <div class="row">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="imageTitle" class="form-label">Image Title / Display Name</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="imageTitle" 
+            name="displayName" 
+            placeholder="e.g. Sunset in Kessab"
+            required
+          >
+        </div>
+
         <div class="col-md-6">
           <label class="form-label">Upload Image</label>
           <div class="input-group mb-3">
@@ -44,15 +56,15 @@
   <script>
     document.addEventListener('DOMContentLoaded', function(e) {
       const form = document.getElementById('travelImagesForm')
-      console.log(form)
+   
       const loadingIndicator = document.getElementById('loadingIndicator')
       const fileInput = document.getElementById('travelImageInput')
       const travelImagePreviewContainer = document.getElementById('travelImagePreviewContainer')
       const travelImagePreview = document.getElementById('travelImagePreview')
 
       loadingIndicator.style.display = 'none'
-
       travelImagePreviewContainer.style.display = 'none'
+
       fileInput.addEventListener('change', function(e) {
         const file = fileInput.files[0]
         travelImagePreview.src = URL.createObjectURL(file)

@@ -31,12 +31,12 @@
             <% if (userRole === 'admin') { %>
               <div role="button" class="position-absolute top-0 bg-white p-1 rounded border">
                 <a href="/travel-images/edit/<%= image._id %>"><i class="bi bi-pencil mx-1"></i></a>
-                <i class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= image.public_id.slice(8, image.public_id.length) %>"></i>
+                <i class="bi bi-trash3 pe-auto text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= image._id %>"></i>
               </div>
             <% } %>
             <b class="small"><%= image.display_name %></b>
           </div>
-          <%- include('../partials/_deleteModal', { data: {id: image.public_id.slice(8, image.public_id.length), ...image}, type: 'Travel Image' }) %>
+          <%- include('../partials/_deleteModal', { data: {id: image._id, publicId: image.public_id.slice(8, image.public_id.length) }, type: 'Travel Image' }) %>
         <% }) %>
       </div>
     </div>
@@ -44,6 +44,19 @@
 </div>
 
 <script>
+  function dispatchDeleteEvent(button) {
+    const event = new CustomEvent('deleteTravelImage', {
+      detail: {
+        id: button.dataset.id,
+        publicId: button.dataset.publicId
+      },
+      bubbles: true,
+      cancelable: true
+    })
+    
+    button.dispatchEvent(event)
+  }
+
   const travelImagesDeleteBtns = document.querySelectorAll(".delete-btn")
   const travelImagesCollapse = document.getElementById('travelImagesCollapse')
   const travelImagesCollapseIcon = document.getElementById('travelImagesCollapseIcon')
@@ -59,32 +72,17 @@
     travelImagesCollapseIcon.classList.add('bi-caret-down-fill')
   })
 
-  const travelImagesSortable = new Sortable(travelImagesContainer, {
-    animation: 150,
-    ghostClass: 'sortable-ghost', 
-    onEnd: async (evt) => {
-      console.log(evt)
-    }
-  })
-
-  travelImagesDeleteBtns.forEach(button => {
-    button.addEventListener('click', async function() {
-      const travelImageId = button.getAttribute("data-id");
-      const travelImagePublicId = button.getAttribute("data-public-id")
-
-      try {
-        const response = await axios({
-          url: `v1/travel-images/remove/${travelImageId}`,
-          method: 'delete',
-          data: {
-            publicId: travelImagePublicId
-          }
-        })
+  document.addEventListener('deleteTravelImage', async function(e) {
+    const { id, publicId } = e.detail
+    try {
+      const response = await axios({
+        url: `v1/travel-images/remove/${id}`,
+        method: 'delete',
+        data: { publicId }
+      })
         showAlert('success', response.data.message)
       } catch (err) {
         showAlert('danger', 'An unexpected error occurred.')
       }
-    })
-
   })
 </script>
