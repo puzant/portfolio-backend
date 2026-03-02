@@ -22,7 +22,7 @@ class TravelImagesController {
   })
 
   addTravelImage = asyncHandler(async (req, res) => {
-    const response = await this.TravelImageService.uploadTravelImage(req.file.path)
+    const response = await this.TravelImageService.uploadTravelImage(req.file.path, req.body)
     return res.status(Status.OK).json(ApiResponse.successResponse("Travel Image added successfully", response))
   })
 
@@ -33,6 +33,7 @@ class TravelImagesController {
 
   deleteTravelImage = asyncHandler(async (req, res) => {
     const { id } = req.params
+    const { publicId } = req.body
     const { target } = req.query
 
     if (!id) throw new AppError("No publicId provided", 400)
@@ -40,7 +41,7 @@ class TravelImagesController {
     if (target === 'cloudinary') {
       await this.TravelImageService.removeFromCloudinary(id)
     } else {
-      await this.TravelImageService.removeTravelImage(req.body.publicId, id)
+      await this.TravelImageService.removeTravelImage(publicId, id)
     }
 
     return res.status(Status.OK).json(ApiResponse.successResponse("Travel Image deleted successfully"))

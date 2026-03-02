@@ -60,12 +60,15 @@ class TravelImageService {
     }
   }
 
-  async uploadTravelImage(filePath) {
+  async uploadTravelImage(filePath, body) {
     const totalDocuments = await this.getAll()
 
     // todo: return webp format to save in the DB
     const result = await cloudinary.uploader.upload(filePath, {
       folder: 'travels',
+      format: 'webp',
+      quality: 'auto:good',
+      resource_type: 'image',
     })
     
     if (!result.secure_url) {
@@ -73,8 +76,8 @@ class TravelImageService {
     }
 
     const imageDoc = new TravelImage({
-      url: result.url,
-      display_name: result.display_name,
+      url: result.secure_url,
+      display_name: body.displayName,
       asset_id: result.asset_id,
       public_id: result.public_id,
       order: totalDocuments.length + 1
