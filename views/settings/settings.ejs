@@ -27,6 +27,58 @@
         data: {}
       })
     })
+
+    const toggleMap = {
+      'cache-projects': 'projects',
+      'cache-publications': 'publications',
+      'cache-travel-images': 'travelImages'
+    }
+
+    const feedback = document.getElementById('cache-feedback')
+
+    document.querySelectorAll('.form-check-input').forEach(checkbox => {
+      checkbox.addEventListener('change', async (e) => {
+        const id = e.target.id
+        const type = toggleMap[id]
+        const value = e.target.checked
+
+        if (!type) return 
+
+        e.target.disabled = true
+        feedback.textContent = 'Saving...'
+        feedback.className = 'text-muted'
+
+        try {
+          const res = await fetch('/v1/settings/cache-toggles', {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type, value }) 
+          })
+
+          const data = await res.json()
+
+          if (!data.success) {
+            throw new Error(`Cache update failed`)
+          }
+
+          feedback.textContent = `Cache for ${type} ${value ? 'enabled' : 'disabled'}`
+          feedback.className = 'text-success'
+        } catch (err) {
+          // Revert UI on failure
+          e.target.checked = !value
+          feedback.textContent = 'Failed to save — please try again'
+          feedback.className = 'text-danger'
+        } finally {
+          e.target.disabled = false
+          setTimeout(() => {
+            feedback.textContent = ''
+            feedback.className = 'text-muted'
+          }, 3000)
+        }
+      })
+    })
   </script>
 
 </body>
