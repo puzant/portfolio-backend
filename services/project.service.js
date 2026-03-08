@@ -144,10 +144,14 @@ class ProjectService {
 
   async reorderProject(order) {
     const bulkOps = order.map((id, index) => ({
-      updateOne: { filter: { _id: id }, update: { priority: index } }
+      updateOne: { 
+        filter: { _id: id }, 
+        update: { $set: { priority: index } } 
+      }
     }))
 
     const res = await Project.bulkWrite(bulkOps)
+    this.cache.del(this.cacheKey)
     return res
   }
 }
