@@ -12,7 +12,12 @@ const UserSchema = new mongoose.Schema(
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     refreshToken: { type: String },
-    role: { type: String, enum: ['admin', 'guest'], default: 'guest' }
+    role: { type: String, enum: ['admin', 'guest'], default: 'guest' },
+    cacheToggles: {
+      projects: { type: Boolean, default: false },
+      publications: { type: Boolean, default: false },
+      travelImages: { type: Boolean, default: false },
+    }
 },
   { timestamps: true }
 );
