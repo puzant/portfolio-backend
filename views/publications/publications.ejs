@@ -1,10 +1,10 @@
-<div class="p-4 my-2">
+<div class="p-2 p-lg-4 my-2">
   <div class="d-flex justify-content-between justify-content-md-start align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#publicationsCollapse" aria-expanded="true" aria-controls="publicationsCollapse">
         <i class="bi bi-caret-down-fill" id="publicationCollapseIcon"></i>
       </a>
-      Publications
+      Publications Projects (<%- publications.length %>)
     </h2>
 
     <% if (userRole === 'admin') { %>

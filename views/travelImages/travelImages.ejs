@@ -1,10 +1,10 @@
-<div class="p-4">
+<div class="p-2 p-lg-4 my-2">
   <div class="d-flex justify-content-between justify-content-md-start align-items-center gap-3">
     <h2>
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#travelImagesCollapse" aria-expanded="true" aria-controls="travelImagesCollapse">
         <i class="bi bi-caret-down-fill" id="travelImagesCollapseIcon"></i>
       </a>
-      Travel Images
+      Travel Images (<%- travelImages.length %>)
     </h2>
     <% if (userRole === 'admin') { %>
       <a href="travel-images/add">
