@@ -11,5 +11,6 @@ router.post('/trigger-deploy', authMiddleware, settingsController.triggerNetlify
 router.post('/update-user', authMiddleware, settingsController.updateUserInfo)
 router.post('/update-password', authMiddleware, settingsController.updatePassword)
 router.post('/delete-account', authMiddleware, settingsController.deleteUserAccount)
+router.patch('/cache-toggles', authMiddleware, settingsController.toggleCache)
 
 export default router
