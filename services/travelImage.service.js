@@ -63,7 +63,6 @@ class TravelImageService {
   async uploadTravelImage(filePath, body) {
     const totalDocuments = await this.getAll()
 
-    // todo: return webp format to save in the DB
     const result = await cloudinary.uploader.upload(filePath, {
       folder: 'travels',
       format: 'webp',
@@ -138,9 +137,12 @@ class TravelImageService {
    return { addedCount: addedImages.length }
   }
 
-  async reOrderTravelImages(order) {
-    const bulkOps = order.map((id, index) => ({
-      updateOne: { filter: { _id: id }, update: { order: index } }
+  async reOrderTravelImages(newOrderIds) {
+    const bulkOps = newOrderIds.map((id, index) => ({
+      updateOne: { 
+        filter: { _id: id }, 
+        update: { $set: { order: index } } 
+      }
     }))
     
     const res = await TravelImage.bulkWrite(bulkOps)
