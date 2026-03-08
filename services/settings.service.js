@@ -5,8 +5,29 @@ import AppError from "#utils/appError.js"
 
 class SettingsService {
   async handleNetlifyDeployment() {
-    const response = await fetch('https://api.netlify.com/build_hooks/6815023f7e3bdc22bcb9e832', { method: 'POST' })
+    const response = await fetch(process.env.NETLIFY_DEPLOY_HOOK, { method: 'POST' })
     return response
+  }
+
+  async toggleCache(req) {
+    const { type, value } = req.body
+    const userId = req.user.id
+
+    const allowedTypes = ["projects", "publications", "travelImages"]
+
+    if (!allowedTypes.includes(type)) 
+      throw new AppError("Invalid cache type", Status.BAD_REQUEST)
+
+    const updatePath = `cacheToggles.${type}`;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId, 
+      { $set: { [updatePath]: value } },
+      { new: true, runValidators: true }
+    ).select('cacheToggles')
+
+    if (!updatedUser) 
+      throw new AppError("User not found", Status.NOT_FOUND)
   }
 
   async updateUserInfo(req) {
@@ -27,7 +48,8 @@ class SettingsService {
     const userId = req.user.id
     const { email } = req.body
 
-    if (!email || email !== req.user.email) throw new AppError("Email confirmation does not match", Status.BAD_REQUEST)
+    if (!email || email !== req.user.email) 
+      throw new AppError("Email confirmation does not match", Status.BAD_REQUEST)
   
     const user = await User.findById(userId)
     if (!user) throw new AppError("User not found", Status.NOT_FOUND)
@@ -40,7 +62,8 @@ class SettingsService {
     const { oldPassword, newPassword } = req.body
     const userId = req.user.id
     
-    if (!oldPassword || !newPassword) throw new AppError("Old password and new password fields are required", Status.BAD_REQUEST)
+    if (!oldPassword || !newPassword) 
+      throw new AppError("Old password and new password fields are required", Status.BAD_REQUEST)
     
     const user = await User.findById(userId)
     if (!user) throw new AppError("User not found", Status.BAD_REQUEST)
