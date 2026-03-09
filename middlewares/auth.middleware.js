@@ -35,7 +35,7 @@ const authMiddleware = async (req, res, next) => {
       }
 
       const newAccessToken = jwt.sign(
-        { id: user._id, username: user.username, email: user.email, role: user.role },
+        { id: user._id, username: user.name, email: user.email, role: user.role },
         process.env.JWT_SECRET,
         { expiresIn: '15min' }
       )
@@ -53,7 +53,7 @@ const authMiddleware = async (req, res, next) => {
       userId = user._id.toString()
       baseUser = {
         id: user._id.toString(),
-        username: user.username,
+        username: user.name,
         email: user.email,
         role: user.role
       }
@@ -65,7 +65,6 @@ const authMiddleware = async (req, res, next) => {
   }
 
   if (userId) {
-    console.log(baseUser)
     const extra = await User.findById(userId) 
       .select('country city cacheToggles')
       .lean()
