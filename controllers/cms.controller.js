@@ -9,9 +9,9 @@ class CMSController {
 
   renderCmsPage = asyncHandler(async (req, res) => {
     const [projects, publications, travelImages] = await Promise.all([
-      this.projectService.getAll(),
-      this.publicationService.getAll(),
-      this.travelImageService.getAll()
+      this.projectService.getAll(req.user),
+      this.publicationService.getAll(req.user),
+      this.travelImageService.getAll(req.user)
     ])
 
     res.render('index', {
