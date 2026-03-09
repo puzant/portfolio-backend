@@ -10,8 +10,8 @@ class ProjectController {
   getAllProjects = asyncHandler(async (req, res) => {
     const projects = await this.projectService.getAll()
     return res.status(Status.OK).json(ApiResponse.successResponse("Projects retrieved successfully", projects))
-  }
-)
+  })
+
   getAllProjectsImages = asyncHandler(async (req, res) => {
     const images = await this.projectService.fetchProjectImages()
     return res.status(Status.OK).json(ApiResponse.successResponse("Projects images retrieved successfully", images))

@@ -18,7 +18,7 @@ class TravelImagesController {
       travelImages = await this.TravelImageService.getAll()
     }
 
-    res.json(ApiResponse.successResponse("Travel images retrieved successfully", travelImages))
+    return res.json(ApiResponse.successResponse("Travel images retrieved successfully", travelImages))
   })
 
   addTravelImage = asyncHandler(async (req, res) => {
