@@ -9,19 +9,20 @@ class TravelImageService {
     this.cacheKey = 'travelImages'
   }
 
-  async _getCachedTravelImages() {
-    let travelImages = this.cache.get(this.cacheKey)
-  
-    if (!travelImages) {
-      travelImages = await TravelImage.find().sort({ order: 1 })
-      this.cache.set(this.cacheKey, travelImages, 43200)
-    }
-      
-    return travelImages
-  }
+  async getAll(user = null) {
+    const shouldBypassCache = user?.cacheToggles.travelImages
 
-  async getAll() {
-    return await this._getCachedTravelImages()
+    if (shouldBypassCache) 
+      return TravelImage.find().sort({ order: 1 })
+    
+      let travelImages = this.cache.get(this.cacheKey)
+    
+      if (!travelImages) {
+        travelImages = await TravelImage.find().sort({ order: 1 })
+        this.cache.set(this.cacheKey, travelImages, 43200)
+      }
+    
+      return travelImages
   }
 
   async getById(id) {

@@ -12,23 +12,24 @@ class ProjectService {
     this.cacheKey = 'projects'
   }
 
-  async _getCachedProjects() {
+  async getAll(user = null) {
+    const shouldBypassCache = user?.cacheToggles.projects
+
+    if (shouldBypassCache) 
+      return Project.find().sort({ priority: 1 }).lean()
+
     let projects = this.cache.get(this.cacheKey)
 
     if (!projects) {
       projects = await Project.find().sort({ priority: 1 }).lean()
       this.cache.set(this.cacheKey, projects, 43200)
     }
-    
+
     return projects
   }
 
-  async getAll() {
-    return await this._getCachedProjects()
-  }
-
   async getById(id) {
-    const projects = await this._getCachedProjects()
+    const projects = await this.getAll()
     const project = projects.find(p => p._id.toString() === id.toString())
 
     if (!project) {

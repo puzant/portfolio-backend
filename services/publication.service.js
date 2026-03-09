@@ -12,20 +12,18 @@ class PublicationService {
     this.cacheKey = 'publications'
   }
 
-  async _getCachedPublications() {
-    let pubilcations = this.cache.get(this.cacheKey)
+  async getAll(user) {
+    const shouldBypassCache = user?.cacheToggles.publications
 
-    if (!pubilcations) {
-      pubilcations = await Publication.find().sort({ publishedDate: -1 }).lean()
-      this.cache.set(this.cacheKey, pubilcations, 43200)
+    if (shouldBypassCache)
+      return Publication.find().sort({ publishedDate: -1 }).lean()
+
+    let publications = this.cache.get(this.cacheKey)
+
+    if (!publications) {
+      publications = await Publication.find().sort({ publishedDate: -1 }).lean()
+      this.cache.set(this.cacheKey, publications, 43200)
     }
-    
-    return pubilcations
-  }
-
-  async getAll() {
-    let publications = await this._getCachedPublications()
-    publications = publications.map( p => this.formatPublicationData(p))
 
     return publications
   }
