@@ -8,9 +8,9 @@
   <%- include('./partials/_navigation') %>
   <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;" id="alertContainer"></div>
 
-  <%- include('./projects/projects', { projects, userRole: user.role }) %>
-  <%- include('./publications/publications', { publications, userRole: user.role }) %>
-  <%- include('./travelImages/travelImages', { travelImages, userRole: user.role }) %>
+  <%- include('./projects/projects', { projects, user }) %>
+  <%- include('./publications/publications', { publications, user }) %>
+  <%- include('./travelImages/travelImages', { travelImages, user }) %>
   
   <script>
     document.getElementById('logoutBtn').addEventListener('click', function() {

@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="d-flex justify-content-between">
       <b class="card-title"><%= project.name %> 
-        <span class="badge rounded-pill <%=project.active ? 'bg-success' : 'bg-warning text-dark'%>"><%= project.active ? 'Active' : 'Inactive' %></span>
+        <span class="badge <%=project.active ? 'bg-success' : 'bg-warning text-dark'%>"><%= project.active ? 'Active' : 'Inactive' %></span>
       </b>
       <% if (userRole === 'admin') { %>
         <div class="d-flex gap-2">
