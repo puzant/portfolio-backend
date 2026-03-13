@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { validationResult } from 'express-validator'
 import { StatusCodes as Status } from "http-status-codes"
+import nodeMailer from 'nodemailer'
 
 import User from "#models/user.model.js"
 import AppError from "#utils/appError.js"
@@ -47,6 +48,48 @@ class AuthService {
     const refreshToken = jwt.sign(refreshPayload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 
     return { token, refreshToken, user }
+  }
+
+  async changePassword(req) {
+    const userId = req.user.id
+    const { oldPassword, newPassword } = req.body
+
+    const user = await User.findById(userId)
+    if (!user) throw new AppError("User is not found", Status.NOT_FOUND)
+
+    const isMatch = bcrypt.compare(oldPassword, user.password)
+    if (!isMatch) throw new AppError("Old password is incorrect", Status.BAD_REQUEST)
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+    user.password = hashedPassword
+
+    await user.save()
+    await this.sendEmailToUser(user, req)
+  }
+
+  async sendEmailToUser(user, req) {
+    const transporter = nodeMailer.createTransport({
+      service: "gmail",
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'puzant24@gmail.com',
+        pass: 'askdsiklfkybohjm'
+      }
+    })
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Password Changed",
+      text: `
+        Your Password was changed
+        User: ${user.email}
+        User ID: ${user.id}
+        IP: ${req.ip}
+        Time: ${new Date()}
+      `
+    })
   }
 
   async createUser(req) {
