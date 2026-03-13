@@ -47,6 +47,12 @@ class AuthController {
     res.status(Status.CREATED).json(ApiResponse.successResponse("User created successfully", { user: newUser }))
   })
 
+  changePassword = asyncHandler(async (req, res) => {
+    await this.authService.changePassword(req)
+    res.status(Status.CREATED).json(ApiResponse.successResponse("Password changed successfully"))
+
+  })
+
   renderPasswordReset = asyncHandler(async (req, res) => {
     try {
       res.render('auth/forgotPassword', {
