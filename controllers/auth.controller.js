@@ -50,7 +50,6 @@ class AuthController {
   changePassword = asyncHandler(async (req, res) => {
     await this.authService.changePassword(req)
     res.status(Status.CREATED).json(ApiResponse.successResponse("Password changed successfully"))
-
   })
 
   renderPasswordReset = asyncHandler(async (req, res) => {
