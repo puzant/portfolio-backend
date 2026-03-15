@@ -2,12 +2,15 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { validationResult } from 'express-validator'
 import { StatusCodes as Status } from "http-status-codes"
-import nodeMailer from 'nodemailer'
 
 import User from "#models/user.model.js"
 import AppError from "#utils/appError.js"
 
 class AuthService {
+  constructor(emailService) {
+    this.emailService = emailService
+  }
+
   async createGuestUser() {
     let guest = await User.findOne({ role: 'guest' })
 
@@ -38,7 +41,7 @@ class AuthService {
     const user = await User.findOne({ email })
     if (!user) throw new AppError("User is not found", Status.NOT_FOUND)
         
-    const isMatch = bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) throw new AppError("Invalid credentials", Status.BAD_REQUEST)
     
     const payload = { id: user._id, username: user.name, email: user.email, role: user.role }
@@ -57,39 +60,12 @@ class AuthService {
     const user = await User.findById(userId)
     if (!user) throw new AppError("User is not found", Status.NOT_FOUND)
 
-    const isMatch = bcrypt.compare(oldPassword, user.password)
+    const isMatch = await bcrypt.compare(oldPassword, user.password)
     if (!isMatch) throw new AppError("Old password is incorrect", Status.BAD_REQUEST)
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10)
-    user.password = hashedPassword
+    user.password = newPassword
 
     await user.save()
-    await this.sendEmailToUser(user, req)
-  }
-
-  async sendEmailToUser(user, req) {
-    const transporter = nodeMailer.createTransport({
-      service: "gmail",
-      port: 587,
-      secure: false,
-      auth: {
-        user: 'puzant24@gmail.com',
-        pass: 'askdsiklfkybohjm'
-      }
-    })
-
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: user.email,
-      subject: "Password Changed",
-      text: `
-        Your Password was changed
-        User: ${user.email}
-        User ID: ${user.id}
-        IP: ${req.ip}
-        Time: ${new Date()}
-      `
-    })
+    await this.emailService.sendPasswordChangedEmail(user, req)
   }
 
   async createUser(req) {
