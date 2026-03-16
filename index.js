@@ -79,6 +79,22 @@ redis.on('error', (err) => {
   console.error('❌ Redis connection error:', err);
 })
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-});
+
+  try {
+    const emailWorker = (await import('./workers/email.worker.js')).default
+    console.log('✅ Email worker started and listening for jobs')
+    global.emailWorker = emailWorker
+  } catch(err) {
+    console.error('❌ Failed to start email worker:', err.message) 
+  }
+})
+
+process.on('SIGTERM', async () => {
+  if (global.emailWorker)
+    await global.emailWorker.close()
+
+  await mongoose.connection.close()
+  process.exit(0)
+})
