@@ -4,11 +4,13 @@ import { validationResult } from 'express-validator'
 import { StatusCodes as Status } from "http-status-codes"
 
 import User from "#models/user.model.js"
+import EmailQueue from '../queues/email.queue.js'
 import AppError from "#utils/appError.js"
 
 class AuthService {
   constructor(emailService) {
     this.emailService = emailService
+    this.emailQueue = EmailQueue
   }
 
   async createGuestUser() {
@@ -65,7 +67,12 @@ class AuthService {
     user.password = newPassword
 
     await user.save()
-    await this.emailService.sendPasswordChangedEmail(user, req)
+    await this.emailQueue.addPasswordChangedJob({
+      email: user.email,
+      name: user.name,
+      userId: user.id,
+      ipAddress: req.ip
+    })
   }
 
   async createUser(req) {
