@@ -7,6 +7,7 @@
 ![EJS](https://img.shields.io/badge/ejs-%23B4CA65.svg?style=for-the-badge&logo=ejs&logoColor=black)
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 
 This project is a backend system built using Node.js, Express, and MongoDB to manage projects, publications, and associated media. It includes features like CRUD operations, user authentication, file uploads with Cloudinary integration, caching with Node-cache, and a server-side rendered CMS using EJS templates. This backend system is designed with modern software development practices like MVC, dependency injection, and design patterns to ensure maintainability and scalability.
 
