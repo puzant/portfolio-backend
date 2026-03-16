@@ -13,16 +13,17 @@ class EmailService {
     })
   }
 
-  async sendPasswordChangedEmail(user, req) {
-    await transporter.sendMail({
+  async sendPasswordChangedEmail(data) {
+    const { email, ipAddress } = data
+
+    await this.transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: user.email,
+      to: email,
       subject: "Password Changed",
       text: `
         Your Password was changed
-        User: ${user.email}
-        User ID: ${user.id}
-        IP: ${req.ip}
+        User: ${email}
+        IP: ${ipAddress}
         Time: ${new Date()}
       `
     })
