@@ -2,9 +2,13 @@ import IORedis from 'ioredis'
 
 class RediSConnection {
   constructor() {
-    this.connection = new IORedis(process.env.REDIS_URL, {
-      maxRetriesPerRequest: null,
-    })
+    if (!RediSConnection.instance) {
+      this.connection = new IORedis(process.env.REDIS_URL, {
+        maxRetriesPerRequest: null,
+      })
+      RediSConnection.instance = this
+    }
+    return RediSConnection.instance
   }
 
   getConnection() {
