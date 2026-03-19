@@ -1,7 +1,6 @@
 import cors from 'cors'
 import path from 'path'
 import morgan from 'morgan'
-
 import express from 'express'
 import mongoose from 'mongoose'
 import { fileURLToPath } from 'url'
@@ -18,7 +17,6 @@ import projectsRoute from './routes/projects.route.js'
 import settingsRoute from './routes/settings.route.js'
 import publicationsRoute from './routes/publications.route.js'
 import travelImagesRoute from './routes/travelImages.route.js'
-
 import renderRoutes from './routes/render.route.js'
 
 import errorHandler from './middlewares/error.middleware.js'
@@ -67,7 +65,7 @@ app.use(errorHandler)
 keepAliveJob.start()
 cacheWarmerJob.start()
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URI, {  useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => console.error('❌ MongoDB connection error:', err))
 

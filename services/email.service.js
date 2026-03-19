@@ -1,4 +1,9 @@
+import ejs from 'ejs'
+import path from 'path'
 import nodeMailer from 'nodemailer'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 class EmailService {
   constructor() {
@@ -14,18 +19,21 @@ class EmailService {
   }
 
   async sendPasswordChangedEmail(data) {
-    const { email, ipAddress } = data
+    const { email, name, ipAddress, userAgent } = data
+
+    const templatePath = path.join(__dirname, '../templates/password-changed.ejs')
+    const html = await ejs.renderFile(templatePath, {
+      username: name, 
+      changeTime: new Date().toLocaleString(),
+      ipAddress: ipAddress,
+      userAgent: userAgent
+    })
 
     await this.transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Password Changed",
-      text: `
-        Your Password was changed
-        User: ${email}
-        IP: ${ipAddress}
-        Time: ${new Date()}
-      `
+      html: html
     })
   }
 }
