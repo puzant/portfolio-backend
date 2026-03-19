@@ -8,8 +8,7 @@ import EmailQueue from '../queues/email.queue.js'
 import AppError from "#utils/appError.js"
 
 class AuthService {
-  constructor(emailService) {
-    this.emailService = emailService
+  constructor() {
     this.emailQueue = EmailQueue
   }
 
@@ -71,7 +70,8 @@ class AuthService {
       email: user.email,
       name: user.name,
       userId: user.id,
-      ipAddress: req.ip
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
     })
   }
 
