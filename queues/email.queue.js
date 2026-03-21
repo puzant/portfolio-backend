@@ -20,6 +20,25 @@ class EmailQueue {
     console.log('📧 Email queue initialized')
   }
 
+  async addPasswordResetJob(userData) {
+    console.log(`📝 Adding password reset job for: ${userData.email}`)
+
+    const job = await this.queue.add('password-reset', {
+      email: userData.email,
+      name: userData.name,
+      resetToken: userData.resetToken,
+      expiresIn: '1 hour',
+      ipAddress: userData.ipAddress,
+      timestamp: new Date().toISOString()
+    }, {
+      priority: 1,
+      attempts: 3
+    })
+    
+    console.log(`✅ Job ID: ${job.id}`)
+    return job
+  }
+
   async addPasswordChangedJob(userData) {
     console.log(`📝 Adding password-changed job for: ${userData.email}`)
 
@@ -31,7 +50,7 @@ class EmailQueue {
       timestamp: new Date().toISOString()
     }, {
       priority: 1,
-      attempts: 5
+      attempts: 3
     })
 
     console.log(`✅ Job ID: ${job.id}`)
