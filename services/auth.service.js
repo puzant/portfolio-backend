@@ -5,11 +5,65 @@ import { StatusCodes as Status } from "http-status-codes"
 
 import User from "#models/user.model.js"
 import EmailQueue from '../queues/email.queue.js'
+import TokenService from './token.service.js'
 import AppError from "#utils/appError.js"
 
 class AuthService {
   constructor() {
     this.emailQueue = EmailQueue
+    this.tokenService = TokenService
+  }
+
+  async forgotPassword(req) {
+    const { email, ipAddress } = req.body
+    const user = await User.findOne({ email: email.toLowerCase() })
+
+    if (!user) 
+      return { message: 'If that email exists, a reset link has been sent.' }
+
+    const { rawToken, hashedToken } = this.tokenService.generateResetToken()
+    user.resetPasswordToken = hashedToken
+    user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
+    
+    await user.save()
+    await this.emailQueue.addPasswordResetJob({
+      email: user.email,
+      name: user.name,
+      resetToken: rawToken,
+      ipAddress: ipAddress,
+      timestamp: new Date().toISOString()
+    })
+  }
+
+  async resetPassword(req) {
+    const { token, newPassword } = req.body
+
+    if (!token || !newPassword) 
+      throw new AppError('Token and new password are required', Status.BAD_REQUEST)
+
+    const hashedToken = this.tokenService.hashToken(token)
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() }
+    })
+    
+    if (!user) 
+      throw new AppError('Invalid or expired token', Status.BAD_REQUEST)
+
+    user.password = newPassword
+    user.resetPasswordToken = null
+    user.resetPasswordExpires = null
+    user.passwordChangedAt = new Date()
+    
+    await user.save()
+    await this.emailQueue.addPasswordChangedJob({
+      email: user.email,
+      name: user.name,
+      userId: user.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent']
+    })
   }
 
   async createGuestUser() {
