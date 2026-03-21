@@ -18,6 +18,27 @@ class EmailService {
     })
   }
 
+  async sendResetPasswordEmail(data) {
+    const { email, name, ipAddress, expiresIn, timestamp, resetToken } = data
+    const resetLink = `${process.env.RENDER_BACKEND_URL}/set-new-password?token=${resetToken}`
+    const templatePath = path.join(__dirname, '../templates/password-reset.ejs')
+
+    const html = await ejs.renderFile(templatePath, {
+      username: name,
+      resetLink,
+      expiresIn,
+      ipAddress,
+      timestamp
+    })
+
+    await this.transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset",
+      html: html
+    })
+  }
+
   async sendPasswordChangedEmail(data) {
     const { email, name, ipAddress, userAgent } = data
 
