@@ -47,29 +47,35 @@ class AuthController {
     res.status(Status.CREATED).json(ApiResponse.successResponse("User created successfully", { user: newUser }))
   })
 
+  forgotPassword = asyncHandler(async (req, res) => {
+    await this.authService.forgotPassword(req)
+    res.status(Status.OK).json(ApiResponse.successResponse("Password reset link was sent successfully"))
+  })
+
   changePassword = asyncHandler(async (req, res) => {
     await this.authService.changePassword(req)
     res.status(Status.CREATED).json(ApiResponse.successResponse("Password changed successfully"))
   })
 
-  renderPasswordReset = asyncHandler(async (req, res) => {
-    try {
-      res.render('auth/forgotPassword', {
-        title: 'Reset Password'
-      })
-    } catch (err) {
-      res.status(Status.INTERNAL_SERVER_ERROR).render('error', { message: 'Internal Server Error. Please try again later.' })
-    }
+  renderSetNewPassword = asyncHandler(async (req, res) => {
+    const token = req.query.token
+
+    res.render('auth/setNewPassword', {
+      title: 'Set New Password',
+      token
+    })
+  })
+
+  renderForgotPassword = asyncHandler(async (req, res) => {
+    res.render('auth/forgotPassword', {
+      title: 'Reset Password'
+    })
   })
 
   renderLogin = asyncHandler(async (req, res) => {
-    try {
-      res.render('auth/login', {
-        title: 'Login'
-      })
-    } catch (err) {
-      res.status(Status.INTERNAL_SERVER_ERROR).render('error', { message: 'Internal Server Error. Please try again later.' })
-    }
+    res.render('auth/login', {
+      title: 'Login'
+    })
   })
 }
 
