@@ -18,8 +18,7 @@ class AuthService {
     const { email, ipAddress } = req.body
     const user = await User.findOne({ email: email.toLowerCase() })
 
-    if (!user) 
-      return { message: 'If that email exists, a reset link has been sent.' }
+    if (!user) return
 
     const { rawToken, hashedToken } = this.tokenService.generateResetToken()
     user.resetPasswordToken = hashedToken
@@ -35,7 +34,7 @@ class AuthService {
     })
   }
 
-  async resetPassword(req) {
+  async setNewPassword(req) {
     const { token, newPassword } = req.body
 
     if (!token || !newPassword) 
@@ -47,7 +46,7 @@ class AuthService {
       resetPasswordToken: hashedToken,
       resetPasswordExpires: { $gt: Date.now() }
     })
-    
+
     if (!user) 
       throw new AppError('Invalid or expired token', Status.BAD_REQUEST)
 
