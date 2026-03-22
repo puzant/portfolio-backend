@@ -14,6 +14,10 @@ class EmailWorker {
         console.log(`   Data:`, job.data)
 
         switch (job.name) {
+          case 'password-reset':
+            await this.emailService.sendResetPasswordEmail(job.data)
+            break
+
           case 'password-changed':
             await this.emailService.sendPasswordChangedEmail(job.data)
             break
