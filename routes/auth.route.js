@@ -14,6 +14,7 @@ router.post('/login', loginValidation, authController.login)
 router.post('/create-user', createUserValidation, authController.createUser)
 router.post('/change-password', authMiddleware, authController.changePassword)
 router.post('/forgot-password', authController.forgotPassword)
+router.post('/set-new-password', authController.setNewPassword)
 router.post('/logout', authMiddleware, authController.logout)
 
 export default router

@@ -41,7 +41,9 @@ router.get('/travel-images/add', authMiddleware, restrictTo('admin'), travelImag
 router.get('/travel-images/edit/:id', authMiddleware, restrictTo('admin'), travelImagesController.renderEditTravelImage)
 
 router.get('/login', authController.renderLogin)
-router.get('/forgot-password', authController.renderPasswordReset)
+router.get('/forgot-password', authController.renderForgotPassword)
+router.get('/set-new-password', authController.renderSetNewPassword)
+
 router.get('/settings', authMiddleware, restrictTo('admin'), settingsController.renderSettings)
 
 export default router
