@@ -49,12 +49,17 @@ class AuthController {
 
   forgotPassword = asyncHandler(async (req, res) => {
     await this.authService.forgotPassword(req)
-    res.status(Status.OK).json(ApiResponse.successResponse("Password reset link was sent successfully"))
+    res.status(Status.OK).json(ApiResponse.successResponse("If that email exists, a reset link has been sent."))
   })
 
   changePassword = asyncHandler(async (req, res) => {
     await this.authService.changePassword(req)
     res.status(Status.CREATED).json(ApiResponse.successResponse("Password changed successfully"))
+  })
+
+  setNewPassword = asyncHandler(async (req, res) => {
+    await this.authService.setNewPassword(req)
+    res.status(Status.OK).json(ApiResponse.successResponse("New password was set successfully"))
   })
 
   renderSetNewPassword = asyncHandler(async (req, res) => {
