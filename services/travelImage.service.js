@@ -26,7 +26,7 @@ class TravelImageService {
   }
 
   async getById(id) {
-    const travelImages = await this._getCachedTravelImages()
+    const travelImages = await this.getAll()
     const travelImage = travelImages.find(t => t._id.toString() === id.toString())
 
     if (!travelImage) {
