@@ -12,11 +12,15 @@ class ProjectService {
     this.cacheKey = 'projects'
   }
 
-  async getAll(user = null) {
-    const shouldBypassCache = user?.cacheToggles.projects
+  async getAll(user = null, filter = 'all') {
+    const useCache = user?.cacheToggles.projects
+    let query = {}
 
-    if (shouldBypassCache) 
-      return Project.find().sort({ priority: 1 }).lean()
+    if (filter == 'active') query.active = true
+    if (filter == 'inactive') query.active = false
+
+    if (!useCache || filter !== 'all') 
+      return Project.find(query).sort({ priority: 1 }).lean()
 
     let projects = this.cache.get(this.cacheKey)
 
