@@ -10,10 +10,7 @@
           <div class="card-body p-4 p-md-5">
             <div class="text-center mb-4">
               <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-flex mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#0d6efd" class="bi bi-person-circle" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                </svg>
+                <img src="/assets/icons/user-icon.svg" alt="">
               </div>
               <h1 class="h3 fw-bold mb-2">Welcome Back</h1>
               <p class="text-muted small">Sign in to your account</p>
@@ -26,9 +23,7 @@
                 <label for="email" class="form-label fw-semibold">Email Address</label>
                 <div class="input-group">
                   <span class="input-group-text bg-white border-end-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#6c757d" class="bi bi-envelope" viewBox="0 0 16 16">
-                      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-1 6.746-5.056-3.04-1.944 1.166-1.944-1.166L2 12.13v.87a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-.87ZM1 11.105l4.708-2.825L1 5.383v5.722Z"/>
-                    </svg>
+                    <i class="bi bi-envelope"></i>
                   </span>
                   <input type="email" class="form-control border-start-0 ps-0" id="email" name="email" placeholder="name@example.com" autofocus>
                 </div>
@@ -38,20 +33,15 @@
                 <label for="password" class="form-label fw-semibold">Password</label>
                 <div class="input-group">
                   <span class="input-group-text bg-white border-end-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#6c757d" class="bi bi-key" viewBox="0 0 16 16">
-                      <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647a.5.5 0 0 1-.708 0L7 9.207l-.646.647a.5.5 0 0 1-.708 0L5 9.207l-.646.647a.5.5 0 0 1-.708 0L3 9.207l-.646.647a.5.5 0 0 1-.708 0L1 9.207l-.646.647a.5.5 0 0 1-.708 0L0 9.207V8z"/>
-                    </svg>
+                    <i class="bi bi-key"></i>
                   </span>
                   <input type="password" class="form-control border-start-0 ps-0" id="password" name="password" placeholder="Enter your password">
                 </div>
               </div>
 
               <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary py-2 fw-semibold">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-in-right me-2" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
-                    <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                  </svg>
+                <button type="submit" class="btn btn-primary py-2 text-white fw-semibold">
+                  <img src="/assets/icons/login-icon.svg" alt="">
                   Sign In
                 </button>
               </div>
@@ -65,9 +55,6 @@
             <form id="guestLoginForm" action="/v1/auth/guest-login" method="POST">
               <div class="d-grid">
                 <button type="submit" class="btn btn-outline-secondary py-2 fw-semibold">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-incognito me-2" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="m4.736 1.968-.892 3.269-.014.058C2.113 5.478 1 6.667 1 8c0 1.333 1.113 2.522 2.83 2.705.034.14.066.28.097.418l-.017.022a.5.5 0 0 0 .2.7l.184.1a.5.5 0 0 0 .7-.2l.031-.05c.064.124.13.245.2.364.077.133.16.261.247.384l.01-.008a.5.5 0 0 0 .687.134l.08-.06c.185.218.38.426.586.623l.016.017a.5.5 0 0 0 .706-.003l.08-.08c.183.15.373.291.568.42a.5.5 0 0 0 .666-.15l.028-.04c.227.123.459.23.696.32.107.04.215.077.325.11a.5.5 0 0 0 .607-.377l.022-.113c.118.02.237.035.356.045a.5.5 0 0 0 .492-.259l.04-.08c.265.05.53.083.796.102a.5.5 0 0 0 .496-.37l.031-.155c.138.014.276.023.414.027a.5.5 0 0 0 .5-.5v-.06c.064.005.128.01.192.01 1.333 0 2.522-1.113 2.705-2.83.28-.02.555-.06.825-.115a.5.5 0 0 0 .402-.58l-.03-.15c.197-.106.387-.22.569-.34a.5.5 0 0 0 .12-.72l-.02-.024c.166-.2.32-.41.463-.628a.5.5 0 0 0-.17-.7l-.08-.05c.07-.12.134-.245.192-.37l.03.05a.5.5 0 0 0 .7.2l.184-.1a.5.5 0 0 0 .2-.7l-.016-.022c.031-.138.064-.278.098-.418C14.887 10.522 16 9.333 16 8c0-1.333-1.113-2.522-2.83-2.705l-.014-.058-.892-3.269-.002-.005A.5.5 0 0 0 11.5 1h-7a.5.5 0 0 0-.476.346l-.288.622zM11.5 2l.722 2.647-.722-.12V2zM8 2v2.528l-.5.083V2h1zm-3 2.528L4.5 2H5v2.528l-.5-.083zM4.278 4.647L5 2h.5v2.528l-1.222-.204zM3.06 5.648 4 5.849l-.008.037-.932-1.22zM12 8c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4z"/>
-                  </svg>
                   Continue as Guest
                 </button>
               </div>

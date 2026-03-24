@@ -4,7 +4,7 @@
       <a class="text-black" style="text-decoration: none;" data-bs-toggle="collapse" role="button" href="#publicationsCollapse" aria-expanded="true" aria-controls="publicationsCollapse">
         <i class="bi bi-caret-down-fill" id="publicationCollapseIcon"></i>
       </a>
-      Publications Projects (<%- publications.length %>)
+      Publications (<%- publications.length %>)
       <% if (user.cacheToggles.publications) { %> <span class="badge bg-warning text-dark fs-6 py-1 px-2">Cache Active</span> <% } %>
     </h3>
 
@@ -17,7 +17,7 @@
 
   <% if (publications.length == 0) { %>
     <div class="alert alert-light w-25" role="alert">
-      There are no projects yet!
+      There are no publications yet!
     </div>
   <% } else { %>
 
