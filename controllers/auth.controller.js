@@ -13,9 +13,6 @@ class AuthController {
     const { guestToken, guestRefreshToken, guest } = await this.authService.createGuestUser()
     setAuthCookies(res, guestToken, guestRefreshToken)
 
-    guest.refreshToken = guestRefreshToken
-    await guest.save()
-
     return res.status(Status.OK).json(ApiResponse.successResponse("Login successful", {
       id: guest._id,
       username: guest.username,
@@ -25,9 +22,6 @@ class AuthController {
   login = asyncHandler(async (req, res) => {
     const { token, refreshToken, user } = await this.authService.login(req)
     setAuthCookies(res, token, refreshToken)
-
-    user.refreshToken = refreshToken
-    await user.save()
 
     return res.status(Status.OK).json(ApiResponse.successResponse("Login successful", {
       id: user._id,
@@ -64,6 +58,9 @@ class AuthController {
 
   renderSetNewPassword = asyncHandler(async (req, res) => {
     const token = req.query.token
+
+    if (!token) 
+      return res.redirect('/forgot-password')
 
     res.render('auth/setNewPassword', {
       title: 'Set New Password',

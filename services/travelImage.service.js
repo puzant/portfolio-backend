@@ -15,14 +15,14 @@ class TravelImageService {
     if (shouldBypassCache) 
       return TravelImage.find().sort({ order: 1 })
     
-      let travelImages = this.cache.get(this.cacheKey)
+    let travelImages = this.cache.get(this.cacheKey)
     
-      if (!travelImages) {
-        travelImages = await TravelImage.find().sort({ order: 1 })
-        this.cache.set(this.cacheKey, travelImages, 43200)
-      }
+    if (!travelImages) {
+      travelImages = await TravelImage.find().sort({ order: 1 })
+      this.cache.set(this.cacheKey, travelImages, 43200)
+    }
     
-      return travelImages
+    return travelImages
   }
 
   async getById(id) {
