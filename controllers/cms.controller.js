@@ -8,14 +8,16 @@ class CMSController {
   }
 
   renderCmsPage = asyncHandler(async (req, res) => {
+    const { filter = 'all' } = req.query // all, active, inactive
+
     const [projects, publications, travelImages] = await Promise.all([
-      this.projectService.getAll(req.user),
+      this.projectService.getAll(req.user, filter),
       this.publicationService.getAll(req.user),
       this.travelImageService.getAll(req.user)
     ])
 
     res.render('index', {
-      projects, publications, travelImages,
+      projects, publications, travelImages, currentFilter: filter,
       title: 'CMS'
     })
   })
