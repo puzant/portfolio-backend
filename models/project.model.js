@@ -12,4 +12,4 @@ const projectSchema = new mongoose.Schema({
   repo: { type: String }
 })
 
-export default mongoose.model('Porject', projectSchema)
+export default mongoose.model('Project', projectSchema)
