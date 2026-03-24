@@ -8,4 +8,4 @@ const travelImageSchema = new mongoose.Schema({
   order: { type: Number, required: true }
 })
 
-export default mongoose.model('TravelImage', travelImageSchema)
+export default mongoose.model('TravelImage', travelImageSchema, 'travelImages')
