@@ -82,6 +82,8 @@ class AuthService {
     const guestToken = jwt.sign(guestPayload, process.env.JWT_SECRET, { expiresIn: '15min' })
     const guestRefreshToken = jwt.sign(refreshPayload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 
+    guest.refreshToken = guestRefreshToken
+    await guest.save()
     return { guestToken, guestRefreshToken, guest }
   }
 
@@ -104,6 +106,8 @@ class AuthService {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '15min' })
     const refreshToken = jwt.sign(refreshPayload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' })
 
+    user.refreshToken = refreshToken
+    await user.save()
     return { token, refreshToken, user }
   }
 
