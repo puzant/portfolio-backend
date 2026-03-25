@@ -13,9 +13,9 @@ class PublicationService {
   }
 
   async getAll(user) {
-    const shouldBypassCache = user?.cacheToggles.publications
+    const useCache = user?.cacheToggles.publications
 
-    if (shouldBypassCache)
+    if (!useCache)
       return Publication.find().sort({ publishedDate: -1 }).lean()
 
     let publications = this.cache.get(this.cacheKey)

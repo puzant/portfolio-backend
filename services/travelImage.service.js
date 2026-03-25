@@ -10,9 +10,9 @@ class TravelImageService {
   }
 
   async getAll(user = null) {
-    const shouldBypassCache = user?.cacheToggles.travelImages
+    const useCache = user?.cacheToggles.travelImages
 
-    if (shouldBypassCache) 
+    if (!useCache) 
       return TravelImage.find().sort({ order: 1 })
     
     let travelImages = this.cache.get(this.cacheKey)

@@ -66,11 +66,12 @@ const authMiddleware = async (req, res, next) => {
 
   if (userId) {
     const extra = await User.findById(userId) 
-      .select('country city cacheToggles')
+      .select('country city updatedAt cacheToggles')
       .lean()
 
     req.user = {
       ...baseUser,
+      updatedAt: extra.updatedAt.toLocaleString(),
       country: extra.country,
       city: extra.city,
       cacheToggles: extra.cacheToggles,
