@@ -20,7 +20,8 @@ import travelImagesRoute from './routes/travelImages.route.js'
 import renderRoutes from './routes/render.route.js'
 
 import errorHandler from './middlewares/error.middleware.js'
-import notFoundHandler from './middlewares/notFoundHandler.middleware.js'
+import apiNotFoundHandler from './middlewares/apiNotFoundHandler.middleware.js'
+import viewNotFoundHandler from './middlewares/viewNotFoundHandler.js'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -59,7 +60,8 @@ app.use('/v1/travel-images', travelImagesRoute)
 app.use('/v1/auth', authRoute)
 app.use('/v1/settings', settingsRoute)
 
-app.use("*", notFoundHandler)
+app.use("v1/", apiNotFoundHandler)
+app.use(viewNotFoundHandler)
 app.use(errorHandler)
 
 keepAliveJob.start()
