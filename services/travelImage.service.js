@@ -9,11 +9,16 @@ class TravelImageService {
     this.cacheKey = 'travelImages'
   }
 
-  async getAll(user = null) {
+  async getAll(user = null, filters = {}) {
     const useCache = user?.cacheToggles.travelImages
+    const { country = 'all' } = filters
+    let query = {}
 
-    if (!useCache) 
-      return TravelImage.find().sort({ order: 1 })
+    if (country || country !== 'all')
+      query.country = country
+
+    if (!useCache || country !== 'all') 
+      return TravelImage.find(query).sort({ order: 1 })
     
     let travelImages = this.cache.get(this.cacheKey)
     
@@ -75,8 +80,15 @@ class TravelImageService {
       throw new AppError('Cloudinary upload failed', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
+     const optimizedUrl = cloudinary.url(uploadResult.public_id, {
+      transformation: [
+        { width: 384, height: 384, crop: 'fill', quality: 'auto' },
+        { fetch_format: 'auto' }
+      ]
+    })
+  
     const imageDoc = new TravelImage({
-      url: result.secure_url,
+      url: optimizedUrl,
       display_name: body.displayName,
       asset_id: result.asset_id,
       public_id: result.public_id,
