@@ -21,6 +21,20 @@
   <% } else { %>
 
     <div class="container-fluid show" id="travelImagesCollapse">
+      <div class="col-md-3 mb-3">
+        <label class="form-label fw-semibold small text-muted mb-1">
+          <i class="bi bi-geo-alt me-1"></i> Filter by Country
+        </label>
+  
+        <select class="form-select" id="countryFilter">
+          <option value="all" <%= currentCountry === 'all' ? 'selected' : '' %>>🌍 All Countries</option>
+          <option value="Lebanon" <%= currentCountry === 'Lebanon' ? 'selected' : '' %>>🇱🇧 Lebanon</option>
+          <option value="Syria" <%= currentCountry === 'Syria' ? 'selected' : '' %>>🇸🇾 Syria</option>
+          <option value="Armenia" <%= currentCountry === 'Armenia' ? 'selected' : '' %>>🇦🇲 Armenia</option>
+          <option value="UAE" <%= currentCountry === 'UAE' ? 'selected' : '' %>>🇦🇪 United Arab Emirates</option>
+        </select>
+      </div>
+
       <div 
         id="<%= user.role === 'admin' ? 'admin-trave-images-container' : 'travel-images-container' %>"
         class="row row-cols-2 row-cols-sm-4 row-cols-md-6 g-4"

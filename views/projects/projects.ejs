@@ -22,15 +22,15 @@
    
     <div class="container-fluid show" id="projectsCollapse">
       <div class="btn-group mb-3">
-        <a href="/cms?filter=all" class="btn btn-sm <%= currentFilter === 'all' ? 'btn-primary' : 'btn-outline-primary' %>">
+        <a href="/cms?status=all" class="btn btn-sm <%= currentStatus === 'all' ? 'btn-primary' : 'btn-outline-primary' %>">
           All Projects
         </a>
   
-        <a href="/cms?filter=active" class="btn btn-sm <%= currentFilter === 'active' ? 'btn-success' : 'btn-outline-success' %>">
+        <a href="/cms?status=active" class="btn btn-sm <%= currentStatus === 'active' ? 'btn-success' : 'btn-outline-success' %>">
           Active
         </a>
   
-        <a href="/cms?filter=inactive" class="btn btn-sm <%= currentFilter === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary' %>">
+        <a href="/cms?status=inactive" class="btn btn-sm <%= currentStatus === 'inactive' ? 'btn-secondary' : 'btn-outline-secondary' %>">
           Inactive
         </a>
       </div>
