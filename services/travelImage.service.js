@@ -10,24 +10,25 @@ class TravelImageService {
   }
 
   async getAll(user = null, filters = {}) {
+    const { country = 'all' } = filters
     const useCache = user?.cacheToggles.travelImages
-    const { country } = filters
-    let query = {}
 
-    if (country || country !== 'all')
-      query.country = country
-
-    if (!useCache || country !== 'all') 
-      return TravelImage.find(query).sort({ order: 1 })
-    
-    let travelImages = this.cache.get(this.cacheKey)
-    
-    if (!travelImages) {
-      travelImages = await TravelImage.find().sort({ order: 1 })
-      this.cache.set(this.cacheKey, travelImages, 43200)
+    if (country !== 'all') {
+      return TravelImage.find({ country }).sort({ order: 1 })
     }
+
+    if (!useCache) {
+      return TravelImage.find().sort({ order: 1 }).lean()
+    }
+  
+    let images = this.cache.get(this.cacheKey)
     
-    return travelImages
+    if (!images) {
+      images = await TravelImage.find().sort({ order: 1 }).lean()
+      this.cache.set(this.cacheKey, images, 43200)
+    }
+
+    return images
   }
 
   async getById(id) {
@@ -80,7 +81,7 @@ class TravelImageService {
       throw new AppError('Cloudinary upload failed', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
-     const optimizedUrl = cloudinary.url(result.public_id, {
+    const optimizedUrl = cloudinary.url(result.public_id, {
       transformation: [
         { width: 384, height: 384, crop: 'fill', quality: 'auto' },
         { fetch_format: 'auto' }
@@ -95,7 +96,7 @@ class TravelImageService {
       order: totalDocuments.length + 1
     })
     
-    imageDoc.save()
+    await imageDoc.save()
     this.cache.del(this.cacheKey)
     return imageDoc
   }
