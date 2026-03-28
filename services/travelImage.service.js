@@ -11,7 +11,7 @@ class TravelImageService {
 
   async getAll(user = null, filters = {}) {
     const useCache = user?.cacheToggles.travelImages
-    const { country = 'all' } = filters
+    const { country } = filters
     let query = {}
 
     if (country || country !== 'all')
