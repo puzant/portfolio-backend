@@ -6,7 +6,6 @@ const travelImageSchema = new mongoose.Schema({
   asset_id: { type: String, required: true },
   public_id: { type: String, required: true },
   order: { type: Number, required: true },
-  country: { type: String, required: true, index: true, trim: true }
 })
 
 export default mongoose.model('TravelImage', travelImageSchema, 'travelImages')
