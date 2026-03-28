@@ -52,8 +52,6 @@ class TravelImagesController {
       title: 'Travel Images',
       user: req.user
     })
-    
-    res.status(500).render('error', { message: 'Internal Server Error. Please try again later.' })
   })
 
   renderEditTravelImage = asyncHandler(async (req, res) => {
