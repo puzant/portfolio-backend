@@ -80,7 +80,7 @@ class TravelImageService {
       throw new AppError('Cloudinary upload failed', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
-     const optimizedUrl = cloudinary.url(uploadResult.public_id, {
+     const optimizedUrl = cloudinary.url(result.public_id, {
       transformation: [
         { width: 384, height: 384, crop: 'fill', quality: 'auto' },
         { fetch_format: 'auto' }
