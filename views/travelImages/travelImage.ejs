@@ -1,0 +1,46 @@
+<div class="col" id="<%= image.public_id %>">
+  <!-- Image Card -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+    <div class="position-relative">
+      <div class="ratio ratio-1x1">
+        <img 
+          class="w-100 h-100 object-fit-cover" 
+          style="object-fit: cover; transition: transform 0.3s ease;"
+          src="<%= image.url %>" 
+          alt="<%= image.display_name %>"
+          loading="lazy"
+          onmouseover="this.style.transform='scale(1.05)'"
+          onmouseout="this.style.transform='scale(1)'"
+        >
+      </div>
+                
+      <!-- Admin Overlay (visible on hover) -->
+      <% if (user.role === 'admin') { %>
+        <div class="position-absolute top-0 end-0 m-2">
+          <div class="btn-group btn-group-sm shadow-sm">
+            <a href="/travel-images/edit/<%= image._id %>" 
+              class="btn btn-light rounded-circle"
+              style="width: 32px; height: 32px;">
+              <i class="bi bi-pencil" style="font-size: 14px;"></i>
+            </a>
+            <button type="button" 
+              class="btn btn-light rounded-circle ms-2"
+              style="width: 32px; height: 32px;"
+              data-bs-toggle="modal" 
+              data-bs-target="#deleteModal-<%= image._id %>"
+            >
+              <i class="bi bi-trash3 text-danger" style="font-size: 14px;"></i>
+            </button>
+          </div>
+        </div>
+      <% } %>
+    </div>
+              
+    <!-- Caption -->
+    <div class="card-body p-2 text-center bg-white">
+      <p class="card-text small text-muted mb-0 text-truncate" style="font-size: 0.8rem;">
+        <%= image.display_name %>
+      </p>
+    </div>
+  </div>
+</div>
