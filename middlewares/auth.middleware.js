@@ -31,7 +31,7 @@ const authMiddleware = async (req, res, next) => {
       if (!user || user.refreshToken !== refreshToken) {
         res.clearCookie('token')
         res.clearCookie('refresh_token')
-        res.redirect('/login')
+        return res.redirect('/login')
       }
 
       const newAccessToken = jwt.sign(
@@ -60,13 +60,13 @@ const authMiddleware = async (req, res, next) => {
     } catch (err) {
       res.clearCookie('token')
       res.clearCookie('refresh_token')
-      res.redirect('/login')
+      return res.redirect('/login')
     }
   }
 
   if (userId) {
     const extra = await User.findById(userId) 
-      .select('country city updatedAt cacheToggles')
+      .select('country city updatedAt cacheToggles preferences')
       .lean()
 
     req.user = {
@@ -75,6 +75,7 @@ const authMiddleware = async (req, res, next) => {
       country: extra.country,
       city: extra.city,
       cacheToggles: extra.cacheToggles,
+      preferences: extra.preferences
     }
 
     res.locals.user = req.user
