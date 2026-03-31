@@ -17,6 +17,12 @@ class SettingsController {
     return res.status(Status.OK).json(ApiResponse.successResponse("Cache settings updated"))
   })
 
+  toggleReOrder = asyncHandler(async (req, res) => {
+    const { enabled } = req.body
+    await this.settingsService.toggleReOrder(req.user.id, enabled)
+    return res.status(Status.OK).json(ApiResponse.successResponse("Ordering settings updated"))
+  })
+
   updateUserInfo = asyncHandler(async (req, res) => {
     const updatedUser = await this.settingsService.updateUserInfo(req)
     return res.status(Status.OK).json(ApiResponse.successResponse("User updated successfully", updatedUser))
