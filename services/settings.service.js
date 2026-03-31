@@ -9,6 +9,20 @@ class SettingsService {
     return response
   }
 
+  async toggleReOrder(userId, enabled) {
+    const user = await User.findById(userId)
+
+    if (!user) 
+      throw new AppError('User not found', Status.NOT_FOUND)
+
+    user.preferences = {
+      ...user.preferences,
+      dragDropEnabled: enabled
+    }
+
+    await user.save()
+  }
+
   async toggleCache(req) {
     const { type, value } = req.body
     const userId = req.user.id
