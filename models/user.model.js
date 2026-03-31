@@ -21,6 +21,9 @@ const UserSchema = new mongoose.Schema(
       publications: { type: Boolean, default: false },
       travelImages: { type: Boolean, default: false },
     },
+    preferences: {
+      dragDropEnabled: { type: Boolean, default: true },
+    }
   },
   { timestamps: true }
 );
