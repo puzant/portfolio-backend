@@ -31,21 +31,34 @@
             </div>
           </div>
 
-          <div class="col-md-8">
-            <label class="form-label">Display Name</label>
+          <div class="col-md-8 col-lg-6">
+            <div class="mb-3">
+              <label class="form-label">Display Name</label>
           
-            <div class="input-group mb-3 w-50">
-              <span class="input-group-text" id="basic-addon1"><i class="bi bi-lightbulb-fill"></i></span>
-              <input name="display_name" type="text" class="form-control" value="<%= travelImage?.display_name || '' %>">
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-lightbulb-fill"></i></span>
+                <input name="display_name" type="text" class="form-control" value="<%= travelImage?.display_name || '' %>">
+              </div>
             </div>
 
-            <label class="form-label">Order</label>
+            <div class="mb-3">
+              <label class="form-label">Country</label>
 
-            <div class="input-group mb-3 w-50">
-              <span class="input-group-text" id="basic-addon1"><i class="bi bi-border-all"></i></span>
-              <input disabled name="order" type="text" class="form-control" value="<%= travelImage?.order || '' %>">
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
+                <input name="country" type="text" class="form-control" value="<%= travelImage?.country || '' %>">
+              </div>
             </div>
-      
+
+            <div class="mb-3">
+              <label class="form-label">Order</label>
+
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-border-all"></i></span>
+                <input disabled name="order" type="text" class="form-control" value="<%= travelImage?.order || '' %>">
+              </div>
+            </div>
+
             <span class="error text-danger" id="nameError"></span>
 
             <p>Public ID: <span class="text-info fw-bold"><%= travelImage?.public_id %></span></p>

@@ -16,7 +16,7 @@
 
     <form id="travelImagesForm" action="/v1/travel-images/add" method="POST">
       <div class="row g-3">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label for="imageTitle" class="form-label">Image Title / Display Name</label>
           <input 
             type="text" 
@@ -28,7 +28,19 @@
           >
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
+          <label for="imageTitle" class="form-label">Country</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="imageTitle" 
+            name="country" 
+            placeholder="Syria"
+            required
+          >
+        </div>
+
+        <div class="col-md-4">
           <label class="form-label">Upload Image</label>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1"><i class="bi bi-image"></i></span>

@@ -1,4 +1,4 @@
-<div class="p-2 p-lg-4 my-2">
+<div class="p-2 p-lg-4 my-2" id="travelImagesSection">
   <!-- Header Section -->
   <div class="d-flex justify-content-between justify-content-md-start align-items-center gap-3">
     <h3>
@@ -60,6 +60,12 @@
 </div>
 
 <script>
+  document.getElementById('countryFilter').addEventListener('change', (e) => {
+    const country = e.target.value
+    const currentStatus = '<%= currentStatus %>'
+    window.location.href = `/cms?status=${currentStatus}&country=${country}#travelImagesSection`
+  })
+
   function dispatchDeleteEvent(button) {
     const event = new CustomEvent('deleteTravelImage', {
       detail: {
