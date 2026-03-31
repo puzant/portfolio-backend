@@ -27,7 +27,7 @@
           <% publications.forEach(publication => { %>
             <div class="col-md-3 mb-3">
               <%- include('./publication', { publication, userRole: user.role }) %>
-              <%- include('../partials/_deleteModal', { data: publication, type: 'publication' }) %>
+              <%- include('../partials/_deleteModal', { data: {id: publication._id, ...publication}, type: 'publication' }) %>
             </div>
           <% }) %>
         </div>
@@ -38,26 +38,26 @@
 </div>
 
 <script>
-  const deletePublicationDeleteBtn = document.querySelectorAll(".delete-btn");
-  const publicatoinCollapseEl = document.getElementById('publicationsCollapse');
-  const publicationCollapseIcon = document.getElementById('publicationCollapseIcon');
+  const deletePublicationDeleteBtn = document.querySelectorAll(".delete-btn")
+  const publicatoinCollapseEl = document.getElementById('publicationsCollapse')
+  const publicationCollapseIcon = document.getElementById('publicationCollapseIcon')
 
   publicatoinCollapseEl.addEventListener('hide.bs.collapse', () => {
-    publicationCollapseIcon.classList.remove('bi-caret-down-fill');
-    publicationCollapseIcon.classList.add('bi-caret-right-fill');
-  });
+    publicationCollapseIcon.classList.remove('bi-caret-down-fill')
+    publicationCollapseIcon.classList.add('bi-caret-right-fill')
+  })
 
   publicatoinCollapseEl.addEventListener('show.bs.collapse', () => {
-    publicationCollapseIcon.classList.remove('bi-caret-right-fill');
-    publicationCollapseIcon.classList.add('bi-caret-down-fill');
-  });
+    publicationCollapseIcon.classList.remove('bi-caret-right-fill')
+    publicationCollapseIcon.classList.add('bi-caret-down-fill')
+  })
 
   deletePublicationDeleteBtn.forEach(button => {
     button.addEventListener('click', async function() {
-      const publicationId = button.getAttribute("data-id");
+      const publicationId = button.getAttribute("data-id")
 
       const response = await fetch(`/publications/api/delete/${publicationId}`, { method: 'DELETE' })
-      if (response.success) Swal.fire({ text: "Publication Deleted!", icon: "success"});
+      if (response.success) Swal.fire({ text: "Publication Deleted!", icon: "success"})
     })
 
   })

@@ -21,7 +21,7 @@
     <% } else { %>
    
     <div class="container-fluid show" id="projectsCollapse">
-      <div class="btn-group mb-3">
+      <div class="btn-group my-1">
         <a href="/cms?status=all" class="btn btn-sm <%= currentStatus === 'all' ? 'btn-primary' : 'btn-outline-primary' %>">
           All Projects
         </a>
@@ -35,11 +35,20 @@
         </a>
       </div>
 
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4" id="<%= user.role === 'admin' ? 'admin-items-container' : 'items-container' %>">
+      <% if (user.role === 'admin') { %>
+        <div class="form-check form-switch my-1">
+          <input class="form-check-input" type="checkbox" id="dragDropToggle" <%= user.preferences?.dragDropEnabled !== false ? 'checked' : '' %>>
+          <label class="form-check-label" for="dragDropToggle">
+            <i class="bi bi-arrows-move me-1"></i> Reordering
+          </label>
+        </div>
+      <% } %>
+
+      <div class="wrapper row row-cols-1 row-cols-sm-2 row-cols-md-4" id="<%= user.role === 'admin' ? 'admin-items-container' : 'items-container' %>">
         <% projects.forEach(project => { %>
-          <div class="mb-3 drag-handle cursor-grab" data-id="<%= project._id %>">
+          <div class="mb-3" data-id="<%= project._id %>">
             <%- include('./project', { project, userRole: user.role }) %>
-            <%- include('../partials/_deleteModal', { data: project, type: 'project' }) %>
+            <%- include('../partials/_deleteModal', { data: {id: project._id, ...project}, type: 'project' }) %>
           </div>
         <% }) %>
       </div>
@@ -50,53 +59,100 @@
 
 <script src="/js/alert.js"></script>
 <script>
-  const itemsContainer = document.getElementById('admin-items-container')
-
-  const sortable = new Sortable(itemsContainer, {
-    animation: 150,
-    ghostClass: 'sortable-ghost', 
-    onEnd: async (evt) => {
-      const order = Array.from(evt.from.children).map(child => child.dataset.id)
-      
-      try {
-        if (evt.oldIndex !== evt.newIndex) {
-          const response = await axios({
-            url: '/v1/projects/reorder-project',
-            method: 'PATCH',
-            data: order,
-          })
-        
-          if (response.data.success) {
-            showAlert('success', response.data.message)
-          }
-        }
-      } catch (err) {
-        showAlert('danger', err.response.data.message)
+  function updateCursor(toggle, projectDivs) {
+    projectDivs.forEach(div => {
+      if (toggle) {
+        div.style.cursor = 'grab'
+      } else {
+        div.style.cursor = ''
       }
-    }
-  })
+    })
+  }
 
-  const deleteButtons = document.querySelectorAll(".delete-btn");
-  const projectCollapseEl = document.getElementById('projectsCollapse');
-  const projectCollapseIcon = document.getElementById('projectCollapseIcon');
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.wrapper')
+    const toggle = document.getElementById('dragDropToggle')
+    const projectDivs = document.querySelectorAll('[data-id]')
 
-  projectCollapseEl.addEventListener('hide.bs.collapse', () => {
-    projectCollapseIcon.classList.remove('bi-caret-down-fill');
-    projectCollapseIcon.classList.add('bi-caret-right-fill');
-  });
+    const user = <%- JSON.stringify(user) %>
 
-  projectCollapseEl.addEventListener('show.bs.collapse', () => {
-    projectCollapseIcon.classList.remove('bi-caret-right-fill');
-    projectCollapseIcon.classList.add('bi-caret-down-fill');
-  });
+    updateCursor(user?.preferences.dragDropEnabled, projectDivs)
 
-  deleteButtons.forEach(button => {
-    button.addEventListener('click', async function() {
-      const projectId = button.getAttribute("data-id");
+    toggle.addEventListener('change', async (e) => {
+      const enabled = e.target.checked
 
-      const response = await fetch(`/projects/api/delete/${projectId}`, { method: 'DELETE' })
-      if (response.success) Swal.fire({ text: "Project Deleted!", icon: "success"});
+      try {
+        const response = await api({
+          url: 'v1/settings/reorder-toggle',
+          method: 'PATCH',
+          data: {
+            enabled: e.target.checked
+          },
+        })
+
+        if (enabled) {
+          container.id = 'admin-items-container'
+          sortable.option('disabled', false)
+        } else {
+          container.id = 'items-container'
+          sortable.option('disabled', true)
+        }
+
+        showAlert('success', response.message || 'If that email exists, a reset link has been sent.')
+      } catch (err) {
+        toggle.checked = !enabled
+        showAlert('danger', err.response?.data?.message || 'Something went wrong. Please try again.')
+      } finally {
+        updateCursor(enabled, projectDivs)
+      }
     })
 
+    const sortable = new Sortable(container, {
+      animation: 150,
+      ghostClass: 'sortable-ghost', 
+      disabled: !user.preferences.dragDropEnabled,
+      onEnd: async (evt) => {
+        const order = Array.from(evt.from.children).map(child => child.dataset.id)
+      
+        try {
+          if (evt.oldIndex !== evt.newIndex) {
+            const response = await axios({
+              url: '/v1/projects/reorder-project',
+              method: 'PATCH',
+              data: order,
+            })
+        
+            if (response.data.success) {
+              showAlert('success', response.data.message)
+            }
+          }
+        } catch (err) {
+          showAlert('danger', err.response.data.message)
+        }
+      }
+    })
+
+    const deleteButtons = document.querySelectorAll(".delete-btn")
+    const projectCollapseEl = document.getElementById('projectsCollapse')
+    const projectCollapseIcon = document.getElementById('projectCollapseIcon')
+
+    projectCollapseEl.addEventListener('hide.bs.collapse', () => {
+      projectCollapseIcon.classList.remove('bi-caret-down-fill')
+      projectCollapseIcon.classList.add('bi-caret-right-fill')
+    })
+
+    projectCollapseEl.addEventListener('show.bs.collapse', () => {
+      projectCollapseIcon.classList.remove('bi-caret-right-fill')
+      projectCollapseIcon.classList.add('bi-caret-down-fill')
+    })
+
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', async function() {
+        const projectId = button.getAttribute("data-id")
+
+        const response = await fetch(`/projects/api/delete/${projectId}`, { method: 'DELETE' })
+        if (response.success) Swal.fire({ text: "Project Deleted!", icon: "success"})
+      })
+    })
   })
 </script>
