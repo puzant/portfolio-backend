@@ -23,6 +23,12 @@ class ProjectController {
   })
   
   editProject = asyncHandler(async (req, res) => {
+    const { ids } = req.body
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json(ApiResponse.successResponse("Invalid project ids"))
+    }
+    
     const updatedProject = await this.projectService.editProject(req, req.params.id)
     return res.status(Status.OK).json(ApiResponse.successResponse("Project updated successfully", updatedProject))
   })
@@ -30,6 +36,11 @@ class ProjectController {
   deleteProject = asyncHandler(async (req, res) => {
     await this.projectService.deleteProject(req.body.public_id, req.params.id)
     return res.status(Status.OK).json(ApiResponse.successResponse("Project deleted successfully"))
+  })
+
+  bulkDeleteProjects = asyncHandler(async (req, res) => {
+    await this.projectService.bulkDeleteProjects()
+    return res.status(Status.OK).json(ApiResponse.successResponse("Projects deleted successfully"))
   })
 
   reorderProject = asyncHandler(async (req, res) => {

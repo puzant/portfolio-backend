@@ -148,6 +148,25 @@ class ProjectService {
     this.cache.del(this.cacheKey)
   }
 
+  async bulkDeleteProjects(projectIds) {
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    try {
+      const result = await Project.deleteMany({
+        _id: { $in: projectIds }
+      }).session(session)
+
+      this.cache.del(this.cacheKey)
+      await session.commitTransaction()
+    } catch (err) {
+      await session.abortTransaction()
+      throw new AppError("There was error deleting projects", Status.INTERNAL_SERVER_ERROR)
+    } finally {
+      session.endSession()
+    }
+  }
+
   async reorderProject(order) {
     const bulkOps = order.map((id, index) => ({
       updateOne: { 
