@@ -1,9 +1,13 @@
 <div class="card shadow-sm" id="project">
   <div class="card-body">
     <div class="d-flex justify-content-between">
-      <b class="card-title"><%= project.name %> 
-        <span class="badge <%=project.active ? 'bg-success' : 'bg-warning text-dark'%>"><%= project.active ? 'Active' : 'Inactive' %></span>
-      </b>
+      <div>
+        <input class="form-check-input project-checkbox" type="checkbox" value="<%= project._id %>" id="project_<%= project._id %>">
+        <b class="card-title mx-1"><%= project.name %> 
+          <span class="badge <%=project.active ? 'bg-success' : 'bg-warning text-dark'%>"><%= project.active ? 'Active' : 'Inactive' %></span>
+        </b>
+      </div>
+
       <% if (userRole === 'admin') { %>
         <div class="d-flex gap-2">
           <a href="projects/edit/<%= project._id %>"><i class="bi bi-pencil"></i></a>
