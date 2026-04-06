@@ -1,7 +1,7 @@
-import dotenv  from 'dotenv'
+import DotenvFlow from 'dotenv-flow'
 import { CronJob } from 'cron'
 
-dotenv.config()
+DotenvFlow.config()
 const render_backend_URL = `${process.env.RENDER_BACKEND_URL}/v1/travel-images`
 
 export const keepAliveJob = new CronJob('*/13 * * * *', async () => {

@@ -1,9 +1,9 @@
+import DotenvFlow from 'dotenv-flow'
 import fs from 'fs'
 import path from 'path'
 import { pathToFileURL } from 'url'
-import dotenv from 'dotenv'
 
-dotenv.config()
+DotenvFlow.config()
 const direction = process.argv[2] || 'up'
 
 async function run() {
