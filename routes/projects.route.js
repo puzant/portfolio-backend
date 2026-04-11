@@ -16,7 +16,7 @@ router.get('/projects-images', authMiddleware, restrictTo('admin'), projectContr
 router.post('/add', authMiddleware, restrictTo('admin'), upload.single('preview'), projectValidation, projectController.addProject)
 router.post('/edit/:id', authMiddleware, restrictTo('admin'), upload.single('preview'), projectValidation, projectController.editProject)
 router.patch('/reorder-project', authMiddleware, restrictTo('admin'), projectController.reorderProject)
-router.delete('/delete/:id', authMiddleware, restrictTo('admin'), projectController.deleteProject)
 router.delete('/delete/bulk', authMiddleware, restrictTo('admin'), projectController.bulkDeleteProjects)
+router.delete('/delete/:id', authMiddleware, restrictTo('admin'), projectController.deleteProject)
 
 export default router
