@@ -29,7 +29,7 @@ class PublicationService {
   }
 
   async getById(id) {
-    const publications = await this._getCachedPublications()
+    const publications = await this.getAll()
     const publication = publications.find(p => p._id.toString() === id.toString())
 
     if (!publication) {
