@@ -13,9 +13,10 @@
         <button 
           data-public-id="<%= data.publicId %>" 
           data-id="<%= data.id %>" 
-          onclick="dispatchDeleteEvent(this)"
           type="button" 
+          id="<%= data.deleteId %>"
           class="delete-btn btn btn-danger"
+          data-bs-dismiss="modal"
         >
           Delete
         </button>
