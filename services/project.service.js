@@ -5,6 +5,7 @@ import { validationResult } from 'express-validator'
 
 import Project from "#models/project.model.js"
 import AppError from '#utils/appError.js'
+import { isProduction } from '#utils/environment.js'
 
 class ProjectService {
   constructor(cache) {
@@ -114,12 +115,19 @@ class ProjectService {
 
     if (isPreviewChanged) {
       try {
-        await cloudinary.uploader.destroy(public_id)
-        const uploadingResult =  await cloudinary.uploader.upload(req.file.path, { folder: 'projects' })
+        if (isProduction()) {
+          await cloudinary.uploader.destroy(public_id)
+          const uploadingResult =  await cloudinary.uploader.upload(req.file.path, { folder: 'projects' })
 
-        updatedFields.preview = uploadingResult.secure_url;
-        updatedFields.public_id = uploadingResult.public_id;
-        updatedFields.asset_id = uploadingResult.asset_id;
+          updatedFields.preview = uploadingResult.secure_url
+          updatedFields.public_id = uploadingResult.public_id
+          updatedFields.asset_id = uploadingResult.asset_id
+        } else {
+          console.log('⚠️ Skipping Cloudinary upload in development mode')
+          updatedFields.preview = preview || 'https://via.placeholder.com/300x200?text=Dev+Image'
+          updatedFields.public_id = null
+          updatedFields.asset_id = null
+        }
       } catch (error) {
         throw new AppError(`Cloudinary Error ${error.message}`, Status.INTERNAL_SERVER_ERROR)
       }
@@ -143,8 +151,10 @@ class ProjectService {
     const projectToDelete = await Project.findById(id)
     if (!projectToDelete) throw new AppError("Project not found", Status.NOT_FOUND)
 
-    await cloudinary.uploader.destroy(publicId)
-    await Project.findByIdAndDelete(id)
+    if (isProduction)
+      await cloudinary.uploader.destroy(publicId)
+    
+    await projectToDelete.deleteOne()
     this.cache.del(this.cacheKey)
   }
 
@@ -153,14 +163,13 @@ class ProjectService {
     session.startTransaction()
 
     try {
-      const result = await Project.deleteMany({
-        _id: { $in: projectIds }
-      }).session(session)
+      await Project.deleteMany({ _id: { $in: projectIds }}).session(session)
 
       this.cache.del(this.cacheKey)
       await session.commitTransaction()
     } catch (err) {
       await session.abortTransaction()
+      console.log("bulk delete error", err)
       throw new AppError("There was error deleting projects", Status.INTERNAL_SERVER_ERROR)
     } finally {
       session.endSession()
