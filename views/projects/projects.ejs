@@ -46,11 +46,33 @@
         <% } %>
       </div>
 
+      <div id="bulkActionsBar" class="alert alert-primary d-none d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <i class="bi bi-check2-circle me-2"></i>
+          <span id="selectedCount">0</span> project(s) selected
+        </div>
+    
+        <div>
+          <button id="selectAllBtn" class="btn btn-sm btn-outline-primary me-2">
+            <i class="bi bi-check-all"></i> Select All
+          </button>
+          
+          <button id="bulkDeleteBtn" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i> Delete Selected</button>
+        </div>
+      </div>
+
       <div class="wrapper row row-cols-1 row-cols-sm-2 row-cols-md-4" id="<%= user.role === 'admin' ? 'admin-items-container' : 'items-container' %>">
         <% projects.forEach(project => { %>
           <div class="mb-3" data-id="<%= project._id %>">
             <%- include('./project', { project, userRole: user.role }) %>
-            <%- include('../partials/_deleteModal', { data: {id: project._id, ...project}, type: 'project' }) %>
+            <%- include('../partials/_deleteModal', { 
+              data: {
+                id: project._id, 
+                deleteId: "projectDeleteBtn",
+                ...project
+                }, 
+                type: 'project' 
+              }) %>
           </div>
         <% }) %>
       </div>
@@ -61,24 +83,89 @@
 
 <script src="/js/alert.js"></script>
 <script>
-  function updateCursor(toggle, projectDivs) {
-    projectDivs.forEach(div => {
-      if (toggle) {
-        div.style.cursor = 'grab'
-      } else {
-        div.style.cursor = ''
-      }
-    })
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.wrapper')
     const toggle = document.getElementById('dragDropToggle')
     const projectDivs = document.querySelectorAll('[data-id]')
+    const bulkActionsBar = document.getElementById("bulkActionsBar")
+    const selectedCountSpan = document.getElementById("selectedCount")
+    const selectAllBtn = document.getElementById("selectAllBtn")
+    const bulkDeleteBtn = document.getElementById("bulkDeleteBtn")
 
     const user = <%- JSON.stringify(user) %>
+    let projectsToBeDeleted = []
+
+    function updateBulkActionBar() {
+      if (projectsToBeDeleted.length > 0) {
+        bulkActionsBar.classList.remove("d-none")
+        selectedCountSpan.textContent = projectsToBeDeleted.length
+      } else {
+        bulkActionsBar.classList.add("d-none")
+      }
+    }
+
+    function updateCursor(toggle, projectDivs) {
+      projectDivs.forEach(div => {
+        if (toggle) {
+          div.style.cursor = 'grab'
+        } else {
+          div.style.cursor = ''
+        }
+      })
+    }
 
     updateCursor(user?.preferences.dragDropEnabled, projectDivs)
+
+    bulkDeleteBtn.addEventListener("click", async () => {
+      const originalText = bulkDeleteBtn.innerHTML
+      bulkDeleteBtn.disabled = true
+      bulkDeleteBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Deleting...
+      `
+
+      try {
+        const response = await api({
+          url: '/v1/projects/delete/bulk',
+          method: 'DELETE',
+          data: { ids: projectsToBeDeleted },
+        })
+
+        showAlert('success', `${projectsToBeDeleted.length} project(s) deleted successfully`);
+        projectsToBeDeleted = []
+        setTimeout(() => location.reload(), 1500)
+
+      } catch (err) {
+        const errorMessage = err.response?.data?.message || err.message || 'An unexpected error occurred';
+        showAlert('danger', errorMessage)
+      } finally {
+        bulkDeleteBtn.disabled = false;
+        bulkDeleteBtn.innerHTML = originalText
+      }
+    })
+
+    selectAllBtn.addEventListener("click", () => {
+      projectsToBeDeleted = []
+      document.querySelectorAll(".project-checkbox").forEach(checkbox => {
+        checkbox.checked = true
+        projectsToBeDeleted.push(checkbox.value)
+      })
+      selectedCountSpan.textContent = projectsToBeDeleted.length
+    })
+
+    document.querySelectorAll(".project-checkbox").forEach(checkbox => {
+      checkbox.addEventListener("change", (e) => {
+        const projectId = e.target.value
+
+        if (e.target.checked) {
+          projectsToBeDeleted.push(projectId)
+        } else {
+          projectsToBeDeleted = projectsToBeDeleted.filter(id => id !== projectId)
+        }
+
+        updateBulkActionBar()
+      })
+    })
 
     toggle.addEventListener('change', async (e) => {
       const enabled = e.target.checked
@@ -100,7 +187,7 @@
           sortable.option('disabled', true)
         }
 
-        showAlert('success', response.message || 'If that email exists, a reset link has been sent.')
+        showAlert('success', response.message)
       } catch (err) {
         toggle.checked = !enabled
         showAlert('danger', err.response?.data?.message || 'Something went wrong. Please try again.')
@@ -134,7 +221,7 @@
       }
     })
 
-    const deleteButtons = document.querySelectorAll(".delete-btn")
+    const deleteButtons = document.querySelectorAll("#projectDeleteBtn")
     const projectCollapseEl = document.getElementById('projectsCollapse')
     const projectCollapseIcon = document.getElementById('projectCollapseIcon')
 
@@ -152,8 +239,16 @@
       button.addEventListener('click', async function() {
         const projectId = button.getAttribute("data-id")
 
-        const response = await fetch(`/projects/api/delete/${projectId}`, { method: 'DELETE' })
-        if (response.success) Swal.fire({ text: "Project Deleted!", icon: "success"})
+        try {
+          const response = await api({
+            url: `/v1/projects/delete/${projectId}`,
+            method: 'DELETE',
+          })
+        } catch (err) {
+          console.log(err)
+        } finally {
+
+        }
       })
     })
   })

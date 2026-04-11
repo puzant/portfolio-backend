@@ -23,22 +23,28 @@
 
     <div class="collapse show" id="publicationsCollapse">
       <div class="container-fluid">
-        <div class="row">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
           <% publications.forEach(publication => { %>
-            <div class="col-md-3 mb-3">
+            <div class="mb-3">
               <%- include('./publication', { publication, userRole: user.role }) %>
-              <%- include('../partials/_deleteModal', { data: {id: publication._id, ...publication}, type: 'publication' }) %>
+              <%- include('../partials/_deleteModal', { 
+                data: {
+                  id: publication._id, 
+                  deleteId: "publicationDeleteBtn",
+                  ...publication
+                  }, 
+                  type: 'publication' }) %>
             </div>
           <% }) %>
         </div>
       </div>
     </div>
   <% } %>
-
 </div>
+<script src="/js/alert.js"></script>
 
 <script>
-  const deletePublicationDeleteBtn = document.querySelectorAll(".delete-btn")
+  const deletePublicationBtn = document.querySelectorAll("#publicationDeleteBtn")
   const publicatoinCollapseEl = document.getElementById('publicationsCollapse')
   const publicationCollapseIcon = document.getElementById('publicationCollapseIcon')
 
@@ -52,12 +58,23 @@
     publicationCollapseIcon.classList.add('bi-caret-down-fill')
   })
 
-  deletePublicationDeleteBtn.forEach(button => {
+  deletePublicationBtn.forEach(button => {
     button.addEventListener('click', async function() {
       const publicationId = button.getAttribute("data-id")
+        
+      try {
+        const response = await api({
+          url: `/v1/publications/delete/${publicationId}`,
+          method: 'DELETE',
+        })
 
-      const response = await fetch(`/publications/api/delete/${publicationId}`, { method: 'DELETE' })
-      if (response.success) Swal.fire({ text: "Publication Deleted!", icon: "success"})
+        showAlert('success', response.message)
+        setTimeout(() => location.reload(), 1500)
+      } catch (err) {
+        showAlert('danger', "there was an error")
+      } finally {
+        
+      }
     })
 
   })

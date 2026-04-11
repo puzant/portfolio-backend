@@ -49,6 +49,7 @@
           <%- include('../partials/_deleteModal', { 
             data: { 
               id: image._id, 
+              deleteId: "travelImageDeleteBtn",
               publicId: image.public_id.slice(8, image.public_id.length) 
             }, 
             type: 'Travel Image' 
@@ -66,20 +67,20 @@
     window.location.href = `/cms?status=${currentStatus}&country=${country}#travelImagesSection`
   })
 
-  function dispatchDeleteEvent(button) {
-    const event = new CustomEvent('deleteTravelImage', {
-      detail: {
-        id: button.dataset.id,
-        publicId: button.dataset.publicId
-      },
-      bubbles: true,
-      cancelable: true
-    })
+  // function dispatchDeleteEvent(button) {
+  //   const event = new CustomEvent('deleteTravelImage', {
+  //     detail: {
+  //       id: button.dataset.id,
+  //       publicId: button.dataset.publicId
+  //     },
+  //     bubbles: true,
+  //     cancelable: true
+  //   })
     
-    button.dispatchEvent(event)
-  }
+  //   button.dispatchEvent(event)
+  // }
 
-  const travelImagesDeleteBtns = document.querySelectorAll(".delete-btn")
+  const deleteTravelImagesBtn = document.querySelectorAll("#travelImageDeleteBtn")
   const travelImagesCollapse = document.getElementById('travelImagesCollapse')
   const travelImagesCollapseIcon = document.getElementById('travelImagesCollapseIcon')
   const travelImagesContainer = document.getElementById('admin-travel-images-container')
@@ -94,18 +95,21 @@
     travelImagesCollapseIcon.classList.add('bi-caret-down-fill')
   })
 
-  document.addEventListener('deleteTravelImage', async function(e) {
-    const { id, publicId } = e.detail
+  deleteTravelImagesBtn.forEach(btn => {
+    btn.addEventListener('click', async function(e) {
+      const { id, publicId } = e.detail
 
-    try {
-      const response = await axios({
-        url: `v1/travel-images/remove/${id}`,
-        method: 'delete',
-        data: { publicId }
-      })
-        showAlert('success', response.data.message)
-      } catch (err) {
-        showAlert('danger', 'An unexpected error occurred.')
-      }
+      try {
+        const response = await axios({
+          url: `v1/travel-images/remove/${id}`,
+          method: 'delete',
+          data: { publicId }
+        })
+          showAlert('success', response.data.message)
+        } catch (err) {
+          showAlert('danger', 'An unexpected error occurred.')
+        }
+    })
   })
+  
 </script>
