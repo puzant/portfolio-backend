@@ -129,7 +129,7 @@ class ProjectService {
           updatedFields.asset_id = null
         }
       } catch (error) {
-        throw new AppError(`Cloudinary Error ${error.message}`, Status.INTERNAL_SERVER_ERROR)
+        throw new AppError(`Cloudinary Error ${error.message}`, Status.INTERNAL_SERVER_ERROR, error)
       }
     } else {
       updatedFields.preview = preview
@@ -169,8 +169,7 @@ class ProjectService {
       await session.commitTransaction()
     } catch (err) {
       await session.abortTransaction()
-      console.log("bulk delete error", err)
-      throw new AppError("There was error deleting projects", Status.INTERNAL_SERVER_ERROR)
+      throw new AppError("There was error deleting projects", Status.INTERNAL_SERVER_ERROR, err)
     } finally {
       session.endSession()
     }
