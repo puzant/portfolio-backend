@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
-import { StatusCodes as Status } from 'http-status-codes'
+import { StatusCodes as Status, StatusCodes } from 'http-status-codes'
 import ApiResponse from '#utils/apiResponse.js'
+import AppError from '#utils/appError.js'
 
 class ProjectController {
   constructor(projectService) {
@@ -36,7 +37,7 @@ class ProjectController {
     const { ids } = req.body
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
-      return res.status(400).json(ApiResponse.successResponse("Invalid project ids"))
+      throw new AppError("Invalid project ids", StatusCodes.BAD_REQUEST)
     }
 
     await this.projectService.bulkDeleteProjects(ids)
