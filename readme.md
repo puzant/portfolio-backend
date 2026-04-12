@@ -1,59 +1,128 @@
 # Portfolio Backend
+A full-stack CMS and portfolio backend system designed to manage personal content such as projects, publications, travel media, and portfolio data. Built as a learning-driven backend engineering project focused on real-world architecture patterns.
 
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![Nodemon](https://img.shields.io/badge/NODEMON-%23323330.svg?style=for-the-badge&logo=nodemon&logoColor=%BBDEAD)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![EJS](https://img.shields.io/badge/ejs-%23B4CA65.svg?style=for-the-badge&logo=ejs&logoColor=black)
-![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
-![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
-![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+## 🚀 Overview
+This project started as a simple CRUD API and evolved into a production-style backend system with authentication, caching, background jobs, RBAC, and CMS capabilities.
 
-This project is a backend system built using Node.js, Express, and MongoDB to manage projects, publications, and associated media. It includes features like CRUD operations, user authentication, file uploads with Cloudinary integration, caching with Node-cache, and a server-side rendered CMS using EJS templates. This backend system is designed with modern software development practices like MVC, dependency injection, and design patterns to ensure maintainability and scalability.
+It powers a Vue-based portfolio frontend and includes a CMS dashboard for managing all content dynamically.
 
-Access the API at [https://portfolio-backend-gq2s.onrender.com/cms](https://portfolio-backend-gq2s.onrender.com/cms)
+## Key Features
+### 📦 Core CMS Features
+- Manage projects, publications, and travel content
+- Image and video support (Cloud storage integration)
+- Drag & reorder items with persistent DB ordering
+- Bulk delete with multi-select support
+- Active / inactive toggles for content visibility
+- Country-based filtering
 
-![app-screenshot](./public/assets/app-preview.png)
+---
 
-## API Endpoints V1
-**Projects**
-| **Endpoint**   | **Method**  | **Description**  | **Data Fields** |
-| -------- | ------- | ------- | ------- |
-| /projects/api  | GET    |  Get all projects  | N/A
-| /projects/api/projects-images  | GET    |  Get projects images  | N/A
-| /projects/api/add  | POST    |  Create new project  | name, descrption, preview, link
-| /projects/api/edit/:id  | POST    |  Edit project  | name, descrption, preview, link
-| /projects/reorder-project | POST | Reorder Projects | priority, id
-| /projects/api/delete/:id  | DELETE    |  Delete project  | id
+### 🔐 Authentication & Authorization
+- JWT-based authentication
+- Refresh token rotation system
+- Role-based access control (RBAC)
+  - Admin: full access
+  - Guest: read-only access
 
-**Publications**
-| **Endpoint**   | **Method**  | **Description**  | **Data Fields** |
-| -------- | ------- | ------- | ------- |
-| /publications/api  | GET    |  Get all publications | N/A
-| /publications/api/add  | POST    |  Create new publication | title, preview, publishedDate, duration, link
-| /publications/api/edit/:id  | POST    |  Edit publication  | name, descrption, preview, link
-| /publications/api/delete/:id  | DELETE    |  Delete publication  | id
+---
 
-**Travel Images**
-| **Endpoint**   | **Method**  | **Description**  | **Data Fields** |
-| -------- | ------- | ------- | ------ |
-| /travel-images/api  | GET    |  Get all travel images | N/A
-| /travel-images/api/add  | POST    | Add new travel image | N/A
-| /travel-images/api/delete/:id  | DELETE |  Delete travel image  | N/A
+### ⚙️ Backend Architecture
+- Layered architecture:
+  - Controller layer
+  - Service layer
+  - Repository-style DB access (Mongoose)
+- Dependency injection patterns (service-based structure)
+- MVC-inspired structure with separation of concerns
 
-## Features
-- **Node.js**: The backend runtime environment.
-- **Express**: Lightweight and flexible web framework.
-- **MongoDB**: Database for storing and managing dynamic content.
-- **EJS Templates**: Render the views of the CMS, enabling dynamic server-side content generation.
-- **CRUD operations**: Get/ Add / Edit / Delete over projects, publications, travel images
-- **Cloudinary SDK**: Used for fetching and managing images stored in Cloudinary.
-- **Deployed on Render**: Easily accessible and scalable deployment.
-- **WebP Image Format**: Optimized image format for faster load times.
-- **Cron Job**: Set to run every 13 minutes, sending an HTTP request to the API to prevent it from entering hibernation mode.
-- **Node Cache**: Caches Cloudinary images with a 12-hour TTL, improving performance and reducing redundant requests.
+---
 
-## Dependencies
-- **Node.js**: Runtime environment
-- **Express**: Web framework
-- **Cloudinary SDK**: Cloud image management
+### 🧵 Background Jobs & Queues
+- Redis + BullMQ integration
+- Asynchronous job processing for:
+  - Password reset emails
+  - Background tasks
+- Job reliability and retry mechanisms
+
+---
+
+### 🗄️ Database
+- MongoDB + Mongoose ODM
+- Transactions using MongoDB sessions
+- Replication set support for transactional consistency
+- Seeder system using Faker.js
+- Custom migration-like scripts (up/down pattern similar to Laravel)
+
+---
+
+### ⚡ Performance & Caching
+- Redis caching layer
+- Feature flags to enable/disable caching dynamically
+- Cache invalidation strategies per entity
+
+---
+
+### 🛠️ Developer Tooling
+- Custom CLI tools for database migrations
+- Environment-based configuration (dev/prod switching)
+- Script-based seeding and deployment workflows
+
+---
+
+### 🌐 Frontend Integration
+- Vue.js frontend consuming backend APIs
+- CMS dashboard using EJS + Bootstrap
+- Dynamic rendering based on user roles
+
+---
+
+## 🧱 Tech Stack
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+
+### Infra / Tools
+- Redis
+- BullMQ
+- Render (deployment)
+- Cloudinary (media storage)
+
+### Frontend
+- Vue.js
+- EJS (CMS dashboard)
+- Bootstrap
+
+### Other
+- JWT authentication
+- Faker.js
+- Custom CLI tooling
+
+## 🧠 Key Engineering Concepts Used
+- MVC + Service Layer architecture
+- Dependency Injection
+- Singleton patterns (service-level instances)
+- Transactional database operations
+- Queue-based async processing
+- Feature flag systems
+- Role-based authorization design
+- Cache-aside pattern
+- RESTful API design
+
+---
+
+## 🌍 Deployment
+
+- Backend deployed on Render
+- Frontend hosted separately
+- MongoDB Atlas (production)
+- Local MongoDB for development
+
+---
+
+## 📌 Notes
+This project is intentionally built as a learning + production hybrid system, continuously improved to reflect real backend engineering practices.
+
+
+
+
