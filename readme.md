@@ -1,6 +1,8 @@
 # Portfolio Backend
 A full-stack CMS and portfolio backend system designed to manage personal content such as projects, publications, travel media, and portfolio data. Built as a learning-driven backend engineering project focused on real-world architecture patterns.
 
+![app-screenshot](./public/assets/diagram.png)
+
 ## 🚀 Overview
 This project started as a simple CRUD API and evolved into a production-style backend system with authentication, caching, background jobs, RBAC, and CMS capabilities.
 
