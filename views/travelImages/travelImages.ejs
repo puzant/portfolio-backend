@@ -67,19 +67,6 @@
     window.location.href = `/cms?status=${currentStatus}&country=${country}#travelImagesSection`
   })
 
-  // function dispatchDeleteEvent(button) {
-  //   const event = new CustomEvent('deleteTravelImage', {
-  //     detail: {
-  //       id: button.dataset.id,
-  //       publicId: button.dataset.publicId
-  //     },
-  //     bubbles: true,
-  //     cancelable: true
-  //   })
-    
-  //   button.dispatchEvent(event)
-  // }
-
   const deleteTravelImagesBtn = document.querySelectorAll("#travelImageDeleteBtn")
   const travelImagesCollapse = document.getElementById('travelImagesCollapse')
   const travelImagesCollapseIcon = document.getElementById('travelImagesCollapseIcon')
@@ -97,15 +84,17 @@
 
   deleteTravelImagesBtn.forEach(btn => {
     btn.addEventListener('click', async function(e) {
-      const { id, publicId } = e.detail
+      const id = btn.getAttribute("data-id")
+      const publicId = btn.getAttribute("data-public-id")
 
       try {
-        const response = await axios({
-          url: `v1/travel-images/remove/${id}`,
+        const response = await api({
+          url: `v1/travel-images/${id}`,
           method: 'delete',
           data: { publicId }
         })
-          showAlert('success', response.data.message)
+          showAlert('success', response.message)
+          setTimeout(() => location.reload(), 1500)
         } catch (err) {
           showAlert('danger', 'An unexpected error occurred.')
         }

@@ -16,6 +16,10 @@
                 
       <!-- Admin Overlay (visible on hover) -->
       <% if (user.role === 'admin') { %>
+        <div class="position-absolute top-0 start-0 m-2">
+          <input class="form-check-input project-checkbox" type="checkbox" value="<%= image._id %>" id="project_<%= image._id %>">
+        </div>
+
         <div class="position-absolute top-0 end-0 m-2">
           <div class="btn-group btn-group-sm shadow-sm">
             <a href="/travel-images/edit/<%= image._id %>" 

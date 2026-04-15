@@ -53,6 +53,10 @@
         </div>
     
         <div>
+          <button id="unSelectAllBtn" class="btn btn-sm btn-outline-secondary me-2">
+            <i class="bi bi-x-square"></i> Unselect All
+          </button>
+
           <button id="selectAllBtn" class="btn btn-sm btn-outline-primary me-2">
             <i class="bi bi-check-all"></i> Select All
           </button>
@@ -69,7 +73,7 @@
               data: {
                 id: project._id, 
                 deleteId: "projectDeleteBtn",
-                ...project
+                publicId: project.public_id,
                 }, 
                 type: 'project' 
               }) %>
@@ -90,6 +94,7 @@
     const bulkActionsBar = document.getElementById("bulkActionsBar")
     const selectedCountSpan = document.getElementById("selectedCount")
     const selectAllBtn = document.getElementById("selectAllBtn")
+    const unSelectAllBtn = document.getElementById("unSelectAllBtn")
     const bulkDeleteBtn = document.getElementById("bulkDeleteBtn")
 
     const user = <%- JSON.stringify(user) %>
@@ -126,7 +131,7 @@
 
       try {
         const response = await api({
-          url: '/v1/projects/delete/bulk',
+          url: '/v1/projects/many',
           method: 'DELETE',
           data: { ids: projectsToBeDeleted },
         })
@@ -141,6 +146,16 @@
       } finally {
         bulkDeleteBtn.disabled = false;
         bulkDeleteBtn.innerHTML = originalText
+      }
+    })
+
+    unSelectAllBtn.addEventListener("click", () => {
+      if (projectsToBeDeleted.length !== 0) {
+        document.querySelectorAll(".project-checkbox").forEach(checkbox => {
+          checkbox.checked = false
+        })
+        projectsToBeDeleted = []
+        bulkActionsBar.classList.add("d-none")
       }
     })
 
@@ -206,7 +221,7 @@
         try {
           if (evt.oldIndex !== evt.newIndex) {
             const response = await axios({
-              url: '/v1/projects/reorder-project',
+              url: '/v1/projects/reorder',
               method: 'PATCH',
               data: order,
             })
@@ -236,18 +251,21 @@
     })
 
     deleteButtons.forEach(button => {
-      button.addEventListener('click', async function() {
+      button.addEventListener('click', async function(e) {
         const projectId = button.getAttribute("data-id")
+        const publicId = button.getAttribute("data-public-id")
 
         try {
           const response = await api({
-            url: `/v1/projects/delete/${projectId}`,
+            url: `/v1/projects/${projectId}`,
             method: 'DELETE',
+            data: { public_id: publicId }
           })
+          
+          showAlert('success', response.message)
+          setTimeout(() => location.reload(), 1500)
         } catch (err) {
-          console.log(err)
-        } finally {
-
+          showAlert('danger', "there was an error")
         }
       })
     })
