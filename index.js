@@ -6,8 +6,6 @@ import mongoose from 'mongoose'
 import { fileURLToPath } from 'url'
 import cookieParser from 'cookie-parser'
 import { v2 as cloudinary } from 'cloudinary'
-import { serve, setup } from 'swagger-ui-express'
-import YAML from 'yamljs'
 
 import { keepAliveJob } from './jobs/keepAlive.js'
 import { cacheWarmerJob } from './jobs/cacheWarmer.js'
@@ -38,7 +36,6 @@ const __fileName = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__fileName)
 const redisConnection = new RediSConnection()
 const redis = redisConnection.getConnection()
-const swaggerDocument = YAML.load("./docs/openapi.yaml")
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
@@ -64,7 +61,6 @@ app.use('/v1/auth', authRoute)
 app.use('/v1/settings', settingsRoute)
 
 app.use("/v1/", apiNotFoundHandler)
-app.use("/v1/api-docs", serve, setup(swaggerDocument))
 app.use(viewNotFoundHandler)
 app.use(errorHandler)
 

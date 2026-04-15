@@ -57,7 +57,7 @@ class PublicationService {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) 
-      throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
+      throw new AppError("Please fill missing fields", Status.BAD_REQUEST, errors.array())
 
     if (!mongoose.Types.ObjectId.isValid(id))
       throw new AppError("Invalid Publication ID", Status.BAD_REQUEST)

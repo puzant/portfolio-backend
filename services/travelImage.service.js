@@ -2,6 +2,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import { StatusCodes as Status, StatusCodes } from 'http-status-codes'
 import TravelImage from '#models/travelImage.model.js'
 import AppError from '#utils/appError.js'
+import { isProduction } from '../utils/environment.js'
 
 class TravelImageService {
   constructor(cache) {
@@ -117,13 +118,15 @@ class TravelImageService {
     const travelImageToDelete = await TravelImage.findById(id)
     if (!travelImageToDelete) throw new AppError("Travel Image not found", Status.NOT_FOUND)
 
-    await cloudinary.uploader.destroy('travels/' + publicId)
-    await TravelImage.findByIdAndDelete(id)
+    this.removeFromCloudinary(publicId)
+    
+    await travelImageToDelete.deleteOne()
     this.cache.del(this.cacheKey)
   }
 
   async removeFromCloudinary(publicId) {
-    await cloudinary.uploader.destroy('travels/' + publicId)
+    if (isProduction()) 
+      await cloudinary.uploader.destroy('travels/' + publicId)
   }
 
   async syncCloudinaryImagesToMongo() {

@@ -66,7 +66,7 @@ class ProjectService {
     let activeValue
 
     if (!errors.isEmpty()) 
-      throw new AppError("Validation error", Status.BAD_REQUEST, errors.array())
+      throw new AppError("Please fill missing fields", Status.BAD_REQUEST, errors.array())
   
     if (Array.isArray(req.body.active)) {
       activeValue = active.includes('true')
