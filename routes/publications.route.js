@@ -11,8 +11,8 @@ const publicationService = new PublicationService(cache)
 const publicationController = new PublicationController(publicationService)
 
 router.get('/', publicationController.getAllPublications)
-router.post('/add', authMiddleware, restrictTo('admin'), publicationValidation, publicationController.addPublication)
-router.post('/edit/:id', authMiddleware, restrictTo('admin'), publicationValidation, publicationController.editPublication)
-router.delete('/delete/:id', authMiddleware, restrictTo('admin'), publicationController.deletePublication)
+router.post('/', authMiddleware, restrictTo('admin'), publicationValidation, publicationController.addPublication)
+router.post('/:id', authMiddleware, restrictTo('admin'), publicationValidation, publicationController.editPublication)
+router.delete('/:id', authMiddleware, restrictTo('admin'), publicationController.deletePublication)
 
 export default router

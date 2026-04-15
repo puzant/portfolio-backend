@@ -11,10 +11,10 @@ const travelImageService = new TravelImageService(cache)
 const travelImagesController = new TravelImagesController(travelImageService)
 
 router.get('/', travelImagesController.getAllTravelImages)
-router.post('/add', authMiddleware, restrictTo('admin'), upload.single('travelImage'), travelImagesController.addTravelImage)
+router.post('/', authMiddleware, restrictTo('admin'), upload.single('travelImage'), travelImagesController.addTravelImage)
 router.post('/sync', authMiddleware, restrictTo('admin'), travelImagesController.syncCloudinaryToMongo)
-router.patch('/edit/:id', authMiddleware, restrictTo('admin'), travelImagesController.editTravelImage)
 router.patch('/reorder', authMiddleware, restrictTo('admin'), travelImagesController.reorderTravelImages)
-router.delete('/remove/:id', authMiddleware, restrictTo('admin'), travelImagesController.deleteTravelImage)
+router.patch('/:id', authMiddleware, restrictTo('admin'), travelImagesController.editTravelImage)
+router.delete('/:id', authMiddleware, restrictTo('admin'), travelImagesController.deleteTravelImage)
 
 export default router
