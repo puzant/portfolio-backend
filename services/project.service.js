@@ -158,12 +158,14 @@ class ProjectService {
     this.cache.del(this.cacheKey)
   }
 
-  async bulkDeleteProjects(projectIds) {
+  async bulkDeleteProjects(projectsIds, projectsPublicIds) {
     const session = await mongoose.startSession()
+    const fullPublicIds = projectsPublicIds.map(id => `projects/${id}`)
     session.startTransaction()
 
     try {
-      await Project.deleteMany({ _id: { $in: projectIds }}).session(session)
+      await Project.deleteMany({ _id: { $in: projectsIds }}).session(session)
+      await cloudinary.api.delete_resources(fullPublicIds, { invalidate: true })
 
       this.cache.del(this.cacheKey)
       await session.commitTransaction()
