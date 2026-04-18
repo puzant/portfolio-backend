@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="d-flex justify-content-between">
       <div>
-        <input class="form-check-input project-checkbox" type="checkbox" value="<%= project._id %>" id="project_<%= project._id %>">
+        <input class="form-check-input project-checkbox" type="checkbox" value="<%= project._id %>" data-public-id="<%= project.public_id %>" id="project_<%= project._id %>">
         <b class="card-title mx-1"><%= project.name %> 
           <span class="badge <%=project.active ? 'bg-success' : 'bg-warning text-dark'%>"><%= project.active ? 'Active' : 'Inactive' %></span>
         </b>
