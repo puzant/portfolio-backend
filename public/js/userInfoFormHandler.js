@@ -8,7 +8,7 @@ document.getElementById('userInfo').addEventListener('submit', async function(e)
   const formData = new FormData(form)
 
   try {
-    const response = await axios({
+    const response = await api({
       url: this.action,
       method: this.method,
       data: Object.fromEntries(formData),

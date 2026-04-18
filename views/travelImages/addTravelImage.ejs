@@ -89,14 +89,14 @@
         loadingIndicator.style.display = 'block'
 
         try {
-          const response = await axios({
+          const response = await api({
             url: this.action,
             method: this.method,
             data: formData
           })
           
-          if (response.data.success) {
-            showAlert('success', response.data.message)
+          if (response.success) {
+            showAlert('success', response.message)
           }
         } catch (err) {
           showAlert('danger', err.response.data.message)

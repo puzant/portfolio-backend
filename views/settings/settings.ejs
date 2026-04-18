@@ -21,7 +21,7 @@
 
   <script>
     document.getElementById('deploy-btn').addEventListener('click', async () => {
-      const response = await axios({
+      const response = await api({
         url: '/v1/settings/trigger-deploy',
         method: 'POST',
         data: {}

@@ -9,7 +9,7 @@ document.getElementById('securitySettings').addEventListener('submit', async fun
   const formData = new FormData(form)
 
   try {
-    const response = await axios({
+    const response = await api({
       url: this.action,
       method: this.method,
       data: Object.fromEntries(formData)

@@ -25,6 +25,7 @@
   </div>
   
   <script src="/js/alert.js"></script>
+  <script src="/js/validator.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -46,6 +47,15 @@
 
       form.addEventListener('submit', async function(e) {
         e.preventDefault()
+        
+        let errorsMap = {}
+        let fieldsMap = [
+          { path: 'name' },
+          { path: 'link' },
+          { path: 'description' },
+          { path: 'file' },
+        ]
+
         const formData =  new FormData(form)
         formData.append('public_id', project.public_id)
         formData.append('asset_id', project.asset_id)
@@ -54,18 +64,19 @@
         document.getElementById('loadingIndicator').style.display = 'block'
 
         try {
-          const response = await axios({
+          const response = await api({
             url: this.action,
             method: this.method,
             data: formData,
           })
             
-          if (response.data.success) {
-            showAlert('success', response.data.message)
-          } else if (response.data.error) {
-            showAlert('danger', response.data.error)
-          }
+          if (response.success) {
+            showAlert('success', response.message)
+            errorsMap = {}
+          } 
         } catch (err) {
+          errorsMap = err.response.data.errors
+          validator(errorsMap, fieldsMap)
           showAlert('danger', 'An unexpected error occurred.')
         } finally {
           document.getElementById('loadingIndicator').style.display = 'none'

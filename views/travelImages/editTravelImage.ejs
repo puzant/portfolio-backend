@@ -88,14 +88,14 @@
         document.getElementById('loadingIndicator').style.display = 'block'
 
         try {
-          const response = await axios({
+          const response = await api({
             url: this.action,
             method: 'PATCH',
             data: Object.fromEntries(formData),
           })
 
-           if (response.data.success) {
-            showAlert('success', response.data.message)
+           if (response.success) {
+            showAlert('success', response.message)
           } else if (response.data.error) {
             showAlert('danger', response.data.error)
           }

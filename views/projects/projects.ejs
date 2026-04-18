@@ -195,7 +195,7 @@
 
       try {
         const response = await api({
-          url: 'v1/settings/reorder-toggle',
+          url: '/v1/settings/reorder-toggle',
           method: 'PATCH',
           data: {
             enabled: e.target.checked
@@ -228,14 +228,14 @@
       
         try {
           if (evt.oldIndex !== evt.newIndex) {
-            const response = await axios({
+            const response = await api({
               url: '/v1/projects/reorder',
               method: 'PATCH',
               data: order,
             })
         
-            if (response.data.success) {
-              showAlert('success', response.data.message)
+            if (response.success) {
+              showAlert('success', response.message)
             }
           }
         } catch (err) {
