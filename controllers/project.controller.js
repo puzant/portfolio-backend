@@ -34,13 +34,16 @@ class ProjectController {
   })
 
   bulkDeleteProjects = asyncHandler(async (req, res) => {
-    const { ids } = req.body
+    const { projects } = req.body
 
-    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+    if (!projects || !Array.isArray(projects) || projects.length === 0) {
       throw new AppError("Invalid project ids", StatusCodes.BAD_REQUEST)
     }
 
-    await this.projectService.bulkDeleteProjects(ids)
+    const projectsIds = projects.map(project => project.id)
+    const projectsPublicIds = projects.map(project => project.publicId)
+    
+    await this.projectService.bulkDeleteProjects(projectsIds, projectsPublicIds)
     return res.status(Status.OK).json(ApiResponse.successResponse("Projects deleted successfully"))
   })
 
