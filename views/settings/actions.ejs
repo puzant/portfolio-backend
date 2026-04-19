@@ -1,12 +1,12 @@
   <div class="tab-pane fade show active" id="actions" role="tabpanel" aria-labelledby="actions" tabindex="0">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-12 col-md-4">
         <h4>Netlify deployment</h4>
         <p>Trigger Netlify deployment for Portfolio website</p>
         <button class="btn btn-primary" id="deploy-btn">Deploy</button>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-12 col-md-4">
         <h4>Cache</h4>
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" id="cache-projects"  <%= user?.cacheToggles?.projects ? 'checked' : '' %>>
@@ -26,7 +26,7 @@
         <div id="cache-feedback" class="mt-3 small text-muted"></div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-12 col-md-4">
         <h4>Backup Database</h4>
         <p>Trigger Database backup from Mongodb Atlas</p>
         <button class="btn btn-primary" id="deploy-btn">Backup</button>

@@ -1,51 +1,70 @@
 <div class="tab-pane fade" id="account-settings" role="tabpanel" aria-labelledby="account-settings" tabindex="0">
   <h2>Edit User Info </h2>
   
-  <form id="userInfo" action="v1/settings/update-user" method="POST">
-    <span class="badge bg-primary my-2">
-      <i class="bi bi-shield-lock"></i> <%- user.role %>
-    </span>
+  <div class="row">
+    <div class="col-12 col-md-10 col-lg-8">
+      <form id="userInfo" action="v1/settings/update-user" method="POST">
+        <span class="badge bg-primary my-2">
+          <i class="bi bi-shield-lock"></i> <%- user.role %>
+        </span>
 
-    <div class="row">
-      <div class="col-md-6">
-        <label class="form-label">Name</label>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon1"><i class="bi bi-person"></i></span>
-          <input name="name" type="text" class="form-control" value="<%= user.username || '' %>">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <label class="form-label">Name</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-person"></i></span>
+              <input name="name" type="text" class="form-control" value="<%= user.username || '' %>">
+            </div>
+          </div>
+          
+          <div class="col-12 col-md-6">
+            <label class="form-label">Email</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope"></i></span>
+              <input name="email" type="text" class="form-control" value="<%= user.email || '' %>">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Country</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
+              <input name="country" type="text" class="form-control" value="<%= user.country || '' %>">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">City</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
+              <input name="city" type="text" class="form-control" value="<%= user.city || '' %>">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Phone</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-telephone"></i></span>
+              <input name="phone" type="text" class="form-control" value="<%= user.phone || '' %>">
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label">Website</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1"><i class="bi bi-link-45deg"></i></span>
+              <input name="website" type="text" class="form-control" value="<%= user.website || '' %>">
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">Email</label>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon1"><i class="bi bi-envelope"></i></span>
-          <input name="email" type="text" class="form-control" value="<%= user.email || '' %>">
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">Country</label>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
-          <input name="country" type="text" class="form-control" value="<%= user.country || '' %>">
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">City</label>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon1"><i class="bi bi-geo-alt"></i></span>
-          <input name="city" type="text" class="form-control" value="<%= user.city || '' %>">
-        </div>
-      </div>
-
-    </div>
   
-    <div class="my-4">
-      <button type="submit" class="btn btn-primary d-flex gap-2 align-items-center">
-        <div id="loadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
-        <span>Save</span>
-      </button>
+        <div class="my-4">
+          <button type="submit" class="btn btn-primary d-flex gap-2 align-items-center">
+            <div id="loadingIndicator" class="spinner-border spinner-border-sm text-light" role="status"></div>
+            <span>Save</span>
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
