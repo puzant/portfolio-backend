@@ -14,12 +14,9 @@ document.getElementById('userInfo').addEventListener('submit', async function(e)
       data: Object.fromEntries(formData),
     })
 
-    if (response.data.success) {
-      showAlert('success', response.data.message)
-    } else if (response.data.error) {
-      showAlert('danger', response.data.error)
+    if (response.success) {
+      showAlert('success', response.message)
     }
-  
   } catch (err) {
     showAlert('danger', 'An unexpected error occurred.')
   } finally {
