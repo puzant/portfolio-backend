@@ -8,6 +8,8 @@ const UserSchema = new mongoose.Schema(
     name: { type: String },
     country: { type: String },
     city: { type: String },
+    phone: { type: String },
+    website: { type: String },
     isActive: { type: Boolean, default: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
@@ -22,7 +24,10 @@ const UserSchema = new mongoose.Schema(
       travelImages: { type: Boolean, default: false },
     },
     preferences: {
-      dragDropEnabled: { type: Boolean, default: true },
+      dragDropEnabled: {
+        projects: { type: Boolean, default: true },
+        travelImages: { type: Boolean, default: true },
+      }
     }
   },
   { timestamps: true }
