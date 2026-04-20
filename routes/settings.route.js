@@ -13,5 +13,5 @@ router.post('/update-password', authMiddleware, settingsController.updatePasswor
 router.post('/delete-account', authMiddleware, settingsController.deleteUserAccount)
 router.patch('/cache-toggles', authMiddleware, settingsController.toggleCache)
 router.patch('/reorder-toggle', authMiddleware, settingsController.toggleReOrder)
-
+router.patch('/change-theme', authMiddleware, settingsController.changeTheme)
 export default router
