@@ -9,7 +9,15 @@ class SettingsService {
     return response
   }
 
-  async toggleReOrder(userId, enabled) {
+  async changeTheme(userId, theme) {
+    await User.findByIdAndUpdate(
+      userId, 
+      { $set: { "preferences.theme": theme } },
+      { new: true, runValidators: true }
+    )
+  }
+
+  async toggleReOrder(userId, type, enabled) {
     const user = await User.findById(userId)
 
     if (!user) 
@@ -17,7 +25,9 @@ class SettingsService {
 
     user.preferences = {
       ...user.preferences,
-      dragDropEnabled: enabled
+      dragDropEnabled: {
+        [type]: enabled
+      }
     }
 
     await user.save()
@@ -45,10 +55,10 @@ class SettingsService {
   }
 
   async updateUserInfo(req) {
-    const { email, name, country, city } = req.body
+    const { email, name, country, city, phone, website } = req.body
     const userId = req.user.id
   
-    const updatedUser = await User.findByIdAndUpdate(userId, { email, name, country, city }, {
+    const updatedUser = await User.findByIdAndUpdate(userId, { email, name, country, city, phone, website }, {
       new: true, 
       runValidators: true 
     })
