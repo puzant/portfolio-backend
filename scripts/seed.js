@@ -28,7 +28,10 @@ async function seedDatabase() {
       country: "Lebanon",
       city: "Beirut",
       preferences: {
-        dragDropEnabled: true,
+        dragDropEnabled: {
+          projects: true,
+          travelImages: true
+        },
         cacheToggles: {
           projects: true,
           publications: true,
