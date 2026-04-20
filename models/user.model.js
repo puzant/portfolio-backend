@@ -24,6 +24,7 @@ const UserSchema = new mongoose.Schema(
       travelImages: { type: Boolean, default: false },
     },
     preferences: {
+      theme: { type: String, default: 'black' },
       dragDropEnabled: {
         projects: { type: Boolean, default: true },
         travelImages: { type: Boolean, default: true },
