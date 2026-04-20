@@ -12,14 +12,19 @@ class SettingsController {
     return res.status(Status.OK).json(ApiResponse.successResponse("Deployment started", response))
   })
 
+  changeTheme = asyncHandler(async (req, res) => {
+    await this.settingsService.changeTheme(req.user.id, req.body.theme)
+    return res.status(Status.OK).json(ApiResponse.successResponse("Theme was updated"))
+  })
+
   toggleCache = asyncHandler(async (req, res) => {
     await this.settingsService.toggleCache(req)
     return res.status(Status.OK).json(ApiResponse.successResponse("Cache settings updated"))
   })
 
   toggleReOrder = asyncHandler(async (req, res) => {
-    const { enabled } = req.body
-    await this.settingsService.toggleReOrder(req.user.id, enabled)
+    const { type, enabled } = req.body
+    await this.settingsService.toggleReOrder(req.user.id, type, enabled)
     return res.status(Status.OK).json(ApiResponse.successResponse("Ordering settings updated"))
   })
 
