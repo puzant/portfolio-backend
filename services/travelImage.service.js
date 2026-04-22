@@ -2,7 +2,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import { StatusCodes as Status, StatusCodes } from 'http-status-codes'
 import TravelImage from '#models/travelImage.model.js'
 import AppError from '#utils/appError.js'
-import { isProduction } from '../utils/environment.js'
+import { isProduction } from '#/utils/environment.js'
 
 class TravelImageService {
   constructor(cache) {
