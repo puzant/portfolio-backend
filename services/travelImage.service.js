@@ -94,6 +94,7 @@ class TravelImageService {
       display_name: body.displayName,
       asset_id: result.asset_id,
       public_id: result.public_id,
+      country: body.country,
       order: totalDocuments.length + 1
     })
     
