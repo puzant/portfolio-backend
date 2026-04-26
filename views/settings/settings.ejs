@@ -21,6 +21,14 @@
   <script src="/js/dangerZoneFormHandler.js"></script>
 
   <script>
+    document.getElementById("backup-btn").addEventListener("click", async () => {
+      const backupResponse = await api({
+        url: '/v1/settings/backup',
+        method: 'POST',
+        data: {}
+      })
+    })
+
     document.getElementById('deploy-btn').addEventListener('click', async () => {
       const response = await api({
         url: '/v1/settings/trigger-deploy',
