@@ -3,8 +3,9 @@ import { StatusCodes as Status } from 'http-status-codes'
 import ApiResponse from '#utils/apiResponse.js'
 
 class SettingsController {
-  constructor(settingsService) {
+  constructor(settingsService, backupService) {
     this.settingsService = settingsService
+    this.backupService = backupService
   }
 
   triggerNetlifyDeployment = asyncHandler(async (req, res) => {
@@ -38,8 +39,13 @@ class SettingsController {
     return res.status(Status.OK).json(ApiResponse.successResponse("User deleted successfully", user))
   })
 
+  createBackup = asyncHandler(async (req, res) => {
+    await this.backupService.createBackup()
+    return res.status(Status.ok).json(ApiResponse.successResponse("DB backup completed successfully"))
+  })
+
   updatePassword = asyncHandler(async (req, res) => {
-     await this.settingsService.updatePassword(req)
+    await this.settingsService.updatePassword(req)
     return res.status(200).json(ApiResponse.successResponse("Password updated successfully"))
   })
 
