@@ -16,6 +16,10 @@ class AuthService {
 
   async forgotPassword(req) {
     const { email, ipAddress } = req.body
+
+    if (!email)
+      throw new AppError("Email is required", Status.BAD_REQUEST)
+    
     const user = await User.findOne({ email: email.toLowerCase() })
 
     if (!user) return
