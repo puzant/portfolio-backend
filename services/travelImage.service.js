@@ -84,7 +84,7 @@ class TravelImageService {
 
     const optimizedUrl = cloudinary.url(result.public_id, {
       transformation: [
-        { width: 384, height: 384, crop: 'fill', quality: 'auto' },
+        { width: 384, crop: 'scale', quality: 'auto' },
         { fetch_format: 'auto' }
       ]
     })
