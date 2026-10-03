@@ -15,6 +15,7 @@ import RediSConnection from './config/redis.js'
 import authRoute from './routes/auth.route.js'
 import projectsRoute from './routes/projects.route.js'
 import settingsRoute from './routes/settings.route.js'
+import caseStudies from './routes/caseStudies.route.js'
 import publicationsRoute from './routes/publications.route.js'
 import travelImagesRoute from './routes/travelImages.route.js'
 import renderRoutes from './routes/render.route.js'
@@ -55,6 +56,7 @@ app.use(cors({
 //  Register routes
 app.use(renderRoutes)
 app.use('/v1/publications', publicationsRoute)
+app.use('/v1/case-studies', caseStudies)
 app.use('/v1/projects', projectsRoute)
 app.use('/v1/travel-images', travelImagesRoute)
 app.use('/v1/auth', authRoute)
