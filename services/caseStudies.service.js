@@ -19,7 +19,7 @@ class CaseStudiesService {
   }
     
   async getCaseStudies() {
-    const databaseId = "3ecafb90-4c0b-800c-bb09-000ba79e80dc"
+    const databaseId = process.env.NOTION_DATA_SOURCE_ID
 
     const res = await notion.dataSources.query({
       data_source_id: databaseId,
