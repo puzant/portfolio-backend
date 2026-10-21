@@ -15,7 +15,7 @@ class TravelImageService {
     const useCache = user?.cacheToggles.travelImages
 
     if (country !== 'all') {
-      return TravelImage.find({ country }).sort({ order: 1 })
+      return TravelImage.find({ country }).sort({ order: 1 }).lean()
     }
 
     if (!useCache) {
