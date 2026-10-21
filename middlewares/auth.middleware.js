@@ -69,6 +69,12 @@ const authMiddleware = async (req, res, next) => {
       .select('country city phone website updatedAt cacheToggles preferences')
       .lean()
 
+    if (!extra) {
+      res.clearCookie('token')
+      res.clearCookie('refresh_token')
+      return res.redirect('/login')
+    }
+
     req.user = {
       ...baseUser,
       updatedAt: extra.updatedAt.toLocaleString(),
